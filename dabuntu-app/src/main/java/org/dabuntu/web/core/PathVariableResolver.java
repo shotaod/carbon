@@ -2,8 +2,8 @@ package org.dabuntu.web.core;
 
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.PathVariable;
-import org.dabuntu.web.container.BindPathVariable;
-import org.dabuntu.web.container.ComputedUriContainer;
+import org.dabuntu.web.container.PathVariableBinding;
+import org.dabuntu.web.container.ComputedUriVariableContainer;
 import org.dabuntu.web.exception.ActionMappingException;
 
 import java.lang.reflect.Method;
@@ -20,13 +20,13 @@ public class PathVariableResolver {
 
 	private class Container {
 		private String partName;
-		private BindPathVariable pathVariable;
+		private PathVariableBinding pathVariable;
 
 		public Container(String partName) {
 			this.partName = partName;
 		}
 
-		public Container(String partName, BindPathVariable pathVariable) {
+		public Container(String partName, PathVariableBinding pathVariable) {
 			this.partName = partName;
 			this.pathVariable = pathVariable;
 		}
@@ -39,18 +39,45 @@ public class PathVariableResolver {
 			return partName;
 		}
 
-		public BindPathVariable getPathVariable() {
+		public PathVariableBinding getPathVariable() {
 			return pathVariable;
 		}
 	}
+
+	private class CandidateArgument {
+		private Parameter argument;
+		private boolean resolved;
+
+		public CandidateArgument(Parameter argument) {
+			this.argument = argument;
+			this.resolved = false;
+		}
+
+		public CandidateArgument(Parameter argument, boolean resolved) {
+			this.argument = argument;
+			this.resolved = resolved;
+		}
+
+		public void setResolved(boolean resolved) {
+			this.resolved = resolved;
+		}
+
+		public Parameter getArgument() {
+			return argument;
+		}
+		public boolean isResolved() {
+			return resolved;
+		}
+	}
+
 
 	private static final String ComputedVariableMarkPrefix = "$$";
 	private static final String PathVariablePrefix = "{";
 	private static final String PathVariableSuffix = "}";
 	private int variableCounter;
-	private List<BindPathVariable> variables;
+	private List<PathVariableBinding> variables;
 
-	public ComputedUriContainer resolve(Method actionMethod) {
+	public ComputedUriVariableContainer resolve(Method actionMethod) {
 		variableCounter = 0;
 		variables = new ArrayList<>();
 
@@ -62,14 +89,15 @@ public class PathVariableResolver {
 		Action actionAnnotation = actionMethod.getDeclaredAnnotation(Action.class);
 
 		// extract bind target arguments by @PathVariable
-		List<Parameter> bindTargets = Arrays.stream(actionMethod.getParameters())
+		List<CandidateArgument> candidates = Arrays.stream(actionMethod.getParameters())
 				.filter(param -> param.isAnnotationPresent(PathVariable.class))
+				.map(CandidateArgument::new)
 				.collect(Collectors.toList());
 
 		// compute url defined by @Action
 		String computedUri = Arrays.stream(actionAnnotation.url().split("/"))
 				.map(urlPart -> {
-					Container container = this.computeUrlPartVariable(urlPart, bindTargets);
+					Container container = this.computeUrlPartVariable(urlPart, candidates);
 					if (container.isVariable()) {
 						this.variables.add(container.getPathVariable());
 					}
@@ -77,10 +105,19 @@ public class PathVariableResolver {
 				})
 				.collect(Collectors.joining("/"));
 
-		return new ComputedUriContainer(computedUri, variables);
+		// confirm if no unresolved candidate exist
+		candidates.forEach(candidate -> {
+			if (!candidate.isResolved()) {
+				String controllerClassName = actionMethod.getDeclaringClass().getName();
+				String  pathVarName = candidate.getArgument().getAnnotation(PathVariable.class).value();
+				throw new ActionMappingException(String.format("Failed to map action. \n At [controller] %s\n    [    action] %s\n PathVariable which named '%s' is not exist in @Action.url", controllerClassName, actionMethod.getName(), pathVarName));
+			}
+		});
+
+		return new ComputedUriVariableContainer(computedUri, variables);
 	}
 
-	private Container computeUrlPartVariable(String urlPart, List<Parameter> bindTargets) {
+	private Container computeUrlPartVariable(String urlPart, List<CandidateArgument> candidates) {
 		if (isNotPathVariablePart(urlPart)) {
 			return new Container(urlPart);
 		}
@@ -88,11 +125,15 @@ public class PathVariableResolver {
 		// variable name extracted in @Action(url)
 		String name = urlPart.replace(PathVariablePrefix, "").replace(PathVariableSuffix, "");
 
-		for (Parameter arg : bindTargets) {
+		for (CandidateArgument candidate : candidates) {
+			Parameter arg = candidate.getArgument();
 			String nameDefinedArg = arg.getDeclaredAnnotation(PathVariable.class).value();
 			if (name.equals(nameDefinedArg)) {
 				String mark = getVariableMark();
-				BindPathVariable bindVar = new BindPathVariable(arg.getType(), arg.getName(), mark);
+				PathVariableBinding bindVar = new PathVariableBinding(arg.getType(), arg.getName(), mark);
+
+				candidate.setResolved(true);
+
 				return new Container(mark, bindVar);
 			}
 		}

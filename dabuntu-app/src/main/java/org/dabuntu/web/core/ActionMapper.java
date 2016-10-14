@@ -6,9 +6,10 @@ import org.dabuntu.util.format.TagAttr;
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.Controller;
 import org.dabuntu.web.annotation.Default;
-import org.dabuntu.web.container.ComputedUriContainer;
-import org.dabuntu.web.container.MappedActionContainer;
-import org.dabuntu.web.container.UriBindAction;
+import org.dabuntu.web.annotation.PathVariable;
+import org.dabuntu.web.container.ComputedUriVariableContainer;
+import org.dabuntu.web.context.MappedActionContainer;
+import org.dabuntu.web.container.DefinedAction;
 import org.dabuntu.web.def.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,13 +32,13 @@ public class ActionMapper {
 	private static Logger logger = LoggerFactory.getLogger(ActionMapper.class);
 
 	private class Container {
-		ComputedUriContainer computedUriContainer;
+		ComputedUriVariableContainer computedUriVariableContainer;
 		HttpMethod method;
 		Class controller;
 		Method action;
 
-		public Container(ComputedUriContainer computedUriContainer, HttpMethod method, Class controller, Method action) {
-			this.computedUriContainer = computedUriContainer;
+		public Container(ComputedUriVariableContainer computedUriVariableContainer, HttpMethod method, Class controller, Method action) {
+			this.computedUriVariableContainer = computedUriVariableContainer;
 			this.method = method;
 			this.controller = controller;
 			this.action = action;
@@ -58,19 +60,20 @@ public class ActionMapper {
 							// filtering Action
 							.filter(method -> method.isAnnotationPresent(Action.class))
 							// convert Container
-							.map(method -> getContainer(clazz, method));
+							.map(method -> this.getContainer(clazz, method));
 				})
 				.collect(Collectors.groupingBy(
 						container -> container.method,
 						Collectors.toList()
 				));
-		Map<HttpMethod, List<UriBindAction>> data = collect.entrySet().stream()
+		Map<HttpMethod, List<DefinedAction>> data = collect.entrySet().stream()
 				.map(entry -> {
-					List<UriBindAction> bindActions = entry.getValue().stream()
-							.map(c -> new UriBindAction(c.computedUriContainer, c.controller, c.action))
+					List<DefinedAction> bindActions = entry.getValue().stream()
+							.map(c -> new DefinedAction(c.computedUriVariableContainer, c.controller, c.action))
 							.collect(Collectors.toList());
 					return new AbstractMap.SimpleEntry<>(entry.getKey(), bindActions);
 				}).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+
 
 		loggingResult(data);
 
@@ -78,20 +81,20 @@ public class ActionMapper {
 	}
 
 	private Container getContainer(Class controller, Method action) {
-		ComputedUriContainer computedUriContainer = pathVariableResolver.resolve(action);
+		ComputedUriVariableContainer computedUriVariableContainer = pathVariableResolver.resolve(action);
 
 		Action annotation = action.getDeclaredAnnotation(Action.class);
 		HttpMethod method = annotation.method();
 
-		return new Container(computedUriContainer, method, controller, action);
+		return new Container(computedUriVariableContainer, method, controller, action);
 	}
 
-	private void loggingResult(Map<HttpMethod, List<UriBindAction>> data) {
+	private void loggingResult(Map<HttpMethod, List<DefinedAction>> data) {
 		List<SimpleKeyValue> kvs = data.entrySet().stream().flatMap(e -> {
 			String hMethod = e.getKey().getCode();
 			return e.getValue().stream().map(bindAction -> {
-				String computedUri = bindAction.getUriComputedContainer().getComputedUri();
-				String actionFQN = bindAction.getClass().getName() + "##" + bindAction.getAction().getName();
+				String computedUri = bindAction.getComputedUriVariableContainer().getComputedUri();
+				String actionFQN = bindAction.getControllerClass().getName() + "##" + bindAction.getActionMethod().getName();
 				String separator = Stream.generate(() -> " ").limit(5 - hMethod.length()).collect(Collectors.joining("", "", ": "));
 				return new SimpleKeyValue(hMethod + separator + computedUri, actionFQN);
 			});

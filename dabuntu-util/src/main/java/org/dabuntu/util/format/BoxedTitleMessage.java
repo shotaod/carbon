@@ -12,8 +12,8 @@ import java.util.stream.Stream;
  * @author ubuntu 2016/10/08.
  */
 public class BoxedTitleMessage {
-	public static final String BoxPrefix = "[";
-	public static final String BoxSuffix = "]";
+	private static final String BoxPrefix = "[";
+	private static final String BoxSuffix = "]";
 
 	private abstract static class JoinType {
 		abstract Collector<CharSequence, ?, String> get(String title);

@@ -1,14 +1,15 @@
 package org.dabuntu.web.container;
 
 /**
+ * org.dabuntu.web.annotation.@PathVariableで定義されたパス変数を格納する
  * @author ubuntu 2016/10/08.
  */
-public class BindPathVariable {
+public class PathVariableBinding {
 	private String pathVariableMark;
 	private Class argumentType;
 	private String argumentName;
 
-	public BindPathVariable(Class argumentType, String argumentName, String pathVariableMark) {
+	public PathVariableBinding(Class argumentType, String argumentName, String pathVariableMark) {
 		this.argumentType = argumentType;
 		this.argumentName = argumentName;
 		this.pathVariableMark = pathVariableMark;

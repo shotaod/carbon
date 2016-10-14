@@ -1,4 +1,4 @@
-package org.dabuntu.sample.web.controller;
+package org.dabuntu.sample.web.request.index;
 
 import org.dabuntu.component.classFactory.ClassFactory;
 import org.dabuntu.component.classFactory.annotation.InOutLogging;
@@ -12,9 +12,13 @@ import org.dabuntu.sample.prop.RootProp;
 import org.dabuntu.sample.web.repository.Products;
 import org.dabuntu.sample.web.service.ProductService;
 import org.dabuntu.sample.web.session.UserSession;
+import org.dabuntu.util.format.StringLineBuilder;
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.Controller;
 import org.dabuntu.web.annotation.PathVariable;
+import org.dabuntu.web.annotation.RequestBody;
+import org.dabuntu.web.annotation.RequestCookie;
+import org.dabuntu.web.annotation.Session;
 import org.dabuntu.web.def.HttpMethod;
 
 import java.io.IOException;
@@ -34,8 +38,6 @@ public class IndexController {
 	// ===================================================================================
 	//                                                                          Dep Inject
 	//                                                                          ==========
-	@Inject
-	private UserSession userSession;
 	@Inject
 	private RootProp prop;
 	@Inject
@@ -71,7 +73,7 @@ public class IndexController {
 			case "scala":
 				return aboutScala();
 			default:
-				return String.format("Sorry... wiki about '%s' is not ready m(_ _)m");
+				return String.format("Sorry... wiki about '%s' is not ready m(_ _)m", target);
 		}
 	}
 
@@ -94,6 +96,27 @@ public class IndexController {
 		InstanceFactory instanceFactory = new InstanceFactory(instanceMap);
 		instanceFactory.run();
 		return instanceFactory.getDependencyText();
+	}
+
+	// -----------------------------------------------------
+	//                                               Session
+	//                                               -------
+	@Action(url = "/request/test", method = HttpMethod.GET)
+	public String requestTestGet() {
+		StringLineBuilder sb = new StringLineBuilder();
+		sb.appendLine("<form action='/request/test/10' method='post'>");
+		sb.appendLine("<input type='text' name='data1'>");
+		sb.appendLine("<input type='text' name='data2'>");
+		sb.appendLine("<input type='submit' value='そーしん'>");
+		sb.appendLine("</form>");
+		return sb.toString();
+	}
+	@Action(url = "/request/test/{userId}", method = HttpMethod.POST)
+	public String authPost(// @Session UserSession userSession,
+							@PathVariable("userId") String userId,
+							@RequestCookie IndexCookie cookie,
+							@RequestBody IndexForm form) {
+		return String.format("here is auth<br><p>data1 is %s</p><br><p>data2 is %s</p><p>cookie('key1') is %s</p><br><p>cookie('key2') is %s</p>",form.getData1(), form.getData2(), cookie.getKey1(), cookie.getKey2());
 	}
 
 	private String getProductInfo(Products.Product product) {

@@ -1,10 +1,11 @@
 package org.dabuntu.web.core;
 
 import org.dabuntu.web.container.ActionContainer;
-import org.dabuntu.web.container.BindPathVariable;
-import org.dabuntu.web.container.MappedActionContainer;
-import org.dabuntu.web.container.UriBindAction;
-import org.dabuntu.web.container.raw.RawUrlVariableBinding;
+import org.dabuntu.web.container.ControllerAction;
+import org.dabuntu.web.container.PathVariableBinding;
+import org.dabuntu.web.context.MappedActionContainer;
+import org.dabuntu.web.container.DefinedAction;
+import org.dabuntu.web.container.ResolvedArgument;
 import org.dabuntu.web.def.HttpMethod;
 import org.dabuntu.web.exception.ActionNotFoundException;
 
@@ -15,12 +16,12 @@ import java.util.List;
 /**
  * @author ubuntu 2016/10/07.
  */
-public class ActionResolver {
+public class ActionFinder {
 
 	private class UrlMatchResult {
 		private boolean match;
-		private UriBindAction action;
-		private List<RawUrlVariableBinding> rawBindings;
+		private DefinedAction action;
+		private List<ResolvedArgument> rawBindings;
 
 		public UrlMatchResult() {
 			rawBindings = new ArrayList<>();
@@ -30,11 +31,11 @@ public class ActionResolver {
 			this.match = match;
 		}
 
-		public void setAction(UriBindAction action) {
+		public void setAction(DefinedAction action) {
 			this.action = action;
 		}
 
-		public void addBind(RawUrlVariableBinding rawBinding) {
+		public void addBind(ResolvedArgument rawBinding) {
 			this.rawBindings.add(rawBinding);
 		}
 
@@ -44,28 +45,30 @@ public class ActionResolver {
 
 		public ActionContainer getActionContainer() {
 			return new ActionContainer(
-				this.action,
+				new ControllerAction(action.getControllerClass(), action.getActionMethod()),
 				this.rawBindings
 			);
 		}
 	}
 
-	public ActionResolver() {}
+	public ActionFinder() {}
 
-	public ActionContainer resolve(HttpServletRequest request, MappedActionContainer container) {
-		List<UriBindAction> bindActions = filterByHttpMethod(request, container);
+	public ActionContainer find(HttpServletRequest request, MappedActionContainer container) {
+		// classify by HttpMethod
+		List<DefinedAction> bindActions = filterByHttpMethod(request, container);
 
+		// find Action by Url
 		ActionContainer bindingResult = findAction(request, bindActions);
 
 		return bindingResult;
 	}
 
-	private List<UriBindAction> filterByHttpMethod(HttpServletRequest request, MappedActionContainer container) {
+	private List<DefinedAction> filterByHttpMethod(HttpServletRequest request, MappedActionContainer container) {
 		HttpMethod httpMethod = HttpMethod.codeOf(request.getMethod());
 		return container.getContainer().get(httpMethod);
 	}
 	
-	private ActionContainer findAction(HttpServletRequest request, List<UriBindAction> bindActions) {
+	private ActionContainer findAction(HttpServletRequest request, List<DefinedAction> bindActions) {
 		if (bindActions == null) {
 			throw  actionNotFoundException(request);
 		}
@@ -77,10 +80,10 @@ public class ActionResolver {
 			.orElseThrow(() -> actionNotFoundException(request));
 	}
 
-	private UrlMatchResult matchUrl(String requestPath, UriBindAction action) {
+	private UrlMatchResult matchUrl(String requestPath, DefinedAction action) {
 		UrlMatchResult result = new UrlMatchResult();
 		String[] requestParts = requestPath.split("/");
-		String[] computedParts = action.getUriComputedContainer().getComputedUri().split("/");
+		String[] computedParts = action.getComputedUriVariableContainer().getComputedUri().split("/");
 
 		if(requestParts.length != computedParts.length) {
 			result.setMatch(false);
@@ -93,14 +96,14 @@ public class ActionResolver {
 
 			// if PathVariable
 			if (computedPart.startsWith("$$")) {
-				BindPathVariable pathVariable = null;
-				for (BindPathVariable bindPathVariable : action.getUriComputedContainer().getVariables()) {
-					if (computedPart.equals(bindPathVariable.getPathVariableMark())) {
-						pathVariable = bindPathVariable;
+				PathVariableBinding pathVariable = null;
+				for (PathVariableBinding defPathVar : action.getComputedUriVariableContainer().getVariables()) {
+					if (computedPart.equals(defPathVar.getPathVariableMark())) {
+						pathVariable = defPathVar;
 						break;
 					}
 				}
-				result.addBind(new RawUrlVariableBinding(
+				result.addBind(new ResolvedArgument(
 					pathVariable,
 					requestPart
 				));

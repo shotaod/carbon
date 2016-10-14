@@ -1,26 +1,24 @@
 package org.dabuntu.web.container;
 
-import org.dabuntu.web.container.raw.RawUrlVariableBinding;
-
 import java.util.List;
 
 /**
  * @author ubuntu 2016/10/05.
  */
 public class ActionContainer {
-	private UriBindAction action;
-	private List<RawUrlVariableBinding> rawBindings;
+	private ControllerAction controllerAction;
+	private List<ResolvedArgument> resolvedArguments;
 
-	public ActionContainer(UriBindAction action, List<RawUrlVariableBinding> rawBindings) {
-		this.action = action;
-		this.rawBindings = rawBindings;
+	public ActionContainer(ControllerAction controllerAction, List<ResolvedArgument> resolvedArguments) {
+		this.controllerAction = controllerAction;
+		this.resolvedArguments = resolvedArguments;
 	}
 
-	public UriBindAction getAction() {
-		return action;
+	public ControllerAction getControllerAction() {
+		return controllerAction;
 	}
 
-	public List<RawUrlVariableBinding> getRawBindings() {
-		return rawBindings;
+	public List<ResolvedArgument> getResolvedArguments() {
+		return resolvedArguments;
 	}
 }

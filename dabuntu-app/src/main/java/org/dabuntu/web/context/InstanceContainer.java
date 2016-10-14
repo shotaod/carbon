@@ -1,4 +1,4 @@
-package org.dabuntu.web.container;
+package org.dabuntu.web.context;
 
 import java.util.Map;
 

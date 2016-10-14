@@ -6,11 +6,11 @@ import java.util.List;
 /**
  * @author ubuntu 2016/10/08.
  */
-public class ComputedUriContainer {
+public class ComputedUriVariableContainer {
 	private String computedUri;
-	private List<BindPathVariable> variables;
+	private List<PathVariableBinding> variables;
 
-	public ComputedUriContainer(String computedUri, List<BindPathVariable> variables) {
+	public ComputedUriVariableContainer(String computedUri, List<PathVariableBinding> variables) {
 		this.computedUri = computedUri;
 		this.variables = variables;
 	}
@@ -19,7 +19,7 @@ public class ComputedUriContainer {
 		return computedUri;
 	}
 
-	public List<BindPathVariable> getVariables() {
+	public List<PathVariableBinding> getVariables() {
 		return variables;
 	}
 }

@@ -2,9 +2,9 @@ package org.dabuntu.web.core;
 
 import org.dabuntu.web.container.ActionContainer;
 import org.dabuntu.web.container.ActionResult;
-import org.dabuntu.web.container.InstanceContainer;
-import org.dabuntu.web.container.UriBindAction;
-import org.dabuntu.web.container.raw.RawUrlVariableBinding;
+import org.dabuntu.web.container.ControllerAction;
+import org.dabuntu.web.context.InstanceContainer;
+import org.dabuntu.web.container.ResolvedArgument;
 import org.dabuntu.web.exception.ActionInvokeException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,13 +30,13 @@ public class ActionExecutor {
 	}
 
 	public ActionResult execute(ActionContainer actionContainer, InstanceContainer instancePool) {
-		UriBindAction action = actionContainer.getAction();
-		List<RawUrlVariableBinding> rawBindings = actionContainer.getRawBindings();
+		ControllerAction action = actionContainer.getControllerAction();
+		List<ResolvedArgument> rawBindings = actionContainer.getResolvedArguments();
 
 		// get Controller
 		Object controller = this.getController(action, instancePool);
 
-		// resolve Arguments
+		// find Arguments
 		ResolvedArguments resolvedArguments = this.resolveArguments(action, rawBindings, instancePool);
 
 		// execute Action
@@ -48,8 +48,8 @@ public class ActionExecutor {
 	// ===================================================================================
 	//                                                                  Resolve Controller
 	//                                                                  ==================
-	private Object getController(UriBindAction action, InstanceContainer instancesContainer) {
-		Class controllerClass = action.getControllerClass();
+	private Object getController(ControllerAction controllerAction, InstanceContainer instancesContainer) {
+		Class controllerClass = controllerAction.getController();
 		Object controllerInstance = findInstance(controllerClass, instancesContainer.getInstances());
 
 		return controllerInstance;
@@ -67,14 +67,14 @@ public class ActionExecutor {
 	// ===================================================================================
 	//                                                                   Resolve Arguments
 	//                                                                   =================
-	private ResolvedArguments resolveArguments(UriBindAction bindAction,
-											   List<RawUrlVariableBinding> rawBindings,
+	private ResolvedArguments resolveArguments(ControllerAction controllerAction,
+											   List<ResolvedArgument> rawBindings,
 											   InstanceContainer instanceContainer) {
-		Object[] resolvedArgs = Arrays.stream(bindAction.getAction().getParameters())
+		Object[] resolvedArgs = Arrays.stream(controllerAction.getAction().getParameters())
 				.map(arg -> {
-					for (RawUrlVariableBinding rawBinding : rawBindings) {
+					for (ResolvedArgument rawBinding : rawBindings) {
 						if (rawBinding.equals(arg)) {
-							return arg.getType().cast(rawBinding.getUrlPartValue());
+							return arg.getType().cast(rawBinding.getValue());
 						}
 					}
 
@@ -88,7 +88,7 @@ public class ActionExecutor {
 	// ===================================================================================
 	//                                                                      Execute Method
 	//                                                                      ==============
-	private ActionResult executeAction(Object controller, UriBindAction action, ResolvedArguments resolvedArguments) {
+	private ActionResult executeAction(Object controller, ControllerAction action, ResolvedArguments resolvedArguments) {
 
 		Object result = null;
 		try {
