@@ -1,15 +1,16 @@
 package org.dabuntu.web.handler;
 
+import org.dabuntu.component.annotation.Component;
+import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.util.format.TagAttr;
-import org.dabuntu.web.container.request.ParsedRequest;
-import org.dabuntu.web.core.ActionArgumentResolver;
-import org.dabuntu.web.core.ActionExecutor;
-import org.dabuntu.web.annotation.Default;
-import org.dabuntu.web.context.ApplicationPool;
-import org.dabuntu.web.core.ActionFinder;
-import org.dabuntu.web.core.ActionWriter;
 import org.dabuntu.web.container.ActionContainer;
 import org.dabuntu.web.container.ActionResult;
+import org.dabuntu.web.container.request.ParsedRequest;
+import org.dabuntu.web.context.ApplicationPool;
+import org.dabuntu.web.core.ActionArgumentResolver;
+import org.dabuntu.web.core.ActionExecutor;
+import org.dabuntu.web.core.ActionFinder;
+import org.dabuntu.web.core.ActionFinisher;
 import org.dabuntu.web.core.RequestParser;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.HandlerWrapper;
@@ -26,30 +27,29 @@ import java.util.Enumeration;
 /**
  * @author ubuntu 2016/10/04.
  */
-@Default
-public class DefaultHandler extends HandlerWrapper {
+@Component
+public class CoreHandler extends HandlerWrapper {
 
-	private Logger logger = LoggerFactory.getLogger(DefaultHandler.class);
+	private static Logger logger = LoggerFactory.getLogger(CoreHandler.class);
 
-	private ApplicationPool pool;
+	private ApplicationPool pool = ApplicationPool.instance;
+	@Inject
 	private ActionFinder actionFinder;
+	@Inject
 	private RequestParser requestParser;
+	@Inject
 	private ActionArgumentResolver actionArgumentResolver;
+	@Inject
 	private ActionExecutor actionExecutor;
-	private ActionWriter actionWriter;
+	@Inject
+	private ActionFinisher actionFinisher;
 
-	public DefaultHandler() {
-		this.pool = ApplicationPool.instance;
-		this.actionFinder = new ActionFinder();
-		this.requestParser = new RequestParser();
-		this.actionArgumentResolver = new ActionArgumentResolver();
-		this.actionExecutor = new ActionExecutor();
-		this.actionWriter = new ActionWriter();
-	}
+	public CoreHandler() {}
 
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+		long start = System.currentTimeMillis();
 		// TODO Request Filtering
 		final boolean createIfNecessary = true;
 		HttpSession session = request.getSession(createIfNecessary);
@@ -71,15 +71,15 @@ public class DefaultHandler extends HandlerWrapper {
 		ActionContainer argResolvedActionContainer = actionArgumentResolver.resolve(parsedRequest, pool.getSessionPool(), actionContainer);
 
 		// execute action container
-		ActionResult actionResult = actionExecutor.execute(argResolvedActionContainer, pool.getInstancePool());
+		ActionResult actionResult = actionExecutor.execute(argResolvedActionContainer, pool.getAppPool());
 
-		// write response
-		actionWriter.write(baseRequest, response, actionResult);
+		// finish response
+		actionFinisher.finish(baseRequest, response, actionResult);
 
-		response.setStatus(HttpServletResponse.SC_OK);
-		baseRequest.setHandled(true);
+		long time = System.currentTimeMillis() - start;
+
+		logger.debug("time take {}milli sec", time);
 
 		super.handle(target, baseRequest, request, response);
-		// TODO Response Filtering
 	}
 }

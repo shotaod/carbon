@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * @author ubuntu 2016/10/01
  */
-public class ClassBaseScanner {
+public class TargetBaseScanner {
 
 	// ===================================================================================
 	//                                                                          Singleton
 	//                                                                          ==========
-	public ClassBaseScanner() {
+	public TargetBaseScanner() {
 		this.classLoader = Thread.currentThread().getContextClassLoader();
 	}
 
@@ -31,7 +31,7 @@ public class ClassBaseScanner {
 	// ===================================================================================
 	//                                                                       Public Method
 	//                                                                       =============
-	public List<Class> run(Class scanBase) throws IOException {
+	public List<Class> scan(Class scanBase) throws IOException {
 		walkPackage(scanBase.getPackage());
 
 		return this.classes;

@@ -1,6 +1,6 @@
-package org.dabuntu.component.classFactory.aop.interceptor;
+package org.dabuntu.component.generator.aop.interceptor;
 
-import org.dabuntu.component.classFactory.annotation.InOutLogging;
+import org.dabuntu.component.generator.aop.annotation.InOutLogging;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.dabuntu.util.format.BoxedTitleMessage;

@@ -1,11 +1,12 @@
 package org.dabuntu.web.core;
 
+import org.dabuntu.component.annotation.Component;
 import org.dabuntu.web.container.ActionContainer;
 import org.dabuntu.web.container.ControllerAction;
-import org.dabuntu.web.container.PathVariableBinding;
-import org.dabuntu.web.context.MappedActionContainer;
 import org.dabuntu.web.container.DefinedAction;
+import org.dabuntu.web.container.PathVariableBinding;
 import org.dabuntu.web.container.ResolvedArgument;
+import org.dabuntu.web.context.MappedActionContainer;
 import org.dabuntu.web.def.HttpMethod;
 import org.dabuntu.web.exception.ActionNotFoundException;
 
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * @author ubuntu 2016/10/07.
  */
+@Component
 public class ActionFinder {
 
 	private class UrlMatchResult {

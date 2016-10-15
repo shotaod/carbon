@@ -1,7 +1,7 @@
 package org.dabuntu.sample.prop;
 
-import org.dabuntu.component.instanceFactory.annotation.Component;
-import org.dabuntu.component.instanceFactory.annotation.Inject;
+import org.dabuntu.component.annotation.Component;
+import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.sample.prop.sub.SubProp1;
 import org.dabuntu.sample.prop.sub.SubProp2;
 

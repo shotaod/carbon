@@ -1,5 +1,6 @@
 package org.dabuntu.web.core;
 
+import org.dabuntu.component.annotation.Component;
 import org.dabuntu.web.container.request.MappedCookie;
 import org.dabuntu.web.container.request.MappedRequestBody;
 import org.dabuntu.web.container.request.ParsedRequest;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 /**
  * @author ubuntu 2016/10/12.
  */
+@Component
 public class RequestParser {
 
 	// -----------------------------------------------------

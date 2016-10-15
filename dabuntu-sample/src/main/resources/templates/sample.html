@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xml:lang="ja" lang="ja">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dabunt Sample</title>
+</head>
+<body>
+<h1>Test Result Below</h1>
+<p>
+    about cookie and form data
+</p>
+<form action="/request/test" method="POST">
+    <ul>
+        <li><input type="text" name="data1"/></li>
+        <li><input type="text" name="data2"/></li>
+        <li><input type="submit" value="submit"/></li>
+    </ul>
+</form>
+<ul th:if="${model}">
+    <li>
+        <pre>Form-1<span th:text="${model.form1}"></span></pre>
+    </li>
+    <li>
+        <pre>Form-2<span th:text="${model.form2}"></span></pre>
+    </li>
+    <li>
+        <pre>Cookie-1<span th:text="${model.cookie1}"></span></pre>
+    </li>
+    <li>
+        <pre>Cookie-2<span th:text="${model.cookie2}"></span></pre>
+    </li>
+</ul>
+</body>
+</html>

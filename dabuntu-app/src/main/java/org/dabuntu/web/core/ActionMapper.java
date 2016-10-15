@@ -1,15 +1,14 @@
 package org.dabuntu.web.core;
 
-import org.dabuntu.util.format.BoxedTitleMessage;
+import org.dabuntu.component.annotation.Component;
 import org.dabuntu.util.SimpleKeyValue;
+import org.dabuntu.util.format.BoxedTitleMessage;
 import org.dabuntu.util.format.TagAttr;
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.Controller;
-import org.dabuntu.web.annotation.Default;
-import org.dabuntu.web.annotation.PathVariable;
 import org.dabuntu.web.container.ComputedUriVariableContainer;
-import org.dabuntu.web.context.MappedActionContainer;
 import org.dabuntu.web.container.DefinedAction;
+import org.dabuntu.web.context.MappedActionContainer;
 import org.dabuntu.web.def.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +24,7 @@ import java.util.stream.Stream;
 /**
  * @author ubuntu 2016/10/05.
  */
-@Default
+@Component
 public class ActionMapper {
 
 	private static Logger logger = LoggerFactory.getLogger(ActionMapper.class);
@@ -55,7 +53,7 @@ public class ActionMapper {
 		Map<HttpMethod, List<Container>> collect = classes.stream()
 				.filter(clazz -> clazz.isAnnotationPresent(Controller.class))
 				.flatMap(clazz -> {
-					// get actions
+					// forClient actions
 					return Arrays.stream(clazz.getMethods())
 							// filtering Action
 							.filter(method -> method.isAnnotationPresent(Action.class))

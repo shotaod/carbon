@@ -1,6 +1,6 @@
 package org.dabuntu.sample.web.service;
 
-import org.dabuntu.component.instanceFactory.annotation.Component;
+import org.dabuntu.component.annotation.Component;
 import org.dabuntu.sample.exception.ResouceNotFoundException;
 import org.dabuntu.sample.web.repository.Products;
 

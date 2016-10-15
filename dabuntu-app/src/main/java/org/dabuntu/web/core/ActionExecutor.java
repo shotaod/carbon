@@ -1,10 +1,11 @@
 package org.dabuntu.web.core;
 
+import org.dabuntu.component.annotation.Component;
 import org.dabuntu.web.container.ActionContainer;
 import org.dabuntu.web.container.ActionResult;
 import org.dabuntu.web.container.ControllerAction;
-import org.dabuntu.web.context.InstanceContainer;
 import org.dabuntu.web.container.ResolvedArgument;
+import org.dabuntu.web.context.InstanceContainer;
 import org.dabuntu.web.exception.ActionInvokeException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,6 +17,7 @@ import java.util.Map;
 /**
  * @author ubuntu 2016/10/07.
  */
+@Component
 public class ActionExecutor {
 	private class ResolvedArguments {
 		private Object[] args;
@@ -33,7 +35,7 @@ public class ActionExecutor {
 		ControllerAction action = actionContainer.getControllerAction();
 		List<ResolvedArgument> rawBindings = actionContainer.getResolvedArguments();
 
-		// get Controller
+		// forClient Controller
 		Object controller = this.getController(action, instancePool);
 
 		// find Arguments

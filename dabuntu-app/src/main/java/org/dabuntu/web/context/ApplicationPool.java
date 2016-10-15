@@ -9,12 +9,23 @@ public class ApplicationPool {
 	// ===================================================================================
 	//                                                                                Pool
 	//                                                                                ====
-	// application scoped
-	private static InstanceContainer instancePool;
-	private static MappedActionContainer actionPool;
+	// -----------------------------------------------------
+	//                                               application scoped
+	//                                               -------
+	// base pool
+	private static InstanceContainer appInstancePool;
+	// separate with app pool for search action easily
+	private static MappedActionContainer actionMapPool;
 
-	// session scoped
+	// -----------------------------------------------------
+	//                                               session scoped
+	//                                               -------
 	private static SessionContainer sessionPool;
+
+	// -----------------------------------------------------
+	//                                               request scoped
+	//                                               -------
+	private static RequestContainer requestPool = RequestContainer.instance;
 
 	// ===================================================================================
 	//
@@ -23,23 +34,26 @@ public class ApplicationPool {
 
 	private ApplicationPool() {}
 
-	public void setPool(Map<Class, Object> pool) {
-		ApplicationPool.instancePool = new InstanceContainer(pool);
+	public void setPool(Map<Class, Object> controllers) {
+		ApplicationPool.appInstancePool = new InstanceContainer(controllers);
 	}
 	public void setPool(MappedActionContainer mappedActionContainer) {
-		ApplicationPool.actionPool = mappedActionContainer;
+		ApplicationPool.actionMapPool = mappedActionContainer;
 	}
 	public void setPool(SessionContainer sessionPool) {
 		ApplicationPool.sessionPool = sessionPool;
 	}
 
-	public InstanceContainer getInstancePool() {
-		return instancePool;
+	public InstanceContainer getAppPool() {
+		return appInstancePool;
 	}
 	public MappedActionContainer getActionPool() {
-		return actionPool;
+		return actionMapPool;
 	}
 	public SessionContainer getSessionPool() {
 		return sessionPool;
+	}
+	public RequestContainer getRequestPool() {
+		return requestPool;
 	}
 }

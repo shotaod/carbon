@@ -85,7 +85,7 @@ public class PathVariableResolver {
 			throw new IllegalArgumentException();
 		}
 
-		// get Annotation @Action
+		// forClient Annotation @Action
 		Action actionAnnotation = actionMethod.getDeclaredAnnotation(Action.class);
 
 		// extract bind target arguments by @PathVariable

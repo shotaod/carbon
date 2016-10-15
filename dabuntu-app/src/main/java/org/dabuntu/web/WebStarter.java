@@ -1,28 +1,28 @@
 package org.dabuntu.web;
 
-import org.dabuntu.component.ComponentManager;
+import org.dabuntu.component.ComponentFaced;
+import org.dabuntu.web.context.InstanceContainer;
 import org.dabuntu.web.context.MappedActionContainer;
 import org.dabuntu.web.context.ApplicationPool;
 import org.dabuntu.web.core.ActionMapper;
 import org.dabuntu.web.def.FactoryAcceptAnnotations;
 import org.dabuntu.web.def.Tomato;
-import org.dabuntu.web.handler.DefaultHandler;
+import org.dabuntu.web.handler.CoreHandler;
 import org.dabuntu.web.handler.ErrorWrapper;
 import org.dabuntu.web.handler.RequestLoggingHandler;
-import org.eclipse.jetty.deploy.DeploymentManager;
-import org.eclipse.jetty.deploy.providers.WebAppProvider;
-import org.eclipse.jetty.server.Handler;
+import org.dabuntu.web.handler.RequestScopeWrapper;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.HandlerWrapper;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author ubuntu 2016/10/06.
@@ -37,9 +37,11 @@ public class WebStarter {
 	// ===================================================================================
 	//                                                                            Settings
 	//                                                                            ========
+	private Class confBase = ConfigurationBase.class;
 	private int port = 8080;
-	private Handler handler = new DefaultHandler();
-	private ComponentManager componentManager = new ComponentManager();
+
+	// TODO configuration
+	private ComponentFaced componentFaced = new ComponentFaced();
 	private ActionMapper actionMapper = new ActionMapper();
 
 	// ===================================================================================
@@ -48,12 +50,6 @@ public class WebStarter {
 	public void setPort(int port) {
 		this.port = port;
 	}
-	public void setHandler(Handler handler) {
-		this.handler = handler;
-	}
-	public void setComponentManager(ComponentManager componentManager) {
-		this.componentManager = componentManager;
-	}
 
 	// ===================================================================================
 	//                                                                              Public
@@ -61,23 +57,35 @@ public class WebStarter {
 	public void start(Class scanBase) throws Exception{
 		logger.info(new Tomato().tomato);
 
-		// initialize managed object
-		Map<Class, Object> objectMap = componentManager.initialize(scanBase, FactoryAcceptAnnotations.get());
+		// resolve configurations and webInstances
+		setupPool(scanBase);
 
-		// mapping request to action
-		MappedActionContainer actionContainer = actionMapper.map(objectMap.keySet().stream().collect(Collectors.toList()));
+		// get Dispatcher
+		InstanceContainer appInstancePool = ApplicationPool.instance.getAppPool();
+		CoreHandler dispatcher = appInstancePool.getInstanceByType(CoreHandler.class);
 
-		// set up app pool
-		ApplicationPool.instance.setPool(objectMap);
-		ApplicationPool.instance.setPool(actionContainer);
-
-		runApplication();
+		runApplication(dispatcher);
 	}
 
 	// ===================================================================================
 	//                                                                             Private
 	//                                                                             =======
-	private void runApplication() throws Exception{
+	private void setupPool(Class scanBase) throws Exception{
+		// load Configuration -> create configurations
+		Set<Class> frameworkManaged = componentFaced.scan(confBase, FactoryAcceptAnnotations.basic());
+		Set<Class> clientManaged = componentFaced.scan(scanBase, FactoryAcceptAnnotations.basic());
+		Set<Class> allManaged = Stream.concat(frameworkManaged.stream(), clientManaged.stream()).collect(Collectors.toSet());
+		Map<Class, Object> webInstances = componentFaced.generate(allManaged);
+
+		// mapping request to action
+		MappedActionContainer mappedActionPool = actionMapper.map(webInstances.keySet().stream().collect(Collectors.toList()));
+
+		// set up app pool
+		ApplicationPool.instance.setPool(webInstances);
+		ApplicationPool.instance.setPool(mappedActionPool);
+	}
+
+	private void runApplication(HandlerWrapper dispatcher) throws Exception{
 		Server server = new Server(port);
 
 		// base
@@ -97,33 +105,18 @@ public class WebStarter {
 		// Error Handler
 		ErrorWrapper errorWrapper = new ErrorWrapper();
 
-		// Dispatcher
-		DefaultHandler defaultHandler = new DefaultHandler();
+		RequestScopeWrapper requestScopeWrapper = new RequestScopeWrapper();
 
-		// context -> session -> logging -> error -> dispatcher
+		// context -> session -> logging -> error -> request scope -> dispatcher
 		baseContext.setHandler(sessionHandler);
 		sessionHandler.setHandler(logHandler);
 		logHandler.setHandler(errorWrapper);
-		errorWrapper.setHandler(defaultHandler);
+		errorWrapper.setHandler(requestScopeWrapper);
+		requestScopeWrapper.setHandler(dispatcher);
 
 		server.setHandler(baseContext);
 
 		server.start();
 		server.join();
-	}
-
-	// ===================================================================================
-	//                                                                          Hot Deploy
-	//                                                                          ==========
-	private DeploymentManager deploymentManager() {
-		DeploymentManager manager = new DeploymentManager();
-		manager.setContexts(new ContextHandlerCollection());
-
-		WebAppProvider webAppProvider = new WebAppProvider();
-		webAppProvider.setMonitoredDirName(".");
-
-		manager.setAppProviders(Collections.singleton(webAppProvider));
-
-		return manager;
 	}
 }

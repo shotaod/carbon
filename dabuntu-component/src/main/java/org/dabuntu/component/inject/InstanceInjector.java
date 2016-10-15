@@ -1,15 +1,15 @@
-package org.dabuntu.component.instanceFactory;
+package org.dabuntu.component.inject;
 
 import org.dabuntu.component.exception.ClassNotRegisterdException;
-import org.dabuntu.component.instanceFactory.annotation.Component;
-import org.dabuntu.component.instanceFactory.annotation.Inject;
 import org.dabuntu.util.format.StringLineBuilder;
 import org.dabuntu.util.format.TagAttr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.dabuntu.component.annotation.Inject;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,32 +17,43 @@ import java.util.stream.Stream;
 /**
  * @author ubuntu 2016/10/01
  */
-public class InstanceFactory {
+public class InstanceInjector {
 
 	// ===================================================================================
 	//                                                                          Logger
 	//                                                                          ==========
-	private Logger logger = LoggerFactory.getLogger(InstanceFactory.class);
+	private Logger logger = LoggerFactory.getLogger(InstanceInjector.class);
 
 	// ===================================================================================
 	//                                                                          	Field
 	//                                                                              ======
 	private Map<Class, Object> singletons;
+	private List<Class> targets;
 
-	public InstanceFactory(Map<Class, Object> singletons) {
+	public InstanceInjector() {
+	}
+
+	public InstanceInjector(Map<Class, Object> singletons) {
 		this.singletons = singletons;
 	}
 
-	public Map<Class, Object> run() throws IOException{
-		this.singletons.entrySet().stream()
-			.filter(entry -> entry.getKey().isAnnotationPresent(Component.class))
-			.forEach(entry -> this.inject(entry.getKey(), entry.getValue()));
+	public InstanceInjector with(Map<Class, Object> singletons) {
+		this.singletons = singletons;
+		return this;
+	}
+
+	public Map<Class, Object> inject() throws IOException{
+		this.singletons.entrySet().forEach(entry -> this.inject(entry.getKey(), entry.getValue()));
 
 		showDependencies();
 
 		return this.singletons;
 	}
 
+
+	// ===================================================================================
+	//                                                                          Core Function
+	//                                                                          ==========
 	private Object inject(Class clazz, Object object) {
 		Arrays.stream(clazz.getDeclaredFields())
 				.filter(field -> field.isAnnotationPresent(Inject.class))
@@ -64,7 +75,7 @@ public class InstanceFactory {
 	}
 
 	private void throwClassNotRegisteredException(Class clazz) {
-		throw new ClassNotRegisterdException(" " + clazz.getName() + "is not registered");
+		throw new ClassNotRegisterdException(" " + clazz.getName() + " is not registered");
 	}
 
 	// ===================================================================================

@@ -1,4 +1,4 @@
-package org.dabuntu.component.classFactory.annotation;
+package org.dabuntu.component.generator.aop.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
