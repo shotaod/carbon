@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 /**
+ * TODO 疎結合 jetty の 構造依存から脱出させる
  * @author ubuntu 2016/10/04.
  */
 @Component

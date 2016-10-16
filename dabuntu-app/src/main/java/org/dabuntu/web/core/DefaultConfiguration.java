@@ -14,6 +14,7 @@ public class DefaultConfiguration {
 	@Component
 	public TemplateEngine templateEngine() {
 		TemplateEngine templateEngine = new TemplateEngine();
+
 		// load template from classpath
 		ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
 		resolver.setTemplateMode("XHTML");
