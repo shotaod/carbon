@@ -35,6 +35,7 @@ public class RequestParser {
 
 		MappedCookie mappedCookie = this.extractCookie(request);
 
+		// if Http Method is GET, process only cookie
 		if (HttpMethod.GET.getCode().equals(request.getMethod())) {
 			return ParsedRequest.forGet(mappedCookie);
 		}
@@ -47,7 +48,8 @@ public class RequestParser {
 	private MappedCookie extractCookie(HttpServletRequest request) {
 		return Optional.ofNullable(request.getHeader("Cookie"))
 			.map(rawCookie -> {
-				Map<String, String> map = Arrays.stream(rawCookie.trim().split(";"))
+				Map<String, String> map = Arrays.stream(rawCookie.split(";"))
+						.map(String::trim)
 						.collect(Collectors.toMap(
 								kv -> kv.split("=")[0],
 								kv -> kv.split("=")[1]

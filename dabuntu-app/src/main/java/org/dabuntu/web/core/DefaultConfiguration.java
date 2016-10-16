@@ -10,6 +10,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
  */
 @Configuration
 public class DefaultConfiguration {
+
 	@Component
 	public TemplateEngine templateEngine() {
 		TemplateEngine templateEngine = new TemplateEngine();
@@ -19,6 +20,9 @@ public class DefaultConfiguration {
 		resolver.setPrefix("templates/");
 		resolver.setSuffix(".html");
 		templateEngine.setTemplateResolver(resolver);
+
+		// manually initialize to prevent run initialize when calling process
+		templateEngine.getConfiguration();
 
 		return templateEngine;
 	}

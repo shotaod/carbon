@@ -29,11 +29,6 @@ public class ActionArgumentResolver {
 
 	public ActionContainer resolve(ParsedRequest parsedRequest, SessionContainer sessionContainer, ActionContainer actionContainer) {
 
-		// if GET do nothing;
-		if (HttpMethod.GET.equals(parsedRequest.getMethod())) {
-			return actionContainer;
-		}
-
 		Method action = actionContainer.getControllerAction().getAction();
 		Parameter[] parameters = action.getParameters();
 		// params defined in Method
@@ -50,7 +45,7 @@ public class ActionArgumentResolver {
 			if (parameter.isAnnotationPresent(RequestCookie.class)) {
 				Object resolveCookie = this.mappingCookie(parsedRequest.getMappedCookie(), parameter.getType());
 				resolvedArguments.add(new ResolvedArgument(parameter.getName(), resolveCookie));
-			} else if (parameter.isAnnotationPresent(RequestBody.class)) {
+			} else if (parameter.isAnnotationPresent(RequestBody.class) && !parsedRequest.getMethod().equals(HttpMethod.GET)) {
 				Object resolvedReqBody = this.mappingRequest(parsedRequest.getMappedRequestBody(), parameter.getType());
 				resolvedArguments.add(new ResolvedArgument(parameter.getName(), resolvedReqBody));
 			}

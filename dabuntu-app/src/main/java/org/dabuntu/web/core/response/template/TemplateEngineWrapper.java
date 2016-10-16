@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * TODO to be interface
  * @author ubuntu 2016/10/14.
  */
 @Component
@@ -31,6 +30,6 @@ public class TemplateEngineWrapper {
 
 		WebContext webContext = new WebContext(request, response, context.getContext("/"));
 		webContext.setVariables(source.getData());
-		this.templateEngine.process(source.getHtmlPath(), webContext, response.getWriter());
+		templateEngine.process(source.getHtmlPath(), webContext, response.getWriter());
 	}
 }

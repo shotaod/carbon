@@ -80,7 +80,7 @@ public class ActionExecutor {
 						}
 					}
 
-					return arg;
+					return null;
 				})
 				.toArray();
 
