@@ -40,7 +40,8 @@ public class RequestParser {
 			return ParsedRequest.forGet(mappedCookie);
 		}
 
-		MappedRequestBody mappedReqBody = new MappedRequestBody(this.contentMapperFactory(request).map());
+		Map<String, Object> map = this.contentMapperFactory(request).map();
+		MappedRequestBody mappedReqBody = new MappedRequestBody(map);
 
 		return new ParsedRequest(request.getMethod(), mappedCookie, mappedReqBody);
 	}

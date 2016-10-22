@@ -17,14 +17,20 @@ public class DefaultConfiguration {
 
 		// load template from classpath
 		ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-		resolver.setTemplateMode("XHTML");
+		resolver.setCharacterEncoding("utf-8");
+		resolver.setTemplateMode("HTML");
 		resolver.setPrefix("templates/");
 		resolver.setSuffix(".html");
 		templateEngine.setTemplateResolver(resolver);
 
 		// manually initialize to prevent run initialize when calling process
-		templateEngine.getConfiguration();
+		loadForced(templateEngine);
 
 		return templateEngine;
 	}
+
+	private void loadForced(TemplateEngine engine) {
+		engine.getConfiguration();
+	}
+
 }

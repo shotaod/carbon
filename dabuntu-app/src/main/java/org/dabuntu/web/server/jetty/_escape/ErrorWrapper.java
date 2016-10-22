@@ -1,8 +1,9 @@
-package org.dabuntu.web.handler;
+package org.dabuntu.web.server.jetty._escape;
 
-import org.dabuntu.web.context.ApplicationPool;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.HandlerWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,16 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author ubuntu 2016/10/15.
+ * @author ubuntu 2016/10/11.
  */
-public class RequestScopeWrapper extends HandlerWrapper {
+@Deprecated
+public class ErrorWrapper extends HandlerWrapper {
+	private static Logger logger = LoggerFactory.getLogger(ErrorWrapper.class);
+
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
-			ApplicationPool.instance.getRequestPool().setObject(request, HttpServletRequest.class);
 			super.handle(target, baseRequest, request, response);
-		} finally {
-			ApplicationPool.instance.getRequestPool().clear();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

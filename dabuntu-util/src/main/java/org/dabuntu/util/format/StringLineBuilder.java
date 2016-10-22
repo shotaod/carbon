@@ -10,8 +10,9 @@ public class StringLineBuilder {
 		this.sb = new StringBuilder();
 	}
 
-	public void append(Object o) {
+	public StringLineBuilder append(Object o) {
 		sb.append(o);
+		return this;
 	}
 
 

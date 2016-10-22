@@ -3,7 +3,7 @@ package org.dabuntu.web.core;
 import org.dabuntu.component.annotation.Component;
 import org.dabuntu.util.SimpleKeyValue;
 import org.dabuntu.util.format.BoxedTitleMessage;
-import org.dabuntu.util.format.TagAttr;
+import org.dabuntu.util.format.ChapterAttr;
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.Controller;
 import org.dabuntu.web.container.ComputedUriVariableContainer;
@@ -98,7 +98,7 @@ public class ActionMapper {
 			});
 		}).collect(Collectors.toList());
 		String boxedTitleLines = BoxedTitleMessage.produceLeft(kvs);
-		String s = TagAttr.getBuilder("Mapping Result").appendLine(boxedTitleLines).toString();
+		String s = ChapterAttr.getBuilder("Mapping Result").appendLine(boxedTitleLines).toString();
 		logger.debug(s);
 	}
 }

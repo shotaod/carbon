@@ -43,6 +43,12 @@
             <artifactId>jetty-all-server</artifactId>
             <version>8.2.0.v20160908</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.0.M10</version>
+        </dependency>
 
         <!-- Json パーサー -->
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
@@ -69,4 +75,6 @@
         </dependency>
 
     </dependencies>
+
+
 </project>

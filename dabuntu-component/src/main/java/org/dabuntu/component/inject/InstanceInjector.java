@@ -1,14 +1,16 @@
 package org.dabuntu.component.inject;
 
+import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.component.exception.ClassNotRegisterdException;
+import org.dabuntu.util.format.ChapterAttr;
+import org.dabuntu.util.format.SimpleSeparator;
 import org.dabuntu.util.format.StringLineBuilder;
-import org.dabuntu.util.format.TagAttr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.dabuntu.component.annotation.Inject;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,7 +44,7 @@ public class InstanceInjector {
 		return this;
 	}
 
-	public Map<Class, Object> inject() throws IOException{
+	public Map<Class, Object> inject() throws IOException {
 		this.singletons.entrySet().forEach(entry -> this.inject(entry.getKey(), entry.getValue()));
 
 		showDependencies();
@@ -62,7 +64,7 @@ public class InstanceInjector {
 						Object singleton = singletons.get(field.getType());
 
 						if (singleton == null) {
-							throwClassNotRegisteredException(field.getType());
+							throwClassNotRegisteredException(clazz, field.getType());
 						}
 
 						field.setAccessible(true);
@@ -74,24 +76,31 @@ public class InstanceInjector {
 		return object;
 	}
 
-	private void throwClassNotRegisteredException(Class clazz) {
-		throw new ClassNotRegisterdException(" " + clazz.getName() + " is not registered");
+	private void throwClassNotRegisteredException(Class parent, Class child) {
+		throw new ClassNotRegisterdException(String.format("class '%s' need @Inject '%s' ,but not registered", parent.getName(), child.getName()));
 	}
 
 	// ===================================================================================
 	//                                                                          Logging
 	//                                                                          ==========
 	private void showDependencies() {
-		StringLineBuilder sb = TagAttr.getBuilder("Injection Result");
-		this.singletons.forEach((k,v) -> {
-			this.showDependencies(sb, k, 0);
-		});
+		StringLineBuilder sb = ChapterAttr.getBuilder("Injection Result");
+		this.singletons.entrySet().stream()
+				.sorted((e1, e2) -> e1.getKey().getName().toLowerCase().compareTo(e2.getKey().getName().toLowerCase()))
+				.collect(Collectors.toMap(
+					e -> e.getKey(),
+					e -> e.getValue(),
+					(can1, can2) -> can1,
+					LinkedHashMap::new))
+				.forEach((k, v) -> {
+					this.showDependencies(sb, k, 0);
+				});
 		logger.debug(sb.toString());
 	}
 
 	public String getDependencyText() {
-		StringLineBuilder sb = TagAttr.getBuilder("Injection Result");
-		this.singletons.forEach((k,v) -> {
+		StringLineBuilder sb = ChapterAttr.getBuilder("Injection Result");
+		this.singletons.forEach((k, v) -> {
 			this.showDependencies(sb, k, 0);
 		});
 		return sb.toString();

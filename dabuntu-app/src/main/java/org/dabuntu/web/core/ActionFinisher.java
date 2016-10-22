@@ -4,7 +4,6 @@ import org.dabuntu.component.annotation.Component;
 import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.web.container.ActionResult;
 import org.dabuntu.web.core.response.ResponseProcessorFactory;
-import org.eclipse.jetty.server.Request;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,8 +16,13 @@ public class ActionFinisher {
 	@Inject
 	private ResponseProcessorFactory processorFactory;
 
-	public void finish(Request baseRequest, HttpServletResponse response, ActionResult result) {
+	public boolean finish(HttpServletResponse response, ActionResult result) {
 		boolean processed = processorFactory.from(result).process(response);
-		baseRequest.setHandled(processed);
+
+		if (processed) {
+			response.setStatus(HttpServletResponse.SC_OK);
+		}
+
+		return processed;
 	}
 }

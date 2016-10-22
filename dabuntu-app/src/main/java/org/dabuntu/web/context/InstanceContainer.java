@@ -1,5 +1,6 @@
 package org.dabuntu.web.context;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -7,6 +8,10 @@ import java.util.Map;
  */
 public class InstanceContainer {
 	private Map<Class, Object> instances;
+
+	public InstanceContainer() {
+		this.instances = new HashMap<>();
+	}
 
 	public InstanceContainer(Map<Class, Object> instances) {
 		this.instances = instances;

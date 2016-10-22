@@ -20,7 +20,7 @@ public class ApplicationPool {
 	// -----------------------------------------------------
 	//                                               session scoped
 	//                                               -------
-	private static SessionContainer sessionPool;
+	private static SessionContainer sessionPool = SessionContainer.instance;
 
 	// -----------------------------------------------------
 	//                                               request scoped
@@ -39,9 +39,6 @@ public class ApplicationPool {
 	}
 	public void setPool(MappedActionContainer mappedActionContainer) {
 		ApplicationPool.actionMapPool = mappedActionContainer;
-	}
-	public void setPool(SessionContainer sessionPool) {
-		ApplicationPool.sessionPool = sessionPool;
 	}
 
 	public InstanceContainer getAppPool() {

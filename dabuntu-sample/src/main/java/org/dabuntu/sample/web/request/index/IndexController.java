@@ -12,8 +12,9 @@ import org.dabuntu.web.annotation.RequestBody;
 import org.dabuntu.web.annotation.RequestCookie;
 import org.dabuntu.web.core.response.HtmlResponse;
 import org.dabuntu.web.def.HttpMethod;
-import org.slf4j.LoggerFactory;
+import org.dabuntu.web.def.Tomato;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,27 +39,40 @@ public class IndexController {
 	// -----------------------------------------------------
 	//                                               Basic
 	//                                               -------
+	@Action(url = "/about", method = HttpMethod.GET)
+	public HtmlResponse dabunt() {
+		String htmlString = new Tomato().tomato.replace("<", "・").replace(">", "・").replace("\n", "<br>");
+		HtmlResponse response = new HtmlResponse("about");
+		response.putData("model", htmlString);
+
+		return response;
+	}
+
 	@InOutLogging
 	@Action(url = "/products", method = HttpMethod.GET)
-	public String productsGet() {
+	public List<Products.Product> productsGet() {
 		List<Products.Product> products = service.getProductsAll();
-		return "call /products \n" + getProductInfo(products);
+//		return "call /products \n" + getProductInfo(products);
+
+		return products;
 	}
 
 	@InOutLogging
 	@Action(url = "/products/{productId}", method = HttpMethod.GET)
-	public String productGet(@PathVariable("productId") String productId) {
+	public Products.Product productGet(@PathVariable("productId") String productId) {
 		Integer id = Integer.parseInt(productId);
 		Products.Product product = service.getProduct(id);
-		return "call /products/" + id + "\n" + getProductInfo(product);
+//		return "call /products/" + id + "\n" + getProductInfo(product);
+
+		return product;
 	}
 
 	// -----------------------------------------------------
 	//                                               Path Variable
 	//                                               -------
 	@InOutLogging
-	@Action(url = "/wiki/{target}", method = HttpMethod.GET)
-	public String wikiGet (@PathVariable("target") String target) {
+	@Action(url = "/wiki/{target}/{target2}", method = HttpMethod.GET)
+	public String wikiGet (@PathVariable("target") String target, @PathVariable("target2") String target2) {
 		switch (target.toLowerCase()) {
 			case "java":
 				return aboutJava();
@@ -90,7 +104,7 @@ public class IndexController {
 		return response;
 	}
 	@Action(url = "/request/test", method = HttpMethod.POST)
-	public HtmlResponse authPost(// @Session SessionInfo userSession,
+	public HtmlResponse requestTestPost(// @Session SessionInfo userSession,
 								 // @PathVariable("userId") String userId,
 								 @RequestCookie IndexCookie cookie,
 								 @RequestBody IndexForm form) {

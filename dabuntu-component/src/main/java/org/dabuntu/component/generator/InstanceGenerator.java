@@ -1,6 +1,5 @@
 package org.dabuntu.component.generator;
 
-import com.google.common.base.Objects;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import org.dabuntu.component.annotation.Component;
@@ -64,6 +63,7 @@ public class InstanceGenerator {
 							return genByReflection(clazz).stream();
 						} catch (InstantiationException | IllegalAccessException e) {
 							e.printStackTrace();
+							System.exit(9);
 						}
 					}
 

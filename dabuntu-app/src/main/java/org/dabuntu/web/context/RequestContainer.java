@@ -9,6 +9,8 @@ public class RequestContainer {
 
 	public static RequestContainer instance = new RequestContainer();
 
+	private RequestContainer() {}
+
 	private static ThreadLocal<InstanceContainer> threadLocal = new ThreadLocal<InstanceContainer>() {
 		@Override
 		protected InstanceContainer initialValue() {
