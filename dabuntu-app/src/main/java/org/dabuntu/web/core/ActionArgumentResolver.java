@@ -4,6 +4,7 @@ import org.dabuntu.component.annotation.Component;
 import org.dabuntu.util.mapper.NameBasedObjectMapper;
 import org.dabuntu.web.annotation.RequestBody;
 import org.dabuntu.web.annotation.RequestCookie;
+import org.dabuntu.web.annotation.Session;
 import org.dabuntu.web.container.ActionContainer;
 import org.dabuntu.web.container.ResolvedArgument;
 import org.dabuntu.web.container.request.MappedCookie;
@@ -49,9 +50,13 @@ public class ActionArgumentResolver {
 				Object resolvedReqBody = this.mappingRequest(parsedRequest.getMappedRequestBody(), parameter.getType());
 				resolvedArguments.add(new ResolvedArgument(parameter.getName(), resolvedReqBody));
 			}
+			else if (parameter.isAnnotationPresent(Session.class)) {
+				Object sessionObj = sessionContainer.getObject(parameter.getType()).orElse(null);
+				resolvedArguments.add(new ResolvedArgument(parameter.getName(), sessionObj));
+			}
 		});
 
-		return new ActionContainer(actionContainer.getControllerAction(), resolvedArguments);
+		return new ActionContainer(actionContainer.getAuth(), actionContainer.getControllerAction(), resolvedArguments);
 	}
 
 	/**

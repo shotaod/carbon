@@ -47,6 +47,7 @@ public class ActionFinder {
 
 		public ActionContainer getActionContainer() {
 			return new ActionContainer(
+				action.getAuth(),
 				new ControllerAction(action.getControllerClass(), action.getActionMethod()),
 				this.rawBindings
 			);
@@ -59,7 +60,7 @@ public class ActionFinder {
 		// classify by HttpMethod
 		List<DefinedAction> bindActions = filterByHttpMethod(request, container);
 
-		// find Action by Url
+		// map Action by Url
 		ActionContainer bindingResult = findAction(request, bindActions);
 
 		return bindingResult;

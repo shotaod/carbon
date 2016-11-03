@@ -10,9 +10,11 @@ import org.dabuntu.component.annotation.Inject;
 public class DefaultChainFactory {
 
 	@Inject
-	private LoggingChain loggingChain;
-	@Inject
 	private ErrorWrapperChain errorWrapperChain;
+	@Inject
+	private CharacterEncodingChain encodingChain;
+	@Inject
+	private LoggingChain loggingChain;
 	@Inject
 	private SessionScopeChain sessionScopeChain;
 	@Inject
@@ -21,11 +23,12 @@ public class DefaultChainFactory {
 	private CoreDispatchChain coreDispatchChain;
 
 	public HttpHandlerChain parentChain() {
-		loggingChain
-				.setChain(errorWrapperChain)
+		errorWrapperChain
+				.setChain(encodingChain)
+				.setChain(loggingChain)
 				.setChain(sessionScopeChain)
 				.setChain(requestScopeChain)
 				.setChain(coreDispatchChain);
-		return loggingChain;
+		return errorWrapperChain;
 	}
 }

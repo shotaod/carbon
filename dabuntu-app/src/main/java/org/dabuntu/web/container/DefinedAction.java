@@ -1,5 +1,7 @@
 package org.dabuntu.web.container;
 
+import org.dabuntu.web.auth.Authentication;
+
 import java.lang.reflect.Method;
 
 /**
@@ -7,17 +9,26 @@ import java.lang.reflect.Method;
  */
 public class DefinedAction {
 	private ComputedUriVariableContainer computedUriVariableContainer;
+	private Authentication auth;
 	private Class controllerClass;
 	private Method actionMethod;
 
-	public DefinedAction(ComputedUriVariableContainer computedUriVariableContainer, Class controllerClass, Method actionMethod) {
+	public DefinedAction(ComputedUriVariableContainer computedUriVariableContainer,
+						 Authentication auth,
+						 Class controllerClass,
+						 Method actionMethod) {
 		this.computedUriVariableContainer = computedUriVariableContainer;
+		this.auth = auth;
 		this.controllerClass = controllerClass;
 		this.actionMethod = actionMethod;
 	}
 
 	public ComputedUriVariableContainer getComputedUriVariableContainer() {
 		return computedUriVariableContainer;
+	}
+
+	public Authentication getAuth() {
+		return auth;
 	}
 
 	public Class getControllerClass() {

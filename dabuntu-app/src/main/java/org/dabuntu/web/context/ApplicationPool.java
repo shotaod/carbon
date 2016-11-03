@@ -9,6 +9,7 @@ public class ApplicationPool {
 	// ===================================================================================
 	//                                                                                Pool
 	//                                                                                ====
+
 	// -----------------------------------------------------
 	//                                               application scoped
 	//                                               -------
@@ -16,6 +17,7 @@ public class ApplicationPool {
 	private static InstanceContainer appInstancePool;
 	// separate with app pool for search action easily
 	private static MappedActionContainer actionMapPool;
+	private static SecurityContainer securityPool;
 
 	// -----------------------------------------------------
 	//                                               session scoped
@@ -27,9 +29,6 @@ public class ApplicationPool {
 	//                                               -------
 	private static RequestContainer requestPool = RequestContainer.instance;
 
-	// ===================================================================================
-	//
-	//                                                                          ==========
 	public static ApplicationPool instance = new ApplicationPool();
 
 	private ApplicationPool() {}
@@ -37,6 +36,10 @@ public class ApplicationPool {
 	public void setPool(Map<Class, Object> controllers) {
 		ApplicationPool.appInstancePool = new InstanceContainer(controllers);
 	}
+	public void setPool(SecurityContainer securityPool) {
+		ApplicationPool.securityPool = securityPool;
+	}
+
 	public void setPool(MappedActionContainer mappedActionContainer) {
 		ApplicationPool.actionMapPool = mappedActionContainer;
 	}
@@ -46,6 +49,9 @@ public class ApplicationPool {
 	}
 	public MappedActionContainer getActionPool() {
 		return actionMapPool;
+	}
+	public SecurityContainer getAuthLogicPool() {
+		return securityPool;
 	}
 	public SessionContainer getSessionPool() {
 		return sessionPool;

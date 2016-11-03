@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author ubuntu 2016/10/16.
@@ -25,6 +24,8 @@ public class DabuntCore {
 	@Inject
 	private ActionFinder actionFinder;
 	@Inject
+	private Authenticator authenticator;
+	@Inject
 	private RequestParser requestParser;
 	@Inject
 	private ActionArgumentResolver actionArgumentResolver;
@@ -35,8 +36,12 @@ public class DabuntCore {
 
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 
+		boolean authenticate = authenticator.authenticate(pool.getAuthLogicPool(), pool.getSessionPool(), request, response);
+		if (!authenticate) return;
+
 		// create action container by url
 		// with resolving url variable
+		// with auth
 		ActionContainer actionContainer = actionFinder.find(request, pool.getActionPool());
 
 		// parse Request for argument Resolver

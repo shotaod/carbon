@@ -1,9 +1,7 @@
 package org.dabuntu.web.handler;
 
 import org.dabuntu.component.annotation.Component;
-import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.web.context.ApplicationPool;
-import org.dabuntu.web.context.InstanceContainer;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

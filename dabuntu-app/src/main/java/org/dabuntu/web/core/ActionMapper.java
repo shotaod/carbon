@@ -5,7 +5,9 @@ import org.dabuntu.util.SimpleKeyValue;
 import org.dabuntu.util.format.BoxedTitleMessage;
 import org.dabuntu.util.format.ChapterAttr;
 import org.dabuntu.web.annotation.Action;
+import org.dabuntu.web.annotation.Auth;
 import org.dabuntu.web.annotation.Controller;
+import org.dabuntu.web.auth.Authentication;
 import org.dabuntu.web.container.ComputedUriVariableContainer;
 import org.dabuntu.web.container.DefinedAction;
 import org.dabuntu.web.context.MappedActionContainer;
@@ -18,6 +20,7 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,14 +67,20 @@ public class ActionMapper {
 						container -> container.method,
 						Collectors.toList()
 				));
-		Map<HttpMethod, List<DefinedAction>> data = collect.entrySet().stream()
-				.map(entry -> {
-					List<DefinedAction> bindActions = entry.getValue().stream()
-							.map(c -> new DefinedAction(c.computedUriVariableContainer, c.controller, c.action))
-							.collect(Collectors.toList());
-					return new AbstractMap.SimpleEntry<>(entry.getKey(), bindActions);
-				}).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 
+		Map<HttpMethod, List<DefinedAction>> data = collect.entrySet().stream()
+			.map(entry -> {
+				List<DefinedAction> bindActions = entry.getValue().stream()
+					.map(c -> {
+//						Authentication auth = Optional.ofNullable(c.action.getDeclaredAnnotation(Auth.class))
+//							.map(annotation -> {
+//								return new Authentication(annotation.key());
+//							}).orElse(Authentication.NotRequired);
+						return new DefinedAction(c.computedUriVariableContainer, null, c.controller, c.action);
+					})
+					.collect(Collectors.toList());
+				return new AbstractMap.SimpleEntry<>(entry.getKey(), bindActions);
+				}).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 
 		loggingResult(data);
 

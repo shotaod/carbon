@@ -38,7 +38,7 @@ public class ActionExecutor {
 		// forClient Controller
 		Object controller = this.getController(action, instancePool);
 
-		// find Arguments
+		// map Arguments
 		ResolvedArguments resolvedArguments = this.resolveArguments(action, rawBindings, instancePool);
 
 		// execute Action

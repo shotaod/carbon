@@ -1,7 +1,5 @@
 package org.dabuntu.web.container;
 
-import org.dabuntu.web.container.PathVariableBinding;
-
 import java.lang.reflect.Parameter;
 
 /**

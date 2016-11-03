@@ -2,19 +2,22 @@ package org.dabuntu.sample.web.request.index;
 
 import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.component.generator.aop.annotation.InOutLogging;
+import org.dabuntu.sample.auth.basic.BasicAuthIdentity;
 import org.dabuntu.sample.prop.RootProp;
 import org.dabuntu.sample.web.repository.Products;
 import org.dabuntu.sample.web.service.ProductService;
 import org.dabuntu.web.annotation.Action;
+import org.dabuntu.web.annotation.Auth;
 import org.dabuntu.web.annotation.Controller;
 import org.dabuntu.web.annotation.PathVariable;
 import org.dabuntu.web.annotation.RequestBody;
 import org.dabuntu.web.annotation.RequestCookie;
+import org.dabuntu.web.annotation.Session;
+import org.dabuntu.web.context.ApplicationPool;
 import org.dabuntu.web.core.response.HtmlResponse;
 import org.dabuntu.web.def.HttpMethod;
 import org.dabuntu.web.def.Tomato;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,22 +51,19 @@ public class IndexController {
 		return response;
 	}
 
-	@InOutLogging
+	// -----------------------------------------------------
+	//                                               Auth
+	//                                               -------
 	@Action(url = "/products", method = HttpMethod.GET)
 	public List<Products.Product> productsGet() {
 		List<Products.Product> products = service.getProductsAll();
-//		return "call /products \n" + getProductInfo(products);
-
 		return products;
 	}
 
-	@InOutLogging
 	@Action(url = "/products/{productId}", method = HttpMethod.GET)
 	public Products.Product productGet(@PathVariable("productId") String productId) {
 		Integer id = Integer.parseInt(productId);
 		Products.Product product = service.getProduct(id);
-//		return "call /products/" + id + "\n" + getProductInfo(product);
-
 		return product;
 	}
 
@@ -108,12 +108,37 @@ public class IndexController {
 								 // @PathVariable("userId") String userId,
 								 @RequestCookie IndexCookie cookie,
 								 @RequestBody IndexForm form) {
+
 		HtmlResponse response = new HtmlResponse("sample");
 		TestResponseModel model = new TestResponseModel();
 		model.setForm1(form.getData1());
 		model.setForm2(form.getData2());
 		model.setCookie1(cookie.getKey1());
 		model.setCookie2(cookie.getKey2());
+
+		ApplicationPool.instance.getSessionPool().getObject(TestResponseModel.class)
+			.ifPresent(beforeModel -> {
+			if (beforeModel != null) {
+				model.setBefore1(beforeModel.getForm1());
+				model.setBefore2(beforeModel.getForm2());
+			}
+			ApplicationPool.instance.getSessionPool().setObject(model);
+		});
+
+		response.putData("model", model);
+
+		return response;
+	}
+
+	// -----------------------------------------------------
+	//                                               Security
+	//                                               -------
+	@Action(url = "/basic/auth", method = HttpMethod.GET)
+	public HtmlResponse requestBasicSecret(@Session BasicAuthIdentity userSession) {
+		HtmlResponse response = new HtmlResponse("basic/secret");
+		UserInfoModel model = new UserInfoModel();
+		model.setUsername(userSession.username());
+		model.setPassword(userSession.cryptPassword());
 		response.putData("model", model);
 
 		return response;

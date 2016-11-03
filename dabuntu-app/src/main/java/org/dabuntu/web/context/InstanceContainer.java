@@ -31,6 +31,10 @@ public class InstanceContainer {
 		this.instances.put(object.getClass(), object);
 	}
 
+	public void remove(Class type) {
+		this.instances.remove(type);
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> T getInstanceByType(Class<T> type) {
 		return (T)this.instances.get(type);

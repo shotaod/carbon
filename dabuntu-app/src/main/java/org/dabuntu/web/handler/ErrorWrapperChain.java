@@ -17,8 +17,6 @@ import java.util.Map;
 @Component
 public class ErrorWrapperChain extends HttpHandlerChain{
 
-	private Logger logger = LoggerFactory.getLogger(ErrorWrapperChain.class);
-
 	@Inject
 	private ErrorHandlingContainer errorHandleRule;
 

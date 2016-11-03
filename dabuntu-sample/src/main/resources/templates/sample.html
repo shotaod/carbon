@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xml:lang="ja" lang="ja">
 <head>
@@ -18,7 +18,15 @@
         <li><input type="submit" value="submit"/></li>
     </ul>
 </form>
+
+<!--/*@thymesVar id="model" type="org.dabuntu.sample.web.request.index.TestResponseModel"*/-->
 <ul th:if="${model}">
+    <li th:if="${model.before1}">
+        <pre>Before-1<span th:text="${model.before1}"></span></pre>
+    </li>
+    <li th:if="${model.before2}">
+        <pre>Before-2<span th:text="${model.before2}"></span></pre>
+    </li>
     <li>
         <pre>Form-1<span th:text="${model.form1}"></span></pre>
     </li>

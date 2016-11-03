@@ -3,9 +3,11 @@ package org.dabuntu.web;
 import org.dabuntu.component.ComponentFaced;
 import org.dabuntu.util.format.ChapterAttr;
 import org.dabuntu.web.context.ApplicationPool;
+import org.dabuntu.web.context.SecurityContainer;
 import org.dabuntu.web.context.InstanceContainer;
 import org.dabuntu.web.context.MappedActionContainer;
 import org.dabuntu.web.core.ActionMapper;
+import org.dabuntu.web.core.SecurityConfigurator;
 import org.dabuntu.web.def.FactoryAcceptAnnotations;
 import org.dabuntu.web.def.Tomato;
 import org.dabuntu.web.server.EmbedServer;
@@ -54,6 +56,7 @@ public class WebStarter {
 	private void setupPool(Class scanBase) throws Exception{
 		ComponentFaced componentFaced = new ComponentFaced();
 		ActionMapper actionMapper = new ActionMapper();
+		SecurityConfigurator securityConfigurator = new SecurityConfigurator();
 
 		// load Configuration -> create configurations
 		Set<Class> frameworkManaged = componentFaced.scan(ConfigurationBase.class, FactoryAcceptAnnotations.basic());
@@ -64,8 +67,12 @@ public class WebStarter {
 		// mapping request to action
 		MappedActionContainer mappedActionPool = actionMapper.map(webInstances.keySet().stream().collect(Collectors.toList()));
 
+		// configure security
+		SecurityContainer securityPool = securityConfigurator.map(webInstances);
+
 		// set up app pool
 		ApplicationPool.instance.setPool(webInstances);
 		ApplicationPool.instance.setPool(mappedActionPool);
+		ApplicationPool.instance.setPool(securityPool);
 	}
 }
