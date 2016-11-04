@@ -2,7 +2,8 @@ package org.dabuntu.sample.web.request.index;
 
 import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.component.generator.aop.annotation.InOutLogging;
-import org.dabuntu.sample.auth.identity.SampleAuthIdentity;
+import org.dabuntu.sample.auth.basic.identity.SampleBasicAuthIdentity;
+import org.dabuntu.sample.auth.form.identity.SampleFormAuthIdentity;
 import org.dabuntu.sample.prop.RootProp;
 import org.dabuntu.sample.repository.Products;
 import org.dabuntu.sample.web.service.ProductService;
@@ -133,7 +134,7 @@ public class IndexController {
 	//                                               Security
 	//                                               -------
 	@Action(url = "/basic/auth", method = HttpMethod.GET)
-	public HtmlResponse requestBasicSecret(@Session SampleAuthIdentity userSession) {
+	public HtmlResponse requestBasicSecret(@Session SampleBasicAuthIdentity userSession) {
 		HtmlResponse response = new HtmlResponse("basic/secret");
 		UserInfoModel model = new UserInfoModel();
 		model.setUsername(userSession.username());
@@ -149,7 +150,7 @@ public class IndexController {
 	}
 
 	@Action(url = "/form/secret", method = HttpMethod.GET)
-	public HtmlResponse getFormSecret(@Session SampleAuthIdentity userSession) {
+	public HtmlResponse getFormSecret(@Session SampleFormAuthIdentity userSession) {
 		HtmlResponse response = new HtmlResponse("/form/secret");
 		UserInfoModel model = new UserInfoModel();
 		model.setUsername(userSession.username());

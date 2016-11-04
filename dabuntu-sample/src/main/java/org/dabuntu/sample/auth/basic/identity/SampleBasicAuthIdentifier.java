@@ -1,4 +1,4 @@
-package org.dabuntu.sample.auth.identity;
+package org.dabuntu.sample.auth.basic.identity;
 
 import org.dabuntu.component.annotation.Component;
 import org.dabuntu.component.annotation.Inject;
@@ -10,15 +10,15 @@ import org.dabuntu.web.exception.UserIdentityNotFoundException;
  * @author ubuntu 2016/11/03.
  */
 @Component
-public class SampleAuthIdentifier implements AuthIdentifier<SampleAuthIdentity> {
+public class SampleBasicAuthIdentifier implements AuthIdentifier<SampleBasicAuthIdentity> {
 
 	@Inject
 	private UsersRepository usersRepository;
 
 	@Override
-	public SampleAuthIdentity find(String username) throws UserIdentityNotFoundException{
+	public SampleBasicAuthIdentity find(String username) throws UserIdentityNotFoundException{
 		return usersRepository.findByUsername(username)
-				.map(SampleAuthIdentity::new)
+				.map(SampleBasicAuthIdentity::new)
 				.orElseThrow(() -> new UserIdentityNotFoundException(username));
 	}
 }

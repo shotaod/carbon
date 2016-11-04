@@ -8,8 +8,10 @@ import org.dabuntu.sample.auth.basic.BasicAuthResponseCreator;
 import org.dabuntu.sample.auth.form.FormAuthFinisher;
 import org.dabuntu.sample.auth.form.FormAuthRequestMapper;
 import org.dabuntu.sample.auth.form.FormAuthResponseCreator;
-import org.dabuntu.sample.auth.identity.SampleAuthIdentifier;
-import org.dabuntu.sample.auth.identity.SampleAuthIdentity;
+import org.dabuntu.sample.auth.basic.identity.SampleBasicAuthIdentifier;
+import org.dabuntu.sample.auth.basic.identity.SampleBasicAuthIdentity;
+import org.dabuntu.sample.auth.form.identity.SampleFormAuthIdentifier;
+import org.dabuntu.sample.auth.form.identity.SampleFormAuthIdentity;
 import org.dabuntu.web.auth.SecurityConfigAdapter;
 import org.dabuntu.web.auth.SecurityConfiguration;
 import org.dabuntu.web.def.HttpMethod;
@@ -20,16 +22,25 @@ import org.dabuntu.web.def.HttpMethod;
 @Component
 public class SampleSecurityConfigAdapter implements SecurityConfigAdapter {
 
+	// -----------------------------------------------------
+	//                                               for Basic Auth
+	//                                               -------
 	@Inject
 	private BasicAuthRequestMapper basicMapper;
 	@Inject
-	private SampleAuthIdentifier sampleIdentifier;
+	private SampleBasicAuthIdentifier basicIdentifier;
 	@Inject
 	private BasicAuthFinisher basicFinisher;
 	@Inject
 	private BasicAuthResponseCreator basicResponse;
+
+	// -----------------------------------------------------
+	//                                               for Form Auth
+	//                                               -------
 	@Inject
 	private FormAuthRequestMapper formMapper;
+	@Inject
+	private SampleFormAuthIdentifier formIdentifier;
 	@Inject
 	private FormAuthResponseCreator formResponse;
 	@Inject
@@ -38,25 +49,25 @@ public class SampleSecurityConfigAdapter implements SecurityConfigAdapter {
 	@Override
 	public void configure(SecurityConfiguration config) {
 		config
-			.define(SampleAuthIdentity.class)
+			.define(SampleBasicAuthIdentity.class)
 				.base("/basic/")
 				.endPoint(HttpMethod.GET, "/basic/auth")
 				.redirect("/basic")
 				.requestMapper(basicMapper)
 				.response(basicResponse)
-				.identifier(sampleIdentifier)
+				.identifier(basicIdentifier)
 				.finisher(basicFinisher)
 			.end()
 //			.define()
 //				.base("/digest")
 //			.end()
-			.define(SampleAuthIdentity.class)
+			.define(SampleFormAuthIdentity.class)
 				.base("/form/")
 				.endPoint(HttpMethod.POST, "/form/auth")
 				.redirect("/form")
 				.requestMapper(formMapper)
 				.response(formResponse)
-				.identifier(sampleIdentifier)
+				.identifier(formIdentifier)
 				.finisher(formFinisher)
 			.end()
 			;

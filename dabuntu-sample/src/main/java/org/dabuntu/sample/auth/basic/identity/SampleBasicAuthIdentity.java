@@ -1,4 +1,4 @@
-package org.dabuntu.sample.auth.identity;
+package org.dabuntu.sample.auth.basic.identity;
 
 import org.dabuntu.sample.repository.User;
 import org.dabuntu.web.auth.AuthIdentity;
@@ -6,11 +6,11 @@ import org.dabuntu.web.auth.AuthIdentity;
 /**
  * @author ubuntu 2016/11/03.
  */
-public class SampleAuthIdentity implements AuthIdentity {
+public class SampleBasicAuthIdentity implements AuthIdentity {
 
 	private User user;
 
-	public SampleAuthIdentity(User user) {
+	public SampleBasicAuthIdentity(User user) {
 		this.user = user;
 	}
 

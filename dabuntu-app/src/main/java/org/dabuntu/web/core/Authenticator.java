@@ -80,18 +80,18 @@ public class Authenticator {
 		String requestUsername = authInfo.getUsername();
 
 		// developer-defined Info
+		AuthFinisher finisher = strategy.getFinisher();
 		AuthIdentity authIdentity;
 		try {
 			authIdentity = strategy.getIdentifier().find(requestUsername);
 		} catch (UserIdentityNotFoundException e) {
-			ResponseUtil.redirect(response, strategy.getRedirectUrl());
+			finisher.onFail(request, response);
 			return false;
 		}
 
 		// check match
 		boolean isMatch = authIdentity.confirm(authInfo.getPassword());
 
-		AuthFinisher finisher = strategy.getFinisher();
 		if (isMatch) {
 			//noinspection unchecked
 			sessionManager.set(authIdentity, session);
