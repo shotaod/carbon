@@ -34,6 +34,7 @@ public class SampleSecurityConfigAdapter implements SecurityConfigAdapter {
 	private FormAuthResponseCreator formResponse;
 	@Inject
 	private FormAuthFinisher formFinisher;
+
 	@Override
 	public void configure(SecurityConfiguration config) {
 		config

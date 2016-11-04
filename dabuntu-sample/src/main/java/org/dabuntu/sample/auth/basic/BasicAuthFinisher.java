@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class BasicAuthFinisher implements AuthFinisher {
+	private static final String Header_Auth = "WWW-Authenticate";
 	@Override
 	public void onAuth(String username, SessionContainer session) {
 
@@ -19,6 +20,7 @@ public class BasicAuthFinisher implements AuthFinisher {
 
 	@Override
 	public void onFail(HttpServletRequest request, HttpServletResponse response) {
-
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setHeader(Header_Auth, "Basic realm=Basic");
 	}
 }
