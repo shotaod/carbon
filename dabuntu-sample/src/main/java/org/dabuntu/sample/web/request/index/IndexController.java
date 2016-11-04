@@ -2,12 +2,11 @@ package org.dabuntu.sample.web.request.index;
 
 import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.component.generator.aop.annotation.InOutLogging;
-import org.dabuntu.sample.auth.basic.BasicAuthIdentity;
+import org.dabuntu.sample.auth.identity.SampleAuthIdentity;
 import org.dabuntu.sample.prop.RootProp;
-import org.dabuntu.sample.web.repository.Products;
+import org.dabuntu.sample.repository.Products;
 import org.dabuntu.sample.web.service.ProductService;
 import org.dabuntu.web.annotation.Action;
-import org.dabuntu.web.annotation.Auth;
 import org.dabuntu.web.annotation.Controller;
 import org.dabuntu.web.annotation.PathVariable;
 import org.dabuntu.web.annotation.RequestBody;
@@ -134,13 +133,28 @@ public class IndexController {
 	//                                               Security
 	//                                               -------
 	@Action(url = "/basic/auth", method = HttpMethod.GET)
-	public HtmlResponse requestBasicSecret(@Session BasicAuthIdentity userSession) {
+	public HtmlResponse requestBasicSecret(@Session SampleAuthIdentity userSession) {
 		HtmlResponse response = new HtmlResponse("basic/secret");
 		UserInfoModel model = new UserInfoModel();
 		model.setUsername(userSession.username());
 		model.setPassword(userSession.cryptPassword());
 		response.putData("model", model);
 
+		return response;
+	}
+
+	@Action(url = "/form", method = HttpMethod.GET)
+	public HtmlResponse getLogin() {
+		return new HtmlResponse("form/index");
+	}
+
+	@Action(url = "/form/secret", method = HttpMethod.GET)
+	public HtmlResponse getFormSecret(@Session SampleAuthIdentity userSession) {
+		HtmlResponse response = new HtmlResponse("/form/secret");
+		UserInfoModel model = new UserInfoModel();
+		model.setUsername(userSession.username());
+		model.setPassword(userSession.cryptPassword());
+		response.putData("model", model);
 		return response;
 	}
 

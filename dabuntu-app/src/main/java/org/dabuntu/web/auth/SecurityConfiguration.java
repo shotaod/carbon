@@ -44,7 +44,7 @@ public class SecurityConfiguration {
 			this._requestMapper = requestMapper;
 			return this;
 		}
-		public Rule responese(AuthResponseCreator responseCreator) {
+		public Rule response(AuthResponseCreator responseCreator) {
 			this._responseCreator = responseCreator;
 			return this;
 		}

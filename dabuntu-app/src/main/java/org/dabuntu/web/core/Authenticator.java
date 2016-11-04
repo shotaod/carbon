@@ -99,7 +99,7 @@ public class Authenticator {
 		}
 		else {
 			sessionManager.remove(session);
-			strategy.getResponseCreator().create(response);
+//			strategy.getResponseCreator().create(response);
 			finisher.onFail(request, response);
 		}
 

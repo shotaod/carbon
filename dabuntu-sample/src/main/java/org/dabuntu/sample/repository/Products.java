@@ -1,4 +1,4 @@
-package org.dabuntu.sample.web.repository;
+package org.dabuntu.sample.repository;
 
 import java.util.*;
 
