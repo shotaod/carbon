@@ -16,6 +16,11 @@ public class SampleFormAuthIdentifier implements AuthIdentifier<SampleFormAuthId
 	private UsersRepository usersRepository;
 
 	@Override
+	public Class<SampleFormAuthIdentity> getType() {
+		return SampleFormAuthIdentity.class;
+	}
+
+	@Override
 	public SampleFormAuthIdentity find(String username) throws UserIdentityNotFoundException{
 		return usersRepository.findByUsername(username)
 				.map(SampleFormAuthIdentity::new)

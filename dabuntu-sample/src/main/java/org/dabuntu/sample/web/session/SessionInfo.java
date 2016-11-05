@@ -1,19 +1,14 @@
 package org.dabuntu.sample.web.session;
 
-import org.dabuntu.component.annotation.Component;
+import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * @author ubuntu 2016/10/01
  */
-@Component
+@Data
 public class SessionInfo {
-	public Long userId;
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public SessionInfo() {
-		this.userId = 1L;
-	}
+	private String username;
+	private LocalDateTime dateTime;
 }

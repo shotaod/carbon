@@ -12,12 +12,12 @@ import org.dabuntu.web.def.HttpMethod;
 public abstract class AuthStrategy<IDENTITY extends AuthIdentity> {
 	private Class<IDENTITY> identityType;
 	private String baseUrl;
+	private String logoutUrl;
 	private String redirectUrl;
-	private AuthSessionManger<IDENTITY> sessionManager;
+	private AuthSessionManager<IDENTITY> sessionManager;
 	private AuthRequestMapper requestMapper;
-	private AuthResponseCreator responseCreator;
 	private AuthIdentifier<IDENTITY> identifier;
-	private AuthFinisher finisher;
+	private AuthEventListener finisher;
 
 	abstract public boolean shouldTryLogin(HttpMethod method, String requestUrl);
 }

@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Note: currently supported {@link String} only
  * @author ubuntu 2016/10/05.
  */
 @Retention(RetentionPolicy.RUNTIME)

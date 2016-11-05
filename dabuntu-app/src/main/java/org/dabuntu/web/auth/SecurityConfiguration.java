@@ -17,23 +17,33 @@ public class SecurityConfiguration {
 		private SecurityConfiguration baseConfiguration;
 		private String _url;
 		private String _loginUrl;
+		private String _logoutUrl;
 		private HttpMethod _method;
 		private String _redirect;
 		private AuthRequestMapper _requestMapper;
-		private AuthResponseCreator _responseCreator;
 		private AuthIdentifier<IDENTITY> _identifier;
-		private AuthFinisher _finisher;
-		private Rule(SecurityConfiguration baseConfiguration, Class<IDENTITY> clazz) {
+		private AuthEventListener _finisher;
+		private Rule(SecurityConfiguration baseConfiguration) {
 			this.baseConfiguration = baseConfiguration;
-			this._identity = clazz;
 		}
 		public Rule base(String url) {
 			this._url = url;
 			return this;
 		}
+
+		/**
+		 * set login end point.
+		 * @param method
+		 * @param loginUrl /xxx/login(single point) or /xxx/** (wildcard)
+		 * @return
+		 */
 		public Rule endPoint(HttpMethod method, String loginUrl) {
 			this._method = method;
 			this._loginUrl = loginUrl;
+			return this;
+		}
+		public Rule logout(String logoutUrl) {
+			this._logoutUrl = logoutUrl;
 			return this;
 		}
 		public Rule redirect(String redirectUrl) {
@@ -44,15 +54,13 @@ public class SecurityConfiguration {
 			this._requestMapper = requestMapper;
 			return this;
 		}
-		public Rule response(AuthResponseCreator responseCreator) {
-			this._responseCreator = responseCreator;
-			return this;
-		}
+		@SuppressWarnings("unchecked")
 		public Rule identifier(AuthIdentifier identifier) {
+			this._identity = identifier.getType();
 			this._identifier = identifier;
 			return this;
 		}
-		public Rule finisher(AuthFinisher finisher) {
+		public Rule finisher(AuthEventListener finisher) {
 			this._finisher = finisher;
 			return this;
 		}
@@ -65,11 +73,17 @@ public class SecurityConfiguration {
 			AuthStrategy<IDENTITY> strategy = new AuthStrategy<IDENTITY>() {
 				@Override
 				public boolean shouldTryLogin(HttpMethod method, String requestUrl) {
-					return _loginUrl.equals(requestUrl)
-						&& _method.equals(method);
+					final String wildCard = "/**";
+					boolean urlMatch;
+					if (_loginUrl.endsWith(wildCard)) {
+						urlMatch = requestUrl.startsWith(_loginUrl.replace(wildCard, ""));
+					} else {
+						urlMatch = _loginUrl.equals(requestUrl);
+					}
+					return urlMatch && _method.equals(method);
 				}
 			};
-			AuthSessionManger<IDENTITY> sessionManger = new AuthSessionManger<IDENTITY>() {
+			AuthSessionManager<IDENTITY> sessionManger = new AuthSessionManager<IDENTITY>() {
 				@Override
 				public Optional<IDENTITY> get(SessionContainer session) {
 					return session.getObject(_identity);
@@ -88,9 +102,9 @@ public class SecurityConfiguration {
 			strategy.setIdentityType(_identity);
 			strategy.setBaseUrl(_url);
 			strategy.setRedirectUrl(_redirect);
+			strategy.setLogoutUrl(_logoutUrl);
 			strategy.setSessionManager(sessionManger);
 			strategy.setRequestMapper(_requestMapper);
-			strategy.setResponseCreator(_responseCreator);
 			strategy.setIdentifier(_identifier);
 			strategy.setFinisher(_finisher);
 			return strategy;
@@ -102,9 +116,8 @@ public class SecurityConfiguration {
 		rules = new ArrayList<>();
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends AuthIdentity> Rule define(Class<T> identityType) {
-		return new Rule(this, identityType);
+	public Rule define() {
+		return new Rule(this);
 	}
 
 	public List<AuthStrategy> getStrategies() {

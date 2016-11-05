@@ -39,7 +39,7 @@ public class ActionExecutor {
 		Object controller = this.getController(action, instancePool);
 
 		// map Arguments
-		ResolvedArguments resolvedArguments = this.resolveArguments(action, rawBindings, instancePool);
+		ResolvedArguments resolvedArguments = this.resolveArguments(action, rawBindings);
 
 		// execute Action
 		ActionResult actionResult = this.executeAction(controller, action, resolvedArguments);
@@ -70,8 +70,7 @@ public class ActionExecutor {
 	//                                                                   Resolve Arguments
 	//                                                                   =================
 	private ResolvedArguments resolveArguments(ControllerAction controllerAction,
-											   List<ResolvedArgument> rawBindings,
-											   InstanceContainer instanceContainer) {
+											   List<ResolvedArgument> rawBindings) {
 		Object[] resolvedArgs = Arrays.stream(controllerAction.getAction().getParameters())
 				.map(arg -> {
 					for (ResolvedArgument rawBinding : rawBindings) {

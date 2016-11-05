@@ -130,35 +130,6 @@ public class IndexController {
 		return response;
 	}
 
-	// -----------------------------------------------------
-	//                                               Security
-	//                                               -------
-	@Action(url = "/basic/auth", method = HttpMethod.GET)
-	public HtmlResponse requestBasicSecret(@Session SampleBasicAuthIdentity userSession) {
-		HtmlResponse response = new HtmlResponse("basic/secret");
-		UserInfoModel model = new UserInfoModel();
-		model.setUsername(userSession.username());
-		model.setPassword(userSession.cryptPassword());
-		response.putData("model", model);
-
-		return response;
-	}
-
-	@Action(url = "/form", method = HttpMethod.GET)
-	public HtmlResponse getLogin() {
-		return new HtmlResponse("form/index");
-	}
-
-	@Action(url = "/form/secret", method = HttpMethod.GET)
-	public HtmlResponse getFormSecret(@Session SampleFormAuthIdentity userSession) {
-		HtmlResponse response = new HtmlResponse("/form/secret");
-		UserInfoModel model = new UserInfoModel();
-		model.setUsername(userSession.username());
-		model.setPassword(userSession.cryptPassword());
-		response.putData("model", model);
-		return response;
-	}
-
 	// ===================================================================================
 	//                                                                          Private
 	//                                                                          ==========

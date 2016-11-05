@@ -16,6 +16,11 @@ public class SampleBasicAuthIdentifier implements AuthIdentifier<SampleBasicAuth
 	private UsersRepository usersRepository;
 
 	@Override
+	public Class<SampleBasicAuthIdentity> getType() {
+		return SampleBasicAuthIdentity.class;
+	}
+
+	@Override
 	public SampleBasicAuthIdentity find(String username) throws UserIdentityNotFoundException{
 		return usersRepository.findByUsername(username)
 				.map(SampleBasicAuthIdentity::new)

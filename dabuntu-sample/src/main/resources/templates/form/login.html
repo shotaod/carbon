@@ -7,14 +7,14 @@
     <title>Dabunt Sample</title>
 </head>
 <body>
-<h1>Form Auth Login Top</h1>
-<pre>welcome here! you success login!</pre>
-<button>
-    <a href="/form/secret">more secret ...</a>
-</button>
-<br />
-<button>
-    <a href="/form/logout">logout</a>
-</button>
+<h1>Form Auth Login Page</h1>
+<pre>under /form is protected by Form Auth</pre>
+<form action="/form/auth" method="POST">
+    <label for="username" >username</label>
+    <input type="text" name="username" id="username"/>
+    <label for="password" >password</label>
+    <input type="password" name="password" id="password"/>
+    <input type="submit" />
+</form>
 </body>
 </html>
