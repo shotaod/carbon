@@ -11,8 +11,10 @@
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>
-    <logger name="org.thymeleaf" level="info">
-    </logger>
-    <logger name="org.eclipse.jetty" level="info">
-    </logger>
+    <logger name="org.thymeleaf" level="info"/>
+    <logger name="org.eclipse.jetty" level="info"/>
+
+    <logger name="org.hibernate" level="INFO" />
+    <logger name="org.hibernate.SQL" level="DEBUG" />
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />
 </configuration>

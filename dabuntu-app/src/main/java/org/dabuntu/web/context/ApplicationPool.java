@@ -33,8 +33,8 @@ public class ApplicationPool {
 
 	private ApplicationPool() {}
 
-	public void setPool(Map<Class, Object> controllers) {
-		ApplicationPool.appInstancePool = new InstanceContainer(controllers);
+	public void setPool(Map<Class, Object> instances) {
+		ApplicationPool.appInstancePool = new InstanceContainer(instances);
 	}
 	public void setPool(SecurityContainer securityPool) {
 		ApplicationPool.securityPool = securityPool;

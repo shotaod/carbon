@@ -1,4 +1,4 @@
-package org.dabuntu.sample.web.request.index;
+package org.dabuntu.sample.web.controller.index;
 
 import lombok.Data;
 

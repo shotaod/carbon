@@ -17,6 +17,8 @@ import java.util.Map;
 @Component
 public class ErrorWrapperChain extends HttpHandlerChain{
 
+	private Logger logger = LoggerFactory.getLogger(ErrorWrapperChain.class);
+
 	@Inject
 	private ErrorHandlingContainer errorHandleRule;
 
@@ -26,6 +28,7 @@ public class ErrorWrapperChain extends HttpHandlerChain{
 			super.chain(request, response);
 		} catch (Throwable throwable) {
 			if (!this.handleThrowable(response, throwable)) {
+				logger.warn("Error that can't be handled is Occurred", throwable);
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 		}

@@ -1,5 +1,8 @@
 package org.dabuntu.component.scan;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -13,6 +16,8 @@ import java.util.List;
  * @author ubuntu 2016/10/01
  */
 public class TargetBaseScanner {
+
+	private Logger logger = LoggerFactory.getLogger(TargetBaseScanner.class);
 
 	// ===================================================================================
 	//                                                                          Singleton
@@ -65,8 +70,8 @@ public class TargetBaseScanner {
 						Class<?> clazz = classLoader.loadClass(fqn);
 						this.classes.add(clazz);
 					} catch (ClassNotFoundException e) {
-						System.out.printf("Not found Class:[%s]", fqn);
-						e.printStackTrace();
+						logger.error("Not found Class:[%s]", fqn);
+						System.exit(0);
 					}
 				});
 	}

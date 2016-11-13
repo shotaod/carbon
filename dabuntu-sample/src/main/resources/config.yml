@@ -1,0 +1,15 @@
+persistent:
+  dataSource:
+    - source:
+        url: jdbc:mysql://localhost/dabunt
+        user: root
+        password: ''
+        port: 3306
+    - source:
+        url: jdbc:mysql://localhost/twitterdb
+        user: root
+        password: ''
+        port: 3306
+  autoddl: validate # none, create-only, drop, create, create-drop, validate, and update
+Logger:
+  name: slf4j

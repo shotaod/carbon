@@ -20,6 +20,19 @@
             <version>0.1.0-BETA</version>
         </dependency>
 
+        <dependency>
+            <groupId>dabuntu</groupId>
+            <artifactId>dabuntu-util</artifactId>
+            <version>0.1.0-BETA</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dabuntu</groupId>
+            <artifactId>dabuntu-persistant</artifactId>
+            <version>0.1.0-BETA</version>
+        </dependency>
+
+
         <!-- Logger インターフェース -->
         <dependency>
             <groupId>log4j</groupId>
@@ -79,7 +92,14 @@
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
         </dependency>
+
+        <!-- yaml パーサー -->
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.17</version>
+        </dependency>
+
     </dependencies>
-
-
 </project>

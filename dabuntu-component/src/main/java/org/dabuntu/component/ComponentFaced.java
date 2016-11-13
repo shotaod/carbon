@@ -53,6 +53,8 @@ public class ComponentFaced {
 		return scanner.scan(scanBase).stream().collect(Collectors.toSet());
 	}
 
+
+
 	public Set<Class> scan(Class scanBase, Set<Class> whiteAnnotationList) throws Exception {
 		return scanner.scan(scanBase).stream()
 			.filter(clazz -> {

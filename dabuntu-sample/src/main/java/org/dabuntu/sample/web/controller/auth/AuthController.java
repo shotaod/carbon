@@ -1,8 +1,8 @@
-package org.dabuntu.sample.web.request.auth;
+package org.dabuntu.sample.web.controller.auth;
 
 import org.dabuntu.sample.auth.basic.identity.SampleBasicAuthIdentity;
 import org.dabuntu.sample.auth.form.identity.SampleFormAuthIdentity;
-import org.dabuntu.sample.web.request.index.UserInfoModel;
+import org.dabuntu.sample.web.controller.index.UserInfoModel;
 import org.dabuntu.sample.web.session.SessionInfo;
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.Controller;

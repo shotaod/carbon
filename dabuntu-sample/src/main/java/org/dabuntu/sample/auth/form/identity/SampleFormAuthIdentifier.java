@@ -2,9 +2,12 @@ package org.dabuntu.sample.auth.form.identity;
 
 import org.dabuntu.component.annotation.Component;
 import org.dabuntu.component.annotation.Inject;
-import org.dabuntu.sample.repository.UsersRepository;
+
+import org.dabuntu.sample.domain.service.UserRoleService;
 import org.dabuntu.web.auth.AuthIdentifier;
 import org.dabuntu.web.exception.UserIdentityNotFoundException;
+
+import java.util.Optional;
 
 /**
  * @author ubuntu 2016/11/03.
@@ -13,7 +16,7 @@ import org.dabuntu.web.exception.UserIdentityNotFoundException;
 public class SampleFormAuthIdentifier implements AuthIdentifier<SampleFormAuthIdentity> {
 
 	@Inject
-	private UsersRepository usersRepository;
+	private UserRoleService userRoleService;
 
 	@Override
 	public Class<SampleFormAuthIdentity> getType() {
@@ -22,7 +25,7 @@ public class SampleFormAuthIdentifier implements AuthIdentifier<SampleFormAuthId
 
 	@Override
 	public SampleFormAuthIdentity find(String username) throws UserIdentityNotFoundException{
-		return usersRepository.findByUsername(username)
+		return Optional.ofNullable(userRoleService.findByUsername(username))
 				.map(SampleFormAuthIdentity::new)
 				.orElseThrow(() -> new UserIdentityNotFoundException(username));
 	}

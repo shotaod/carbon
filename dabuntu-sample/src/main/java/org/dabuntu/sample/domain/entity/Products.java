@@ -1,4 +1,4 @@
-package org.dabuntu.sample.repository;
+package org.dabuntu.sample.domain.entity;
 
 import java.util.*;
 

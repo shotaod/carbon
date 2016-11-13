@@ -5,9 +5,7 @@ import org.dabuntu.util.SimpleKeyValue;
 import org.dabuntu.util.format.BoxedTitleMessage;
 import org.dabuntu.util.format.ChapterAttr;
 import org.dabuntu.web.annotation.Action;
-import org.dabuntu.web.annotation.Auth;
 import org.dabuntu.web.annotation.Controller;
-import org.dabuntu.web.auth.Authentication;
 import org.dabuntu.web.container.ComputedUriVariableContainer;
 import org.dabuntu.web.container.DefinedAction;
 import org.dabuntu.web.context.MappedActionContainer;
@@ -20,7 +18,6 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

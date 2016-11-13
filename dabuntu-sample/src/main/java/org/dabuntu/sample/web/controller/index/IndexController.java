@@ -1,22 +1,21 @@
-package org.dabuntu.sample.web.request.index;
+package org.dabuntu.sample.web.controller.index;
 
 import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.component.generator.aop.annotation.InOutLogging;
-import org.dabuntu.sample.auth.basic.identity.SampleBasicAuthIdentity;
-import org.dabuntu.sample.auth.form.identity.SampleFormAuthIdentity;
+import org.dabuntu.sample.domain.entity.User;
+import org.dabuntu.sample.domain.service.UserRoleService;
 import org.dabuntu.sample.prop.RootProp;
-import org.dabuntu.sample.repository.Products;
-import org.dabuntu.sample.web.service.ProductService;
+import org.dabuntu.sample.domain.entity.Products;
+import org.dabuntu.sample.domain.service.ProductService;
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.Controller;
 import org.dabuntu.web.annotation.PathVariable;
 import org.dabuntu.web.annotation.RequestBody;
 import org.dabuntu.web.annotation.RequestCookie;
-import org.dabuntu.web.annotation.Session;
 import org.dabuntu.web.context.ApplicationPool;
 import org.dabuntu.web.core.response.HtmlResponse;
 import org.dabuntu.web.def.HttpMethod;
-import org.dabuntu.web.def.Tomato;
+import org.dabuntu.web.def.Logo;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,9 @@ public class IndexController {
 	@Inject
 	private RootProp prop;
 	@Inject
-	private ProductService service;
+	private ProductService productService;
+	@Inject
+	private UserRoleService userRoleService;
 
 	// ===================================================================================
 	//                                                                          Request
@@ -44,7 +45,7 @@ public class IndexController {
 	//                                               -------
 	@Action(url = "/about", method = HttpMethod.GET)
 	public HtmlResponse dabunt() {
-		String htmlString = new Tomato().tomato.replace("<", "・").replace(">", "・").replace("\n", "<br>");
+		String htmlString = new Logo().logo.replace("<", "・").replace(">", "・").replace("\n", "<br>").replaceAll("\\s", "&nbsp;");
 		HtmlResponse response = new HtmlResponse("about");
 		response.putData("model", htmlString);
 
@@ -52,18 +53,23 @@ public class IndexController {
 	}
 
 	// -----------------------------------------------------
-	//                                               Auth
+	//                                               DB integration
 	//                                               -------
+	@Action(url = "/users", method = HttpMethod.GET)
+	public List<User> usersGet() {
+		return userRoleService.findUsers();
+	}
+
 	@Action(url = "/products", method = HttpMethod.GET)
 	public List<Products.Product> productsGet() {
-		List<Products.Product> products = service.getProductsAll();
+		List<Products.Product> products = productService.getProductsAll();
 		return products;
 	}
 
 	@Action(url = "/products/{productId}", method = HttpMethod.GET)
 	public Products.Product productGet(@PathVariable("productId") String productId) {
 		Integer id = Integer.parseInt(productId);
-		Products.Product product = service.getProduct(id);
+		Products.Product product = productService.getProduct(id);
 		return product;
 	}
 
@@ -103,6 +109,7 @@ public class IndexController {
 		response.putData("model", model);
 		return response;
 	}
+
 	@Action(url = "/request/test", method = HttpMethod.POST)
 	public HtmlResponse requestTestPost(// @Session SessionInfo userSession,
 								 // @PathVariable("userId") String userId,

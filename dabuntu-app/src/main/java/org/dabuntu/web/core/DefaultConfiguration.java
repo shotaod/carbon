@@ -32,5 +32,4 @@ public class DefaultConfiguration {
 	private void loadForced(TemplateEngine engine) {
 		engine.getConfiguration();
 	}
-
 }
