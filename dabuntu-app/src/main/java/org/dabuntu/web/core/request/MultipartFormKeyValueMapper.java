@@ -15,14 +15,10 @@ import java.util.stream.Collectors;
 /**
  * @author ubuntu 2016/10/12.
  */
-public class MultipartFormKeyValueMapper extends AbstractKeyValueMapper {
-
-	public MultipartFormKeyValueMapper(HttpServletRequest request) {
-		super(request);
-	}
+public class MultipartFormKeyValueMapper implements RequestMapper {
 
 	@Override
-	public Map<String, Object> doMap(HttpServletRequest request) {
+	public Map<String, Object> map(HttpServletRequest request) {
 		ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
 		upload.setSizeMax(20 * 1024);
 		upload.setFileSizeMax(10 * 1024);
@@ -31,7 +27,7 @@ public class MultipartFormKeyValueMapper extends AbstractKeyValueMapper {
 		try {
 			items = upload.parseRequest(request);
 		} catch (FileUploadException e) {
-			throw new RequestMappingException();
+			throw new RequestMappingException("", e);
 		}
 
 		return items.stream().map(item -> {

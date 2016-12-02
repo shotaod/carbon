@@ -2,8 +2,8 @@ package org.dabuntu.web.core;
 
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.PathVariable;
-import org.dabuntu.web.container.PathVariableBinding;
 import org.dabuntu.web.container.ComputedUriVariableContainer;
+import org.dabuntu.web.container.PathVariableBinding;
 import org.dabuntu.web.exception.ActionMappingException;
 
 import java.lang.reflect.Method;

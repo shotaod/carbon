@@ -20,6 +20,7 @@ public class JsonProcessor extends AbstractResponseProcessor {
 		try {
 			response.setContentType("application/json; charset=utf-8");
 			mapper.writeValue(response.getWriter(), this.result);
+			response.setStatus(HttpServletResponse.SC_OK);
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();

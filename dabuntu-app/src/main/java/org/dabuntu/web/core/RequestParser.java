@@ -1,19 +1,17 @@
 package org.dabuntu.web.core;
 
 import org.dabuntu.component.annotation.Component;
+import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.web.container.request.MappedCookie;
 import org.dabuntu.web.container.request.MappedRequestBody;
 import org.dabuntu.web.container.request.ParsedRequest;
-import org.dabuntu.web.core.request.JsonKeyValueMapper;
-import org.dabuntu.web.core.request.KeyValueMapper;
-import org.dabuntu.web.core.request.MultipartFormKeyValueMapper;
+import org.dabuntu.web.core.request.RequestMapper;
+import org.dabuntu.web.core.request.RequestMapperFactory;
 import org.dabuntu.web.def.HttpMethod;
 import org.dabuntu.web.exception.RequestMappingException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,12 +22,8 @@ import java.util.stream.Collectors;
 @Component
 public class RequestParser {
 
-	// -----------------------------------------------------
-	//                              applicable content types
-	//                              ------------------------
-	private static final String APPLICATION_JSON = "application/json";
-	private static final String MULTIPART_FORM = "multipart/form-data";
-	private static final String X_WWW_FORM_URL_ENCODE = "application/x-www-form-urlencoded";
+	@Inject
+	private RequestMapperFactory factory;
 
 	public ParsedRequest parse(HttpServletRequest request) {
 
@@ -39,8 +33,12 @@ public class RequestParser {
 		if (HttpMethod.GET.getCode().equals(request.getMethod())) {
 			return ParsedRequest.forGet(mappedCookie);
 		}
+		RequestMapper mapper = factory.factorize(request).orElseThrow(() ->
+			new RequestMappingException(String
+				.format("Not Found suitable request mapper For content-type ['%s']",
+					request.getContentType())));
 
-		Map<String, Object> map = this.contentMapperFactory(request).map();
+		Map<String, Object> map = mapper.map(request);
 		MappedRequestBody mappedReqBody = new MappedRequestBody(map);
 
 		return new ParsedRequest(request.getMethod(), mappedCookie, mappedReqBody);
@@ -57,34 +55,5 @@ public class RequestParser {
 						));
 				return new MappedCookie(map);
 			}).orElseGet(() -> MappedCookie.empty());
-	}
-
-	private KeyValueMapper contentMapperFactory(HttpServletRequest request) {
-		String contentType = Optional.ofNullable(request.getHeader("content-type")).map(ct -> ct.toLowerCase()).orElse(null);
-
-		if (APPLICATION_JSON.equals(contentType)) {
-			return new JsonKeyValueMapper(request);
-		}
-
-		if (MULTIPART_FORM.equals(contentType)) {
-			return new MultipartFormKeyValueMapper(request);
-		}
-
-		if (X_WWW_FORM_URL_ENCODE.equals(contentType) || contentType == null) {
-			return () -> {
-				HashMap<String, Object> keyValues = new HashMap<>();
-
-				Enumeration<String> params = request.getParameterNames();
-				while (params.hasMoreElements()) {
-					String pName = params.nextElement();
-					String pValue = request.getParameter(pName);
-					keyValues.put(pName, pValue);
-				}
-
-				return keyValues;
-			};
-		}
-
-		throw new RequestMappingException(String.format("Not Found suitable request mapper For content-type ['%s']", contentType));
 	}
 }

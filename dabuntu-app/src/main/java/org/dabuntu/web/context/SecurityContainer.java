@@ -1,5 +1,6 @@
 package org.dabuntu.web.context;
 
+import org.dabuntu.web.auth.AuthIdentity;
 import org.dabuntu.web.auth.AuthStrategy;
 
 import java.util.List;
@@ -9,12 +10,12 @@ import java.util.List;
  */
 public class SecurityContainer {
 
-	private List<AuthStrategy> strategies;
+	private List<AuthStrategy<AuthIdentity>> strategies;
 
 	public SecurityContainer() {
 	}
 
-	public SecurityContainer(List<AuthStrategy> strategies) {
+	public SecurityContainer(List<AuthStrategy<AuthIdentity>> strategies) {
 		this.strategies = strategies;
 	}
 
@@ -22,7 +23,7 @@ public class SecurityContainer {
 		return strategies != null && !strategies.isEmpty();
 	}
 
-	public List<AuthStrategy> getStrategies() {
+	public List<AuthStrategy<AuthIdentity>> getStrategies() {
 		return strategies;
 	}
 }

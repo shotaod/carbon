@@ -1,10 +1,10 @@
 package org.dabuntu.component.generator.aop.interceptor;
 
-import org.dabuntu.component.generator.aop.annotation.InOutLogging;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import org.dabuntu.util.format.BoxedTitleMessage;
+import org.dabuntu.component.generator.aop.annotation.InOutLogging;
 import org.dabuntu.util.SimpleKeyValue;
+import org.dabuntu.util.format.BoxedTitleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

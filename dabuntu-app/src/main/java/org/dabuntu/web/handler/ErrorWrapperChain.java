@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * @author ubuntu 2016/10/17.
@@ -30,6 +30,11 @@ public class ErrorWrapperChain extends HttpHandlerChain{
 			if (!this.handleThrowable(response, throwable)) {
 				logger.warn("Error that can't be handled is Occurred", throwable);
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				try {
+					response.getWriter().println("<h1>Error</h1>");
+				} catch (IOException ignored) {}
+			} else {
+				logger.warn("Handled Error", throwable);
 			}
 		}
 	}
@@ -39,7 +44,7 @@ public class ErrorWrapperChain extends HttpHandlerChain{
 
 		if (errorConsumer == null) return false;
 
-		errorConsumer.accept(throwable.getClass(), response);
+		errorConsumer.accept(throwable, response);
 
 		return true;
 	}

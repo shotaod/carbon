@@ -90,7 +90,7 @@ public class SecurityConfiguration {
 				}
 
 				@Override
-				public void set(IDENTITY identity, SessionContainer session) {
+				public void set(AuthIdentity identity, SessionContainer session) {
 					session.setObject(identity);
 				}
 
@@ -120,9 +120,9 @@ public class SecurityConfiguration {
 		return new Rule(this);
 	}
 
-	public List<AuthStrategy> getStrategies() {
+	public List<AuthStrategy<AuthIdentity>> getStrategies() {
 		return this.rules.stream()
-				.map(rule -> rule.convert())
+				.map(rule -> (AuthStrategy<AuthIdentity>)rule.convert())
 				.collect(Collectors.toList());
 	}
 }

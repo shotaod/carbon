@@ -1,7 +1,6 @@
 package org.dabuntu.sample.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

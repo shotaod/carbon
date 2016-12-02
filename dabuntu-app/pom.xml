@@ -50,11 +50,17 @@
         </dependency>
 
         <!-- 組み込み Web Starter -->
-        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty.aggregate/jetty-all-server -->
+        <!--https://mvnrepository.com/artifact/org.eclipse.jetty.aggregate/jetty-all-server-->
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all-server</artifactId>
             <version>8.2.0.v20160908</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.jetty.orbit</groupId>
+                    <artifactId>javax.servlet</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core -->
         <dependency>

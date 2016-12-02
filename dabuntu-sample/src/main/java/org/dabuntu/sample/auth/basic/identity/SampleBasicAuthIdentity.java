@@ -1,6 +1,6 @@
 package org.dabuntu.sample.auth.basic.identity;
 
-import org.dabuntu.sample.domain.entity.User;
+import org.dabunt.sample.tables.pojos.User;
 import org.dabuntu.web.auth.AuthIdentity;
 
 /**
@@ -16,12 +16,12 @@ public class SampleBasicAuthIdentity implements AuthIdentity {
 
 	@Override
 	public String username() {
-		return user.getUsername();
+		return user.getUserName();
 	}
 
 	@Override
 	public String cryptPassword() {
-		return user.getPassword();
+		return user.getUserPassword();
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,6 +26,8 @@ import java.util.stream.Stream;
 public class ConfigHolder {
 	private Logger logger = LoggerFactory.getLogger(ConfigHolder.class);
 
+	private Yaml yaml;
+	private String configFileName;
 	private Map<String, Object> config;
 	private List<Config> flatConfig;
 
@@ -41,12 +45,25 @@ public class ConfigHolder {
 
 	@SuppressWarnings("unchecked")
 	public ConfigHolder(String configFileName) {
-		Yaml yamlParser = new Yaml();
-		this.config = Optional.ofNullable(ClassLoader.getSystemResourceAsStream(configFileName))
-				.map(yamlStream -> yamlParser.loadAs(yamlStream, Map.class))
-				.orElse(new HashMap());
-		this.flatConfig = deep(config, null);
-		this.flatConfig.forEach(flat -> logger.debug(flat.toString()));
+		this.configFileName = configFileName;
+		this.yaml = new Yaml();
+		try (InputStream stream = getConfigStream()) {
+			this.config = Optional.ofNullable(stream)
+					.map(yamlStream -> this.yaml.loadAs(yamlStream, Map.class))
+					.orElse(new HashMap());
+			this.flatConfig = deep(config, null);
+			this.flatConfig.forEach(flat -> logger.debug(flat.toString()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public <T> T mappingConf(Class<T> target) {
+		try (InputStream stream = getConfigStream()) {
+			return this.yaml.loadAs(stream, target);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public <T> Optional<T> findPrimitive(String key, Class<T> type) {
@@ -65,6 +82,10 @@ public class ConfigHolder {
 		logger.debug(chapter + results + "\n");
 
 		return confs;
+	}
+
+	private InputStream getConfigStream() {
+		return ClassLoader.getSystemResourceAsStream(configFileName);
 	}
 
 	@SuppressWarnings("unchecked")

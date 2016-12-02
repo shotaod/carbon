@@ -9,6 +9,6 @@ import java.util.Optional;
  */
 public interface AuthSessionManager<IDENTITY extends AuthIdentity> {
 	Optional<IDENTITY> get(SessionContainer session);
-	void set(IDENTITY identity, SessionContainer session);
+	void set(AuthIdentity identity, SessionContainer session);
 	void remove(SessionContainer session);
 }

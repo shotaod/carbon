@@ -1,19 +1,36 @@
 package org.dabuntu.util.mapper;
 
-import org.dabuntu.util.exception.ObjectMappingException;
-
-import java.lang.reflect.Field;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author ubuntu 2016/10/12.
  */
+// TODO ubuntu error handling refactoring
 public class NameBasedObjectMapper {
-	private boolean dismissCastException = true;
+	private interface Caster<T> {
+		T cast(Class<T> type, String source);
+	}
 
+	private boolean dismissCastException = true;
+	private Map<Class, Caster> handlableTypes;
 	public NameBasedObjectMapper() {
+		handlableTypes = initializeHandlable();
 	}
 	public NameBasedObjectMapper(boolean dismissCastException) {
 		this.dismissCastException = dismissCastException;
@@ -23,41 +40,219 @@ public class NameBasedObjectMapper {
 		this.dismissCastException = dismissCastException;
 	}
 
-	public <T> T map(Map<String, Object> source, Class<T> mapTo) {
-		T target;
-		try {
-			target = mapTo.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			String className = mapTo.getName();
-			if (e.getCause() instanceof NoSuchMethodException) {
-				throw new ObjectMappingException(String.format("Failed to construct class['%s'] Plz define 'No arg constructor in %s'", className, className), e);
-			}
-			throw new ObjectMappingException(String.format("Failed to construct class ['%s']", className), e);
+	public <T> T map(Map<String, Object> sources, Class<T> mapTo) {
+
+		/* =======================
+		* check
+		* defined key or not
+		* (not)
+		* - iterate field
+		* (key defined)
+		* - same
+		* - list
+		* - handlable
+		* - pojo
+		======================= */
+
+		T instance = newInstance(mapTo, null);
+		LinkedList<PropertyDescriptor> props = new LinkedList<>();
+		props.addAll(getSetters(mapTo));
+		return (T)doMap(instance, props, sources);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Object doMap(Object target, LinkedList<PropertyDescriptor> setters, Map<String, Object> sources) {
+		if (setters.size() == 0) {
+			return target;
+		}
+		PropertyDescriptor prop = setters.poll();
+		Class<?> propType = prop.getPropertyType();
+		Object source = sources.get(prop.getName());
+
+		if (source == null) {
+			return doMap(target, setters, sources);
 		}
 
-		Arrays.stream(mapTo.getDeclaredFields())
-			.forEach(field -> {
-				try {
-					Object o = findByName(field, source);
-					if (!Objects.isNull(o)) {
-						field.setAccessible(true);
-						field.set(target, o);
-					}
-				} catch (ClassCastException ignorable) {
-					if (!this.dismissCastException) {
-						throw new ObjectMappingException("Failed to set field", ignorable);
-					}
-				} catch (IllegalAccessException impossible) {
-					impossible.printStackTrace();
+		Class<?> sourceClass = source.getClass();
+
+		if (propType.isAssignableFrom(sourceClass)) {
+			if (List.class.isAssignableFrom(propType)) {
+				Class type = (Class)((ParameterizedType) prop.getReadMethod().getGenericReturnType()).getActualTypeArguments()[0];
+				Class parentClass = type.getEnclosingClass();
+				Supplier<Object> elementSupplier;
+				if (parentClass != null && parentClass.isAssignableFrom(target.getClass())) {
+					elementSupplier = () -> newInstance(type, target);
+				} else {
+					elementSupplier = () -> newInstance(type, null);
 				}
-			});
 
-		return target;
+				if (source instanceof List) {
+					List item = (List) ((List) source).stream().map(sourceElement -> {
+						Class<?> sourceElementClass = sourceElement.getClass();
+						if (type.isAssignableFrom(sourceElementClass)) {
+							return sourceElement;
+						}
+						if (handlableTypes.containsKey(type)) {
+							return handlableTypes.get(type).cast(type, sourceElement.toString());
+						}
+						if (sourceElement instanceof Map) {
+							LinkedList<PropertyDescriptor> nestProps = new LinkedList<>();
+							nestProps.addAll(getSetters(type));
+							return doMap(elementSupplier.get(), nestProps, (Map) sourceElement);
+						} else {
+							return null;
+						}
+					}).collect(Collectors.toList());
+					invokeSetter(target, prop, item);
+				} else {
+
+				}
+				return doMap(target, setters, sources);
+			}
+			invokeSetter(target, prop, source);
+			return doMap(target, setters, sources);
+		}
+		if (handlableTypes.containsKey(propType)) {
+			Object cast = handlableTypes.get(propType).cast(propType, source.toString());
+			invokeSetter(target, prop, cast);
+			return doMap(target, setters, sources);
+		}
+		// POJO
+		Object pojo = newInstance(propType, target);
+		LinkedList<PropertyDescriptor> tmp = new LinkedList<>();
+		tmp.addAll(getSetters(propType));
+		if (Map.class.isAssignableFrom(sourceClass)) {
+			invokeSetter(target, prop, doMap(pojo, tmp, (Map)source));
+		}
+		return doMap(target, setters, sources);
 	}
 
-	private Object findByName(Field field, Map<String, Object> source) {
-		Object o = source.get(field.getName());
-		return field.getType().cast(o);
+	private List<PropertyDescriptor> getSetters(Class mapTo) {
+		try {
+			List<PropertyDescriptor> setters = Arrays.stream(Introspector.getBeanInfo(mapTo).getPropertyDescriptors())
+					.filter(pd -> pd.getWriteMethod() != null)
+					.collect(Collectors.toList());
+			LinkedList<PropertyDescriptor> propertyDescriptors = new LinkedList<>();
+			propertyDescriptors.addAll(setters);
+			return propertyDescriptors;
+		} catch (IntrospectionException e) {
+			throw new RuntimeException();
+		}
 	}
 
+	private Object findMap(String key, Map<String, Object> sources) {
+		LinkedList<String> keys = new LinkedList<>();
+		keys.addAll(Arrays.asList(key.split("\\.")));
+		return findMap(keys, sources);
+	}
+
+	private Object findMap(LinkedList<String> keys, Map<String, Object> sources) {
+		if (keys.size() == 0) {
+			String key = keys.poll();
+			return sources.get(key);
+		}
+		String key = keys.poll();
+		Map map = Optional.ofNullable(sources.get(keys.poll())).map(obj -> (Map) obj).orElse(null);
+		return findMap(keys, map);
+	}
+
+	private <T> T newInstance(Class<T> type, Object parentIfAny) {
+		boolean isInnerClass = type.isMemberClass();
+		if (isInnerClass) {
+			try {
+				if (parentIfAny == null || !parentIfAny.getClass().equals(type.getEnclosingClass())) {
+					parentIfAny = type.getEnclosingClass().newInstance();
+				}
+				Constructor<T> constructor = type.getDeclaredConstructor(parentIfAny.getClass());
+				return constructor.newInstance(parentIfAny);
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			return type.newInstance();
+		} catch (InstantiationException e) {
+			if (e.getCause() instanceof NoSuchMethodException) {
+
+			}
+			return null;
+		} catch( IllegalAccessException e) {
+			return null;
+		}
+	}
+
+	private void invokeSetter(Object instance, PropertyDescriptor prop, Object item) {
+		try {
+			prop.getWriteMethod().invoke(instance, item);
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Map<Class, Caster> initializeHandlable() {
+		Map<Class, Caster> map = new HashMap<>();
+		Caster intCaster = (t, s) -> {
+			return Integer.parseInt(s);
+		};
+		Caster longCaster = (t, s) -> {
+			return Long.parseLong(s);
+		};
+		Caster floatCaster = (t, s) -> {
+			return Float.parseFloat(s);
+		};
+		Caster doubleCaster = (t, s) -> {
+			return Double.parseDouble(s);
+		};
+		Caster byteCaster = (t, s) -> {
+			return Byte.parseByte(s);
+		};
+		Caster shortCaster = (t, s) -> {
+			return Short.parseShort(s);
+		};
+		Caster boolCaster = (t, s) -> {
+			return Boolean.parseBoolean(s);
+		};
+
+		map.put(int.class, intCaster);
+		map.put(Integer.class, intCaster);
+		map.put(long.class, longCaster);
+		map.put(Long.class, longCaster);
+		map.put(float.class, floatCaster);
+		map.put(Float.class, floatCaster);
+		map.put(double.class, doubleCaster);
+		map.put(Double.class, doubleCaster);
+		map.put(byte.class, byteCaster);
+		map.put(Byte.class, byteCaster);
+		map.put(short.class, shortCaster);
+		map.put(Short.class, shortCaster);
+		map.put(boolean.class, boolCaster);
+		map.put(Boolean.class, boolCaster);
+
+		map.put(char.class, (t, s) -> {
+			return s.charAt(0);
+		});
+		map.put(Character.class, (t, s) -> {
+			return s.charAt(0);
+		});
+
+		DateTimeFormatter dFormatter = DateTimeFormatter.ISO_DATE;
+		DateTimeFormatter dtFormatter = DateTimeFormatter.ISO_DATE_TIME;
+
+		map.put(LocalDate.class, (t, s) -> {
+			return LocalDate.parse(s, dFormatter);
+		});
+		map.put(LocalDateTime.class, (t, s) -> {
+			return LocalDateTime.parse(s, dtFormatter);
+		});
+
+		return map;
+	}
 }

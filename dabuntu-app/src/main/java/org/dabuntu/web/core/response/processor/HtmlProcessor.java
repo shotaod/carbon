@@ -29,11 +29,11 @@ public class HtmlProcessor extends AbstractResponseProcessor {
 		try {
 			response.setContentType("text/html; charset=utf-8");
 			templateEngine.run(this.htmlResponse, response);
+			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		response.setStatus(HttpServletResponse.SC_OK);
 		return true;
 	}
 }

@@ -1,6 +1,7 @@
 package org.dabuntu.web.container.error;
 
 import org.dabuntu.component.annotation.Component;
+import org.dabuntu.web.exception.ActionInvokeException;
 import org.dabuntu.web.exception.ActionNotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,12 @@ public class ErrorHandlingContainer {
 		});
 
 		rule.put(ActionNotFoundException.class, (e,resp) -> {
+			int status = HttpServletResponse.SC_NOT_FOUND;
+			resp.setStatus(status);
+			errorPage(status, "Not Found", resp);
+		});
+
+		rule.put(ActionInvokeException.class, (e, resp) -> {
 			int status = HttpServletResponse.SC_NOT_FOUND;
 			resp.setStatus(status);
 			errorPage(status, "Not Found", resp);

@@ -91,25 +91,23 @@ public class ActionExecutor {
 	//                                                                      ==============
 	private ActionResult executeAction(Object controller, ControllerAction action, ResolvedArguments resolvedArguments) {
 
-		Object result = null;
+		Object result;
+		Method actionMethod = action.getAction();
 		try {
-			Method actionMethod = action.getAction();
 			if (resolvedArguments.emptyArg()) {
 				result = actionMethod.invoke(controller);
 			} else {
 				result = actionMethod.invoke(controller, resolvedArguments.args);
 			}
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
+			throw actionInvokeException(actionMethod.getDeclaringClass(), e);
 		}
 
 		return new ActionResult(result);
-
 	}
 
-	private ActionInvokeException actionInvokeException (Class target, ClassCastException e) {
+	private ActionInvokeException actionInvokeException (Class target, Exception e) {
 		String message = String.format("failed to Invoke Controller [%s]", target.getName());
 		return new ActionInvokeException(message, e);
 	}
-
 }

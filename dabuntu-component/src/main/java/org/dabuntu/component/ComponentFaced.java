@@ -1,11 +1,12 @@
 package org.dabuntu.component;
 
+import org.dabuntu.component.annotation.Configuration;
+import org.dabuntu.component.generator.CallbackConfiguration;
 import org.dabuntu.component.generator.InstanceGenerator;
 import org.dabuntu.component.inject.InstanceInjector;
 import org.dabuntu.component.scan.TargetBaseScanner;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,8 +54,6 @@ public class ComponentFaced {
 		return scanner.scan(scanBase).stream().collect(Collectors.toSet());
 	}
 
-
-
 	public Set<Class> scan(Class scanBase, Set<Class> whiteAnnotationList) throws Exception {
 		return scanner.scan(scanBase).stream()
 			.filter(clazz -> {
@@ -66,30 +65,30 @@ public class ComponentFaced {
 	}
 
 	/**
-	 * choose this when Dependency is within 'classes'
+	 *
 	 * @param classes
+	 * @param dependency
+	 * @param configuration
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<Class, Object> generate(Set<Class> classes) throws Exception{
-		Map<Class, Object> instance = generator.generate(classes);
-		return injector.with(instance).inject();
-	}
+	public Map<Class, Object> generate(Set<Class> classes, Map<Class,Object> dependency, CallbackConfiguration configuration) throws Exception{
+		Map<Class, Object> instances = generator.generate(classes, configuration);
+		instances.putAll(dependency);
 
-	/**
-	 * choose this when Dependency is in 'classes' over 'dependency'
-	 * @param classes
-	 * @param dependency
-	 * @return
-	 */
-	public Map<Class, Object> generate(Set<Class> classes, Map<Class,Object> dependency) throws Exception{
-		Map<Class, Object> instances = generator.generate(classes);
-		Map<Class, Object> map = new HashMap<>();
-		map.putAll(instances);
-		map.putAll(dependency);
-		Map<Class, Object> injected = injector.with(map).inject();
+		// resolve configuration component
+		Map<Class, Object> configurations = instances.entrySet().stream()
+			.filter(entry -> entry.getKey().isAnnotationPresent(Configuration.class))
+			.collect(Collectors.toMap(
+				e -> e.getKey(),
+				e -> e.getValue()
+			));
+		Map<Class, Object> instancesSuppliedByConfiguration = generator.generateMethodComponent(injector.inject(configurations, instances));
+		instances.putAll(instancesSuppliedByConfiguration);
+
+		Map<Class, Object> injected = injector.inject(instances);
 		return injected.entrySet().stream()
-				.filter(e -> instances.containsKey(e.getKey()))
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+			.filter(e -> !dependency.containsKey(e.getKey()))
+			.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 	}
 }

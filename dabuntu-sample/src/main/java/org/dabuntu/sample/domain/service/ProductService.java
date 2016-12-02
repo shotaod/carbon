@@ -1,36 +1,25 @@
 package org.dabuntu.sample.domain.service;
 
+import org.dabunt.sample.tables.pojos.Product;
 import org.dabuntu.component.annotation.Component;
-import org.dabuntu.sample.exception.ResouceNotFoundException;
-import org.dabuntu.sample.domain.entity.Products;
+import org.dabuntu.component.annotation.Inject;
+import org.jooq.DSLContext;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author ubuntu 2016/10/04.
  */
 @Component
 public class ProductService {
-	private Products products = Products.repository;
+	@Inject
+	private DSLContext jooq;
 
-	public List<Products.Product> getProductsAll() {
-		return products.getProducts();
+	public List<Product> getProductsAll() {
+		return null;
 	}
 
-	public Products.Product getProduct(Integer productId) {
-		Optional<Products.Product> opProduct = products.getProductById(productId);
-		if (!opProduct.isPresent()) {
-			throw new ResouceNotFoundException("プロダクト(Id=" + productId + ") は存在しません");
-		}
-
-		System.out.println(opProduct.get().getName());
-		return opProduct.get();
-	}
-
-	public void buyProduct(Integer productId) {
-		products.getProductById(productId).ifPresent(product -> {
-			System.out.println("Buy " + product.getName() + ", Price is ￥" + product.getPrice() * 1.08);
-		});
+	public Product getProduct(Long productId) {
+		return null;
 	}
 }

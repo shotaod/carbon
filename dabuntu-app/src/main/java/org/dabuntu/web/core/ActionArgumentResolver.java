@@ -1,6 +1,7 @@
 package org.dabuntu.web.core;
 
 import org.dabuntu.component.annotation.Component;
+import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.util.mapper.NameBasedObjectMapper;
 import org.dabuntu.web.annotation.RequestBody;
 import org.dabuntu.web.annotation.RequestCookie;
@@ -26,7 +27,8 @@ import java.util.stream.Collectors;
 @Component
 public class ActionArgumentResolver {
 
-	private NameBasedObjectMapper objectMapper = new NameBasedObjectMapper();
+	@Inject
+	private NameBasedObjectMapper objectMapper;
 
 	public ActionContainer resolve(ParsedRequest parsedRequest, SessionContainer sessionContainer, ActionContainer actionContainer) {
 

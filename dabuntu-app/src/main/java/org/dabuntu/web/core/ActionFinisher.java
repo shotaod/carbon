@@ -17,12 +17,6 @@ public class ActionFinisher {
 	private ResponseProcessorFactory processorFactory;
 
 	public boolean finish(HttpServletResponse response, ActionResult result) {
-		boolean processed = processorFactory.from(result).process(response);
-
-		if (processed) {
-			response.setStatus(HttpServletResponse.SC_OK);
-		}
-
-		return processed;
+		return processorFactory.from(result).process(response);
 	}
 }

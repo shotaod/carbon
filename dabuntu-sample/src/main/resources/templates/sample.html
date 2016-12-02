@@ -11,15 +11,24 @@
 <p>
     about cookie and form data
 </p>
+<!--/*@thymesVar id="form" type="org.dabuntu.sample.web.sample.index.IndexForm"*/-->
 <form action="/request/test" method="POST">
     <ul>
         <li><input type="text" name="data1"/></li>
         <li><input type="text" name="data2"/></li>
         <li><input type="submit" value="submit"/></li>
     </ul>
+    <input name="array[]" type="hidden" value="A">
+    <input name="array[]" type="hidden" value="B">
+    <input name="array[]" type="hidden" value="C">
+    <input name="array[]" type="hidden" value="D">
+    <input name="obj.inner" type="hidden" value="In_A">
+    <input name="obj.inner" type="hidden" value="In_B">
+    <input name="obj.inner" type="hidden" value="In_C">
+    <input name="obj.inner" type="hidden" value="In_D">
 </form>
 
-<!--/*@thymesVar id="model" type="org.dabuntu.sample.web.controller.index.TestResponseModel"*/-->
+<!--/*@thymesVar id="model" type="org.dabuntu.sample.web.sample.index.TestResponseModel"*/-->
 <ul th:if="${model}">
     <li th:if="${model.before1}">
         <pre>Before-1<span th:text="${model.before1}"></span></pre>

@@ -6,5 +6,5 @@ import java.util.function.BiConsumer;
 /**
  * @author ubuntu 2016/10/18.
  */
-public interface ErrorResponseConsumer extends BiConsumer<Class<? extends Throwable>, HttpServletResponse> {
+public interface ErrorResponseConsumer extends BiConsumer<Throwable, HttpServletResponse> {
 }

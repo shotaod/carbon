@@ -1,5 +1,6 @@
 persistent:
-  dataSource:
+  implementation: jooq # jooq or hibernate
+  dataSources:
     - source:
         url: jdbc:mysql://localhost/dabunt
         user: root
@@ -10,6 +11,6 @@ persistent:
         user: root
         password: ''
         port: 3306
-  autoddl: validate # none, create-only, drop, create, create-drop, validate, and update
+  autoddl: create # none, create-only, drop, create, create-drop, validate, and update
 Logger:
   name: slf4j

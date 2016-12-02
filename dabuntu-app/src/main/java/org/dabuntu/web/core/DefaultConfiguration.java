@@ -2,6 +2,7 @@ package org.dabuntu.web.core;
 
 import org.dabuntu.component.annotation.Component;
 import org.dabuntu.component.annotation.Configuration;
+import org.dabuntu.util.mapper.NameBasedObjectMapper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
@@ -31,5 +32,10 @@ public class DefaultConfiguration {
 
 	private void loadForced(TemplateEngine engine) {
 		engine.getConfiguration();
+	}
+
+	@Component
+	public NameBasedObjectMapper objectMapper() {
+		return new NameBasedObjectMapper();
 	}
 }

@@ -3,7 +3,8 @@ package org.dabuntu.web.server.tomcat;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 import org.dabuntu.component.annotation.Component;
-import org.dabuntu.web.handler.HttpHandlerChain;
+import org.dabuntu.component.annotation.Inject;
+import org.dabuntu.web.handler.DefaultChainFactory;
 import org.dabuntu.web.server.EmbedServer;
 
 import javax.servlet.ServletException;
@@ -18,8 +19,9 @@ import java.io.IOException;
 @Component
 public class TomcatServerBridge implements EmbedServer{
 
-	private Tomcat _server = this.tomcat();
-	private HttpHandlerChain chain;
+	private Tomcat _server = tomcat();
+	@Inject
+	private DefaultChainFactory chainFactory;
 
 	private HttpServlet httpServlet() {
 		return new HttpServlet() {
@@ -61,15 +63,16 @@ public class TomcatServerBridge implements EmbedServer{
 	}
 
 	private void doHandle(HttpServletRequest request, HttpServletResponse response) {
-		chain.startSync(request, response);
+		chainFactory.superChain().startAsync(request, response);
 	}
 
 	private Tomcat tomcat() {
 		Tomcat tomcat = new Tomcat();
 		tomcat.setPort(8080);
-		Context context = tomcat.addContext("", ".");
-		Tomcat.addServlet(context, "Core", this.httpServlet());
-		context.addServletMappingDecoded("/*", "Core");
+		// all programmatic, no server.xml or web.xml used
+		Context context = tomcat.addContext("", null);
+		Tomcat.addServlet(context, "core", httpServlet());
+		context.addServletMappingDecoded("/*", "core");
 
 		return tomcat;
 	}

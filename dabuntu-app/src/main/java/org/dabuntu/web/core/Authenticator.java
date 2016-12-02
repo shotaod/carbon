@@ -51,7 +51,7 @@ public class Authenticator {
 		//                                               Find Security Strategy
 		//                                               -------
 		String requestPath = Optional.ofNullable(request.getPathInfo()).orElse("");
-		Optional<AuthStrategy> strategyOp = securityContainer.getStrategies().stream()
+		Optional<AuthStrategy<AuthIdentity>> strategyOp = securityContainer.getStrategies().stream()
 				.filter(strategy -> requestPath.startsWith(strategy.getBaseUrl()))
 				.findFirst();
 
@@ -60,11 +60,11 @@ public class Authenticator {
 			return true;
 		}
 
-		AuthStrategy strategy = strategyOp.get();
+		AuthStrategy<? extends AuthIdentity> strategy = strategyOp.get();
 		logger.info("[Authenticator] process -> Found Strategy: {}", strategy.getClass());
 
 
-		AuthSessionManager sessionManager = strategy.getSessionManager();
+		AuthSessionManager<? extends AuthIdentity> sessionManager = strategy.getSessionManager();
 		// -----------------------------------------------------
 		//                                               Logout check
 		//                                               -------
@@ -78,8 +78,12 @@ public class Authenticator {
 		// -----------------------------------------------------
 		//                                               Check session
 		//                                               -------
-		Optional sessionIdentity = sessionManager.get(session);
-		if (sessionIdentity.isPresent()) {
+		Optional<? extends AuthIdentity> sessionIdentity = sessionManager.get(session);
+		sessionIdentity.map(identity -> {
+			return identity.getClass().equals(strategy.getIdentityType());
+		});
+
+		if (sessionIdentity.map(identity -> identity.getClass().equals(strategy.getIdentityType())).orElse(false)) {
 			logger.info("[Authenticator] end -> Login Success; Found Session Identity: {}", sessionIdentity.get().getClass());
 			return true;
 		}
@@ -125,7 +129,6 @@ public class Authenticator {
 		boolean isMatch = authIdentity.confirm(authInfo.getPassword());
 
 		if (isMatch) {
-			//noinspection unchecked
 			sessionManager.set(authIdentity, session);
 			finisher.onAuth(requestUsername, session);
 			logger.info("[Authenticator] end -> Success Login; User Identity: {}", authIdentity.getClass());

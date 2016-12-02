@@ -4,18 +4,20 @@ import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import org.dabuntu.component.annotation.Component;
 import org.dabuntu.component.annotation.Configuration;
+import org.dabuntu.component.exception.ConstructInstanceException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Generate class
- * Concern about to set aop or not
+ * Concern about to construct object and set aop
  * No concern about what class generate and what class do not generate
  * @author ubuntu 2016/10/07.
  */
@@ -49,57 +51,72 @@ public class InstanceGenerator {
 		}
 	}
 
-	private List<Callback> callbacks;
+	private Map<Class, Callback> tmpCallbacks = new HashMap<>();
 
-	public Map<Class, Object> generate(Set<Class> classes) {
-		return classes.stream()
-				.filter(clazz -> {
-					return !clazz.isInterface() && !clazz.isAnnotation();
-				})
-				.flatMap(clazz -> {
-					// if No callback, generate by Reflection
-					if (this.callbacks == null || this.callbacks.isEmpty()) {
-						try {
-							return genByReflection(clazz).stream();
-						} catch (InstantiationException | IllegalAccessException e) {
-							e.printStackTrace();
-							System.exit(9);
-						}
+	public Map<Class, Object> generate(Set<Class> classes, CallbackConfiguration callbackConfiguration) {
+		Map<Class, Object> result = classes.stream()
+			.filter(clazz -> {
+				return !clazz.isInterface() && !clazz.isAnnotation();
+			})
+			.map(clazz -> {
+				List<Class<? extends Callback>> callbackClasses = callbackConfiguration.getCallback(clazz);
+				if (callbackClasses.isEmpty()) {
+					try {
+						return new ClassAndObject(clazz, clazz.newInstance());
+					} catch (InstantiationException | IllegalAccessException e) {
+						throw new ConstructInstanceException("Failed to perform Construct Instance", e);
 					}
+				}
 
-					// if exist callback, generate by cglib
-					Enhancer enhancer = new Enhancer();
-					enhancer.setSuperclass(clazz);
-					enhancer.setCallbacks(this.callbacks.toArray(new Callback[this.callbacks.size()]));
-					Object o = enhancer.create();
-					return Collections.singleton(new ClassAndObject(clazz, o)).stream();
-				})
-				.collect(Collectors.toMap(
+				// if exist callback, generate by cglib
+				Enhancer enhancer = new Enhancer();
+				enhancer.setSuperclass(clazz);
+				List<Callback> callbacks = callbackClasses.stream()
+						.map(callbackClass -> {
+							return tmpCallbacks.computeIfAbsent(callbackClass, (type) -> {
+								try {
+									return (Callback) type.newInstance();
+								} catch (InstantiationException | IllegalAccessException e) {
+									throw new ConstructInstanceException("Failed to perform Construct Instance", e);
+								}
+							});
+						}).collect(Collectors.toList());
+				enhancer.setCallbacks(callbacks.toArray(new Callback[callbacks.size()]));
+				Object o = enhancer.create();
+				return new ClassAndObject(clazz, o);
+			})
+			.collect(Collectors.toMap(
 					co -> co.getC(),
 					co -> co.getO()
-				));
+			));
+
+		result.putAll(tmpCallbacks);
+		return result;
 	}
 
-	public void setCallbacks(List<Callback> callbacks) {
-		this.callbacks = callbacks;
+	public Map<Class, Object> generateMethodComponent(Map<Class, Object> configurations) {
+		return configurations.entrySet().stream()
+			.flatMap(entry -> genByMethodComponent(entry.getKey(), entry.getValue()))
+			.collect(Collectors.toMap(
+				co -> co.getC(),
+				co -> co.getO()
+			));
 	}
 
-	private Set<ClassAndObject> genByReflection(Class type) throws IllegalAccessException, InstantiationException {
+	private Stream<ClassAndObject> genByMethodComponent(Class type, Object object) {
 		if (type.isAnnotationPresent(Configuration.class)) {
-			Object o = type.newInstance();
 			return Arrays.stream(type.getDeclaredMethods())
 				.filter(method -> method.isAnnotationPresent(Component.class))
 				.map(method -> {
 					try {
-						Object result = method.invoke(o);
+						Object result = method.invoke(object);
 						return new ClassAndObject(method.getReturnType(), result);
 					} catch (IllegalAccessException | InvocationTargetException e) {
-						throw new RuntimeException(e);
+						throw new ConstructInstanceException("Failed to perform Construct Instance", e);
 					}
-				})
-				.collect(Collectors.toSet());
+				});
 		}
 
-		return Collections.singleton(new ClassAndObject(type, type.newInstance()));
+		return Stream.of(new ClassAndObject(type, object));
 	}
 }

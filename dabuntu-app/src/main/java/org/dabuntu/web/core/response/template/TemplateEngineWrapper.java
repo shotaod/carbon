@@ -21,7 +21,7 @@ import java.io.IOException;
 public class TemplateEngineWrapper {
 
 	@Inject
-	private static TemplateEngine templateEngine;
+	private TemplateEngine templateEngine;
 
 	public void run(HtmlResponse source, HttpServletResponse response) throws IOException{
 		ContextHandler.Context context = WebAppContext.getCurrentContext();

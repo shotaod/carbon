@@ -22,7 +22,7 @@ public class DefaultChainFactory {
 	@Inject
 	private CoreDispatchChain coreDispatchChain;
 
-	public HttpHandlerChain parentChain() {
+	public HttpHandlerChain superChain() {
 		errorWrapperChain
 				.setChain(encodingChain)
 				.setChain(loggingChain)

@@ -4,6 +4,7 @@ import org.dabuntu.component.annotation.Component;
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.Auth;
 import org.dabuntu.web.annotation.Controller;
+import org.dabuntu.web.auth.AuthIdentity;
 import org.dabuntu.web.auth.AuthStrategy;
 import org.dabuntu.web.auth.SecurityConfigAdapter;
 import org.dabuntu.web.auth.SecurityConfiguration;
@@ -35,7 +36,7 @@ public class SecurityConfigurator {
 		return findAdapter(context).map(adapter -> {
 			SecurityConfiguration config = new SecurityConfiguration();
 			adapter.configure(config);
-			List<AuthStrategy> strategies = config.getStrategies();
+			List<AuthStrategy<AuthIdentity>> strategies = config.getStrategies();
 			return new SecurityContainer(strategies);
 		}).orElse(new SecurityContainer());
 	}

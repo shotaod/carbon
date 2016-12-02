@@ -6,10 +6,7 @@ import org.dabuntu.web.handler.DefaultChainFactory;
 import org.dabuntu.web.server.EmbedServer;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.SessionManager;
 import org.eclipse.jetty.server.handler.HandlerWrapper;
-import org.eclipse.jetty.server.session.HashSessionManager;
-import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import javax.servlet.ServletException;
@@ -41,7 +38,7 @@ public class JettyServerBridge implements EmbedServer {
 		HandlerWrapper handler = new HandlerWrapper() {
 			@Override
 			public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-				factory.parentChain().startAsync(request, response);
+				factory.superChain().startAsync(request, response);
 				// Dabunt handle Any Case, so we don't delegate jetty
 				baseRequest.setHandled(true);
 			}

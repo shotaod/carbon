@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xml:lang="ja" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+</head>
+<body>
+    <h1>Product List Below</h1>
+    <!--/*@thymesVar id="models" type="java.util.List<org.dabuntu.sample.domain.entity.Product>"*/-->
+    <ul th:each="product : ${models}">
+        <li>
+            <span>￥</span><span th:text="${product.getPrice()}"></span><span> : </span>
+            <a th:href="@{'/products/' + ${product.getId()}}" th:text="${product.getName()}"></a>
+        </li>
+    </ul>
+</body>
+</html>
