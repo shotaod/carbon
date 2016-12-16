@@ -5,7 +5,7 @@ import org.carbon.web.def.HttpMethod;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
 public class ParsedRequest {
 	private HttpMethod method;

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author ubuntu 2016/10/16.
+ * @author Shota Oda 2016/10/16.
  */
 @Component
 public class DabuntCore {

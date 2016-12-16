@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/11/03.
+ * @author Shota Oda 2016/11/03.
  */
 public interface AuthRequestMapper {
 	class AuthInfo {

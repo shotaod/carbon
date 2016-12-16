@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * Generate class
  * Concern about to construct object and set aop
  * No concern about what class generate and what class do not generate
- * @author ubuntu 2016/10/07.
+ * @author Shota Oda 2016/10/07.
  */
 public class InstanceGenerator {
 

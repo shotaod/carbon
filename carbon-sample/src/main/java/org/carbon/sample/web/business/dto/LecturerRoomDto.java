@@ -7,7 +7,7 @@ import org.carbon.sample.tables.pojos.LecturerRoom;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/12/10.
+ * @author Shota Oda 2016/12/10.
  */
 @Value
 public class LecturerRoomDto {

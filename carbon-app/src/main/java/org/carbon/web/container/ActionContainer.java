@@ -5,7 +5,7 @@ import org.carbon.web.auth.Authentication;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/10/05.
+ * @author Shota Oda 2016/10/05.
  */
 public class ActionContainer {
 	private Authentication auth;

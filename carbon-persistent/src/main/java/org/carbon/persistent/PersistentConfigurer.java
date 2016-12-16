@@ -1,7 +1,7 @@
 package org.carbon.persistent;
 
 /**
- * @author ubuntu 2016/11/12.
+ * @author Shota Oda 2016/11/12.
  */
 public class PersistentConfigurer {
 	private PersistentImplementation implementation;

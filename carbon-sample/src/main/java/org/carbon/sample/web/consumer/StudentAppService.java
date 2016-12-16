@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2016/11/27.
+ * @author Shota Oda 2016/11/27.
  */
 @Component
 public class StudentAppService {

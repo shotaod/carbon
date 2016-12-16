@@ -8,7 +8,7 @@ import org.carbon.component.annotation.Inject;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author ubuntu 2016/10/05.
+ * @author Shota Oda 2016/10/05.
  */
 @Component
 public class ActionFinisher {

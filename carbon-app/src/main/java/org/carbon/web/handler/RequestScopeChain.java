@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author ubuntu 2016/10/17.
+ * @author Shota Oda 2016/10/17.
  */
 @Component
 public class RequestScopeChain extends HttpScopeChain {

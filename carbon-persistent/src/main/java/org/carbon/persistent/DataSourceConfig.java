@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
- * @author ubuntu 2016/11/13.
+ * @author Shota Oda 2016/11/13.
  */
 @Data
 public class DataSourceConfig {

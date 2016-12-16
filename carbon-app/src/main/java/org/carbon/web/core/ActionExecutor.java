@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author ubuntu 2016/10/07.
+ * @author Shota Oda 2016/10/07.
  */
 @Component
 public class ActionExecutor {

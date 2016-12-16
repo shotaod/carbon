@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author ubuntu 2016/11/29.
+ * @author Shota Oda 2016/11/29.
  */
 @Component
 public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {

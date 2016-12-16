@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
 @Component
 public class JsonKeyValueRequestMapper implements TypeSafeRequestMapper {

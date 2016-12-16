@@ -15,7 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
- * @author ubuntu 2016/11/25.
+ * @author Shota Oda 2016/11/25.
  */
 @Getter
 @Setter

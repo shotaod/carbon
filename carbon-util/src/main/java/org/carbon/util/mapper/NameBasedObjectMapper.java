@@ -19,9 +19,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
-// TODO ubuntu error handling refactoring
+// TODO Shota Oda error handling refactoring
 public class NameBasedObjectMapper {
 	private interface Caster<T> {
 		T cast(Class<T> type, String source);

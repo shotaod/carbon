@@ -5,7 +5,7 @@ import org.carbon.sample.tables.pojos.Asset;
 import org.carbon.sample.tables.pojos.Lecturer;
 
 /**
- * @author ubuntu 2016/12/10.
+ * @author Shota Oda 2016/12/10.
  */
 @Value
 public class LecturerIndex {

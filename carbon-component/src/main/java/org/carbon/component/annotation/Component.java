@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * (using with @Configuration class)
  * Produce Component by method
  * <p>but, currently supported pure generation, means that Method process must not have dependencies</p>
- * @author ubuntu 2016/10/02
+ * @author Shota Oda 2016/10/02
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

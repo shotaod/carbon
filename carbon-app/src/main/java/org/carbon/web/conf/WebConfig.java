@@ -3,7 +3,7 @@ package org.carbon.web.conf;
 import lombok.Data;
 
 /**
- * @author ubuntu 2016/12/10.
+ * @author Shota Oda 2016/12/10.
  */
 @Data
 public class WebConfig {

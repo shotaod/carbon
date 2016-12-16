@@ -1,7 +1,7 @@
 package org.carbon.util.exception;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
 public class ObjectMappingException extends RuntimeException {
 	public ObjectMappingException() {}

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author ubuntu 2016/10/17.
+ * @author Shota Oda 2016/10/17.
  */
 @Component
 public class ErrorWrapperChain extends HttpHandlerChain{

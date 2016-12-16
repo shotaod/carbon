@@ -2,7 +2,7 @@ package org.carbon.web.container;
 
 /**
  * org.dabuntu.web.annotation.@PathVariableで定義されたパス変数を格納する
- * @author ubuntu 2016/10/08.
+ * @author Shota Oda 2016/10/08.
  */
 public class PathVariableBinding {
 	private String pathVariableMark;

@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author ubuntu 2016/10/06.
+ * @author Shota Oda 2016/10/06.
  */
 public class WebStarter {
 

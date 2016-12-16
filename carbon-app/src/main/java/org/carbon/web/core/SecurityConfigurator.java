@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2016/10/28.
+ * @author Shota Oda 2016/10/28.
  */
 @Component
 public class SecurityConfigurator {

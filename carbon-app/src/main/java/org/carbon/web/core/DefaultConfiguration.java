@@ -14,7 +14,7 @@ import javax.validation.ValidatorFactory;
 
 
 /**
- * @author ubuntu 2016/10/15.
+ * @author Shota Oda 2016/10/15.
  */
 @Configuration
 public class DefaultConfiguration {

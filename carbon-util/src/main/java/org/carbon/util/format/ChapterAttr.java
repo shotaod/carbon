@@ -1,7 +1,7 @@
 package org.carbon.util.format;
 
 /**
- * @author ubuntu 2016/10/22.
+ * @author Shota Oda 2016/10/22.
  */
 public class ChapterAttr {
 	private static final String Prefix = "             ";

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author ubuntu 2016/10/15.
+ * @author Shota Oda 2016/10/15.
  */
 @Deprecated
 public class RequestScopeWrapper extends HandlerWrapper {

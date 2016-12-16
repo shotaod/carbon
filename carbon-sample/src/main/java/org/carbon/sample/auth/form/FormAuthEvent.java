@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 /**
- * @author ubuntu 2016/11/03.
+ * @author Shota Oda 2016/11/03.
  */
 @Component
 public class FormAuthEvent implements AuthEventListener {

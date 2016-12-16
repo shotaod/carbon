@@ -3,7 +3,7 @@ package org.carbon.web.container;
 import java.lang.reflect.Parameter;
 
 /**
- * @author ubuntu 2016/10/08.
+ * @author Shota Oda 2016/10/08.
  */
 public class ResolvedArgument {
 	// argument name correspond to value

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
 @Component
 public class RequestMapper {

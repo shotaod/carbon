@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
 public class SessionContainer {
 	private static ThreadLocal<String> sessionKey = new ThreadLocal<String>() {

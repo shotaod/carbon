@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author ubuntu 2016/10/07.
+ * @author Shota Oda 2016/10/07.
  */
 public final class FactoryAcceptAnnotations {
 	public static Set<Class> basic() {

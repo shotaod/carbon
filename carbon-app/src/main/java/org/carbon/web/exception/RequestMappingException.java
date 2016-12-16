@@ -1,7 +1,7 @@
 package org.carbon.web.exception;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
 public class RequestMappingException extends RuntimeException {
 	public RequestMappingException(String message, Throwable cause) {

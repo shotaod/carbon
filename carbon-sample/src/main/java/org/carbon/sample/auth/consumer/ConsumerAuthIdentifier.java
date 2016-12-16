@@ -7,7 +7,7 @@ import org.carbon.web.auth.AuthIdentifier;
 import org.carbon.web.exception.UserIdentityNotFoundException;
 
 /**
- * @author ubuntu 2016/11/23.
+ * @author Shota Oda 2016/11/23.
  */
 @Component
 public class ConsumerAuthIdentifier implements AuthIdentifier<ConsumerAuthIdentity>{

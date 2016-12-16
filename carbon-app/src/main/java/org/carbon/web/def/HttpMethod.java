@@ -1,7 +1,7 @@
 package org.carbon.web.def;
 
 /**
- * @author ubuntu 2016/10/05.
+ * @author Shota Oda 2016/10/05.
  */
 public enum  HttpMethod {
 	ALL("ALL"),

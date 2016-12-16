@@ -17,7 +17,7 @@ import org.carbon.web.auth.SecurityConfiguration;
 import org.carbon.web.def.HttpMethod;
 
 /**
- * @author ubuntu 2016/11/03.
+ * @author Shota Oda 2016/11/03.
  */
 @Component
 public class SampleSecurityConfigAdapter implements SecurityConfigAdapter {

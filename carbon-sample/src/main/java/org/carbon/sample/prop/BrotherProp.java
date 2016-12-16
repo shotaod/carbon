@@ -5,7 +5,7 @@ import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 
 /**
- * @author ubuntu 2016/10/09.
+ * @author Shota Oda 2016/10/09.
  */
 @Component
 public class BrotherProp {

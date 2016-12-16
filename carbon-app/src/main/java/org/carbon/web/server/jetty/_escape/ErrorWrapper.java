@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author ubuntu 2016/10/11.
+ * @author Shota Oda 2016/10/11.
  */
 @Deprecated
 public class ErrorWrapper extends HandlerWrapper {

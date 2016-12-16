@@ -9,7 +9,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 /**
- * @author ubuntu 2016/12/03.
+ * @author Shota Oda 2016/12/03.
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes("org.dabuntu.web.annotation.Form")

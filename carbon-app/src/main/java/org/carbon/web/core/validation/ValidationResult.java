@@ -4,7 +4,7 @@ import javax.validation.ConstraintViolation;
 import java.util.Set;
 
 /**
- * @author ubuntu 2016/12/11.
+ * @author Shota Oda 2016/12/11.
  */
 public class ValidationResult {
     protected Set<ConstraintViolation> constraintViolations;

@@ -6,7 +6,7 @@ import org.carbon.component.annotation.Inject;
 import org.carbon.sample.prop.sub.SubProp2;
 
 /**
- * @author ubuntu 2016/10/03.
+ * @author Shota Oda 2016/10/03.
  */
 @Component
 public class RootProp {

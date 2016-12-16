@@ -1,7 +1,7 @@
 package org.carbon.component.exception;
 
 /**
- * @author ubuntu 2016/11/28.
+ * @author Shota Oda 2016/11/28.
  */
 public class ConstructInstanceException extends RuntimeException {
 	public ConstructInstanceException(String message) {

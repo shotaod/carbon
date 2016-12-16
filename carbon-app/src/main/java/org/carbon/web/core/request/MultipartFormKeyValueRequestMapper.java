@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
 @Component
 public class MultipartFormKeyValueRequestMapper implements TypeSafeRequestMapper {

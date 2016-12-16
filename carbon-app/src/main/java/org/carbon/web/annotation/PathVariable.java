@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Note: currently supported {@link String} only
- * @author ubuntu 2016/10/05.
+ * @author Shota Oda 2016/10/05.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)

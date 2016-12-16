@@ -1,7 +1,7 @@
 package org.carbon.web.core.response;
 
 /**
- * @author ubuntu 2016/11/28.
+ * @author Shota Oda 2016/11/28.
  */
 public interface HttpOperation {
 	enum Strategy {

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author ubuntu 2016/10/08.
+ * @author Shota Oda 2016/10/08.
  */
 public class InstanceContainer {
 	private Map<Class, Object> instances;

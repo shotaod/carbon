@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
- * @author ubuntu 2016/12/11.
+ * @author Shota Oda 2016/12/11.
  */
 public class LocalDateTimeConverter implements Converter<Timestamp, LocalDateTime> {
     @Override

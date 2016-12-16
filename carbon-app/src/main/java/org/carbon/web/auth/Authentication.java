@@ -1,7 +1,7 @@
 package org.carbon.web.auth;
 
 /**
- * @author ubuntu 2016/10/28.
+ * @author Shota Oda 2016/10/28.
  */
 public class Authentication {
 

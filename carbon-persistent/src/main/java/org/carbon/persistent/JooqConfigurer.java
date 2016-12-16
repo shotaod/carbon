@@ -7,7 +7,7 @@ import org.jooq.impl.DefaultDSLContext;
 import javax.sql.DataSource;
 
 /**
- * @author ubuntu 2016/11/26.
+ * @author Shota Oda 2016/11/26.
  */
 public class JooqConfigurer {
 	private DataSource dataSource;

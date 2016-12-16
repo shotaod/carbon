@@ -5,7 +5,7 @@ import org.carbon.web.auth.Authentication;
 import java.lang.reflect.Method;
 
 /**
- * @author ubuntu 2016/10/07.
+ * @author Shota Oda 2016/10/07.
  */
 public class DefinedAction {
 	private ComputedUriVariableContainer computedUriVariableContainer;

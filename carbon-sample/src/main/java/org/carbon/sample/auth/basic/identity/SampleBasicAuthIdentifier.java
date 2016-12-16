@@ -9,7 +9,7 @@ import org.carbon.web.exception.UserIdentityNotFoundException;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/11/03.
+ * @author Shota Oda 2016/11/03.
  */
 @Component
 public class SampleBasicAuthIdentifier implements AuthIdentifier<SampleBasicAuthIdentity> {

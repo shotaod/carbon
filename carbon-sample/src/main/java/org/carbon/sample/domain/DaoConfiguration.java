@@ -8,7 +8,7 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DAOImpl;
 
 /**
- * @author ubuntu 2016/11/26.
+ * @author Shota Oda 2016/11/26.
  */
 @Configuration
 public class DaoConfiguration {

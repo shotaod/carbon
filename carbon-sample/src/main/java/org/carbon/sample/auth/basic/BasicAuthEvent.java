@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author ubuntu 2016/11/03.
+ * @author Shota Oda 2016/11/03.
  */
 @Component
 public class BasicAuthEvent implements AuthEventListener {

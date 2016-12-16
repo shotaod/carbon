@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author ubuntu 2016/11/25.
+ * @author Shota Oda 2016/11/25.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

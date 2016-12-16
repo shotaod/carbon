@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/11/13.
+ * @author Shota Oda 2016/11/13.
  */
 @Component
 public class StudentService {

@@ -1,7 +1,7 @@
 package org.carbon.web.container;
 
 /**
- * @author ubuntu 2016/10/05.
+ * @author Shota Oda 2016/10/05.
  */
 public class ActionResult {
 	private Object result;

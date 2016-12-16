@@ -1,7 +1,7 @@
 package org.carbon.sample.exception;
 
 /**
- * @author ubuntu 2016/10/08.
+ * @author Shota Oda 2016/10/08.
  */
 public class ResourceNotFoundException extends RuntimeException {
 	public ResourceNotFoundException(String message) {

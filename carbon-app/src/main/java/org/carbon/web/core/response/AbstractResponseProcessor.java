@@ -1,7 +1,7 @@
 package org.carbon.web.core.response;
 
 /**
- * @author ubuntu 2016/10/14.
+ * @author Shota Oda 2016/10/14.
  */
 public abstract class AbstractResponseProcessor implements ResponseProcessor {
 	protected Object result;

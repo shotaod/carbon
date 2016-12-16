@@ -5,7 +5,7 @@ import org.carbon.component.annotation.Inject;
 import org.carbon.sample.prop.sub.supersub.SuperSubProp1;
 
 /**
- * @author ubuntu 2016/10/09.
+ * @author Shota Oda 2016/10/09.
  */
 @Component
 public class SubProp1 {

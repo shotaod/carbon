@@ -1,7 +1,7 @@
 package org.carbon.sample.web.sample.index;
 
 /**
- * @author ubuntu 2016/10/12.
+ * @author Shota Oda 2016/10/12.
  */
 public class IndexCookie {
 	private String key1;

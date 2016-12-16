@@ -1,7 +1,7 @@
 package org.carbon.persistent;
 
 /**
- * @author ubuntu 2016/11/26.
+ * @author Shota Oda 2016/11/26.
  */
 public enum PersistentImplementation {
 	Hibernate("hibernate"),

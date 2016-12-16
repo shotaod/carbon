@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.carbon.web.def.HttpMethod;
 
 /**
- * @author ubuntu 2016/10/27.
+ * @author Shota Oda 2016/10/27.
  */
 @Getter
 @Setter

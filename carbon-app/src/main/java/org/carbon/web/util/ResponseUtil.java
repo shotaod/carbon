@@ -3,7 +3,7 @@ package org.carbon.web.util;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author ubuntu 2016/11/03.
+ * @author Shota Oda 2016/11/03.
  */
 public class ResponseUtil {
 	private final static String Header_Location = "Location";

@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author ubuntu 2016/10/17.
+ * @author Shota Oda 2016/10/17.
  */
 public abstract class HttpHandlerChain {
 	private final Object lock = new Object();

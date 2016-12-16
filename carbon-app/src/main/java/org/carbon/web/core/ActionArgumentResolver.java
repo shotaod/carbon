@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2016/10/11.
+ * @author Shota Oda 2016/10/11.
  */
 @Component
 public class ActionArgumentResolver {

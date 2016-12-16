@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 
 /**
- * @author ubuntu 2016/10/01
+ * @author Shota Oda 2016/10/01
  */
 public class TargetBaseScanner {
 

@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
- * @author ubuntu 2016/11/28.
+ * @author Shota Oda 2016/11/28.
  */
 public class DateTimeBinding implements Binding<Timestamp, LocalDateTime> {
 	@Override

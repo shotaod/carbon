@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * @author ubuntu 2016/10/01
+ * @author Shota Oda 2016/10/01
  */
 @Data
 public class SessionInfo {

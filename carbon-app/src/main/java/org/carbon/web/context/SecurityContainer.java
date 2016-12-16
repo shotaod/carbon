@@ -6,7 +6,7 @@ import org.carbon.web.auth.AuthStrategy;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/10/29.
+ * @author Shota Oda 2016/10/29.
  */
 public class SecurityContainer {
 

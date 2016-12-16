@@ -6,7 +6,7 @@ import org.jooq.util.jaxb.*;
 import java.io.File;
 
 /**
- * @author ubuntu 2016/11/25.
+ * @author Shota Oda 2016/11/25.
  */
 public class JooqGenerator {
 	public static void main(String[] args) throws Exception {

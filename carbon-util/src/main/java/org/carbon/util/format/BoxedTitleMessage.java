@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author ubuntu 2016/10/08.
+ * @author Shota Oda 2016/10/08.
  */
 public class BoxedTitleMessage {
 	private static final String BoxPrefix = "[";

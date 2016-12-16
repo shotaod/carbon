@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 /**
- * @author ubuntu 2016/12/13.
+ * @author Shota Oda 2016/12/13.
  */
 @Data
 public class LecturerProfileForm {

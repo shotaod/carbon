@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/11/04.
+ * @author Shota Oda 2016/11/04.
  */
 @Component
 public class FormAuthRequestMapper implements AuthRequestMapper{

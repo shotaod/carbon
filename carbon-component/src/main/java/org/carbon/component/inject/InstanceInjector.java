@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author ubuntu 2016/10/01
+ * @author Shota Oda 2016/10/01
  */
 public class InstanceInjector {
 

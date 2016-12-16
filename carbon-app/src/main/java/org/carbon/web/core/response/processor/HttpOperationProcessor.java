@@ -8,7 +8,7 @@ import org.carbon.web.core.response.HttpOperation;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author ubuntu 2016/11/28.
+ * @author Shota Oda 2016/11/28.
  */
 @Component
 public class HttpOperationProcessor extends AbstractResponseProcessor {

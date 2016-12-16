@@ -6,7 +6,7 @@ import org.carbon.component.annotation.Inject;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/11/29.
+ * @author Shota Oda 2016/11/29.
  */
 @Component
 public class RequestMapperFactory {

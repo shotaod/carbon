@@ -1,7 +1,7 @@
 package org.carbon.component.exception;
 
 /**
- * @author ubuntu 2016/10/02
+ * @author Shota Oda 2016/10/02
  */
 public class ClassNotRegisterdException extends RuntimeException {
 	public ClassNotRegisterdException(String message) {

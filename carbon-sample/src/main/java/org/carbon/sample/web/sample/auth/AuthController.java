@@ -12,7 +12,7 @@ import org.carbon.web.core.response.HtmlResponse;
 import org.carbon.web.def.HttpMethod;
 
 /**
- * @author ubuntu 2016/11/05.
+ * @author Shota Oda 2016/11/05.
  */
 @Controller
 public class AuthController {

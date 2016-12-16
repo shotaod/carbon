@@ -1,7 +1,7 @@
 package org.carbon.util;
 
 /**
- * @author ubuntu 2016/10/08.
+ * @author Shota Oda 2016/10/08.
  */
 public class SimpleKeyValue {
 	private String key;

@@ -6,7 +6,7 @@ import org.carbon.sample.tables.pojos.Student;
 import org.carbon.web.auth.AuthIdentity;
 
 /**
- * @author ubuntu 2016/11/23.
+ * @author Shota Oda 2016/11/23.
  */
 @Data
 @AllArgsConstructor

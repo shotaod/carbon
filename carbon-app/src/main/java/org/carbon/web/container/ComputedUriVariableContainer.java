@@ -4,7 +4,7 @@ package org.carbon.web.container;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/10/08.
+ * @author Shota Oda 2016/10/08.
  */
 public class ComputedUriVariableContainer {
 	private String computedUri;

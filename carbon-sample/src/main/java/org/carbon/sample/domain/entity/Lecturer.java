@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/11/05.
+ * @author Shota Oda 2016/11/05.
  */
 @Getter
 @Setter

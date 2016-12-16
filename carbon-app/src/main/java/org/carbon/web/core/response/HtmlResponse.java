@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author ubuntu 2016/10/14.
+ * @author Shota Oda 2016/10/14.
  */
 public class HtmlResponse{
 	private String htmlPath;

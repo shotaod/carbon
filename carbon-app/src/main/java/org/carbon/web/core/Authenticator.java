@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/10/27.
+ * @author Shota Oda 2016/10/27.
  */
 @Component
 public class Authenticator {

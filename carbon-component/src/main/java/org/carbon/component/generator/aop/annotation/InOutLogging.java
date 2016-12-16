@@ -7,7 +7,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * @author ubuntu 2016/10/02.
+ * @author Shota Oda 2016/10/02.
  */
 @Retention(RUNTIME)
 @Target({METHOD})

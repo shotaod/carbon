@@ -1,7 +1,7 @@
 package org.carbon.sample.web.sample.index;
 
 /**
- * @author ubuntu 2016/10/15.
+ * @author Shota Oda 2016/10/15.
  */
 public class TestResponseModel {
 	private String before1;

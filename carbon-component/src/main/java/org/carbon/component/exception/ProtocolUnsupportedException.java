@@ -1,7 +1,7 @@
 package org.carbon.component.exception;
 
 /**
- * @author ubuntu 2016/11/16.
+ * @author Shota Oda 2016/11/16.
  */
 public class ProtocolUnsupportedException extends RuntimeException{
 	public ProtocolUnsupportedException() {

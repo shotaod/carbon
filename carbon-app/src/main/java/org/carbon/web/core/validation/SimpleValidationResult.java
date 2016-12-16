@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2016/12/11.
+ * @author Shota Oda 2016/12/11.
  */
 public class SimpleValidationResult extends ValidationResult {
     Map<String, String> simpleViolationResults;

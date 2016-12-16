@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
- * @author ubuntu 2016/11/28.
+ * @author Shota Oda 2016/11/28.
  */
 @Data
 public class RoomCreateForm {

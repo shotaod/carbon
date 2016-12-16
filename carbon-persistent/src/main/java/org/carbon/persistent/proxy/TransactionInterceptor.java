@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 
 /**
- * @author ubuntu 2016/11/25.
+ * @author Shota Oda 2016/11/25.
  */
 @Component
 public class TransactionInterceptor implements MethodInterceptor {

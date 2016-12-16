@@ -13,7 +13,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/10/17.
+ * @author Shota Oda 2016/10/17.
  */
 @Component
 public class LoggingChain extends HttpHandlerChain {

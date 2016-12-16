@@ -8,7 +8,7 @@ import org.carbon.web.core.response.processor.HttpOperationProcessor;
 import org.carbon.web.core.response.processor.JsonProcessor;
 
 /**
- * @author ubuntu 2016/10/14.
+ * @author Shota Oda 2016/10/14.
  */
 @Component
 public class ResponseProcessorFactory {

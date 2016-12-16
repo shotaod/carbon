@@ -11,7 +11,7 @@ import org.jooq.DSLContext;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/11/13.
+ * @author Shota Oda 2016/11/13.
  */
 @Component
 public class LecturerService {

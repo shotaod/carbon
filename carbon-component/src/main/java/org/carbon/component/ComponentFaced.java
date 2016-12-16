@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2016/10/07.
+ * @author Shota Oda 2016/10/07.
  */
 public class ComponentFaced {
 

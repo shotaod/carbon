@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/10/01
+ * @author Shota Oda 2016/10/01
  */
 @Controller
 public class IndexController {

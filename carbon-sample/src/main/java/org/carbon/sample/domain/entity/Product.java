@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * @author ubuntu 2016/10/04.
+ * @author Shota Oda 2016/10/04.
  */
 @Getter
 @Setter

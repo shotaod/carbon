@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author ubuntu 2016/10/04.
+ * @author Shota Oda 2016/10/04.
  */
 @Deprecated
 public class DispatchHandler extends HandlerWrapper {

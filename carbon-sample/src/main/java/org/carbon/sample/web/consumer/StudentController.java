@@ -16,7 +16,7 @@ import org.carbon.web.def.HttpMethod;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/11/23.
+ * @author Shota Oda 2016/11/23.
  */
 @Controller
 public class StudentController {

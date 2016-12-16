@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * @author ubuntu 2016/10/17.
+ * @author Shota Oda 2016/10/17.
  */
 @Component
 public class SessionScopeChain extends HttpScopeChain{

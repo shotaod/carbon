@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author ubuntu 2016/11/12.
+ * @author Shota Oda 2016/11/12.
  */
 public class ConfigHolder {
 	private Logger logger = LoggerFactory.getLogger(ConfigHolder.class);

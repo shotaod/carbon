@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2016/10/02.
+ * @author Shota Oda 2016/10/02.
  */
 public class InOutLoggingInterceptor implements MethodInterceptor{
 

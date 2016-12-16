@@ -8,7 +8,7 @@ import org.jooq.DSLContext;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/10/04.
+ * @author Shota Oda 2016/10/04.
  */
 @Component
 public class ProductService {

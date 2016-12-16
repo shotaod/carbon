@@ -20,7 +20,7 @@ import org.jooq.Result;
 import java.util.List;
 
 /**
- * @author ubuntu 2016/11/28.
+ * @author Shota Oda 2016/11/28.
  */
 @Component
 public class LecturerAppService {

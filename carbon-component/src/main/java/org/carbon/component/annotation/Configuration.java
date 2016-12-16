@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * assert using with @Component in Method
  * and this annotated class is also resolved @Inject
  * @see Component
- * @author ubuntu 2016/10/15.
+ * @author Shota Oda 2016/10/15.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
