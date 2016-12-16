@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xml:lang="ja" lang="ja">
+<head>
+    <title>[受講者]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/static/css/materialize.min.css}"  media="screen,projection"/>
+</head>
+<body>
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">受講者プロトタイプ</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#">講師一覧</a></li>
+            <li><a href="#">予約一覧</a></li>
+            <li><a href="#">カレンダー</a></li>
+            <li><a th:href="@{/consumer/logout}">ログアウト</a></li>
+        </ul>
+    </div>
+</nav>
+<section layout:fragment="content"></section>
+<footer>
+
+</footer>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" th:src="@{/static/js/materialize.min.js}"></script>
+</body>
+</html>

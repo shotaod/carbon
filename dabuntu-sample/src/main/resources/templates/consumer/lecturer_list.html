@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xml:lang="ja" lang="ja"
+      layout:decorate="~{/consumer/layout}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">講師一覧</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <!--/*@thymesVar id="models" type="java.util.List<org.dabuntu.sample.web.consumer.dto.LecturerIndex>"*/-->
+            <div class="col s4" th:each="index : ${models}">
+                <div class="card medium sticky-action">
+                    <div class="card-image">
+                        <img th:src="${index.asset.assetPath}" />
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4" th:inline="text">
+                            [[${index.lecturer.username}]]
+                            <i class="material-icons right">more_vert</i>
+                        </span>
+                        <p th:text="${index.lecturer.prTextShort}"></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4" th:inline="text">
+                            [[${index.lecturer.username}]]
+                            <i class="material-icons right">close</i>
+                        </span>
+                        <p th:text="${index.lecturer.prText}"></p>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">プロフィールを見る</a>
+                        <br>
+                        <a th:href="@{/consumer/lecturer/{lecturerId}/room(lecturerId=${index.lecturer.id})}">講義を見る</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

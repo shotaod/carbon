@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xml:lang="ja" lang="ja"
+      layout:decorate="~{/business/layout}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">プロフィール</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <!--/*@thymesVar id="model" type="org.dabunt.sample.tables.pojos.Lecturer"*/-->
+    <nav>
+        <div class="nav-wrapper">
+            <div class="col s12">
+                <a th:href="@{/business/home}" class="breadcrumb">HOME</a>
+                <a href="#" class="breadcrumb" th:text="プロフィール"></a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="col s6 offset-s3">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">プロフィール</span>
+                    <p>名前: <span th:text="${model.username}"></span></p>
+                    <br />
+                    <p>メールアドレス: <span th:text="${model.email}"></span></p>
+                    <br />
+                    <p>プロフィール要約: <span th:text="${model.prTextShort}"></span></p>
+                    <br />
+                    <p>プロフィール詳細: <span th:text="${model.prText}"></span></p>
+                    <br />
+                </div>
+                <div class="card-action">
+                    <a href="#">This is a link</a>
+                    <a href="#">This is a link</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                <a class="waves-effect waves-light btn-large"
+                   th:href="@{/business/profile/edit}"
+                >
+                    <i class="material-icons left">mode_edit</i>
+                    編集
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -2,22 +2,24 @@ package org.dabuntu.web.container.request;
 
 import org.dabuntu.web.def.HttpMethod;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author ubuntu 2016/10/12.
  */
 public class ParsedRequest {
 	private HttpMethod method;
 	private MappedCookie cookie;
-	private MappedRequestBody request;
+	private HttpServletRequest rewRequest;
 
 	public static ParsedRequest forGet(MappedCookie cookie) {
 		return new ParsedRequest(HttpMethod.GET.getCode(), cookie, null);
 	}
 
-	public ParsedRequest(String hMethod, MappedCookie cookie, MappedRequestBody request) {
+	public ParsedRequest(String hMethod, MappedCookie cookie, HttpServletRequest rewRequest) {
 		this.method = HttpMethod.codeOf(hMethod);
 		this.cookie = cookie;
-		this.request = request;
+		this.rewRequest = rewRequest;
 	}
 
 	public HttpMethod getMethod() {
@@ -28,7 +30,7 @@ public class ParsedRequest {
 		return cookie;
 	}
 
-	public MappedRequestBody getMappedRequestBody() {
-		return request;
+	public HttpServletRequest getRewRequest() {
+		return rewRequest;
 	}
 }

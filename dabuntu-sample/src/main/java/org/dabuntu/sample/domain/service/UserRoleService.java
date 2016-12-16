@@ -32,7 +32,7 @@ public class UserRoleService {
 	}
 
 	public User findByUsername(String username) {
-		return userDao.fetchOneByUserName(username);
+		return userDao.fetchOneByUsername(username);
 	}
 
 	public List<User> findUsers() {

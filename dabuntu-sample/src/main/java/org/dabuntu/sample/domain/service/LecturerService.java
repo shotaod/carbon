@@ -26,7 +26,7 @@ public class LecturerService {
 	}
 
 	public Lecturer findByAddress(String address) {
-		return lecturerDao.fetchOneByAddress(address);
+		return lecturerDao.fetchOneByEmail(address);
 	}
 
 	public List<Lecturer> findLecturers() {

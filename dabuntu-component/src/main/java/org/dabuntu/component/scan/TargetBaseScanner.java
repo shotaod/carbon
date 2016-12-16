@@ -31,7 +31,7 @@ public class TargetBaseScanner {
 	//                                                                          Singleton
 	//                                                                          ==========
 	public TargetBaseScanner() {
-		this.classLoader = Thread.currentThread().getContextClassLoader();
+		this.classLoader = ClassLoader.getSystemClassLoader();
 	}
 
 	// ===================================================================================

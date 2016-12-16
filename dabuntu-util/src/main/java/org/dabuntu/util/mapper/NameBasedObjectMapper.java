@@ -33,6 +33,7 @@ public class NameBasedObjectMapper {
 		handlableTypes = initializeHandlable();
 	}
 	public NameBasedObjectMapper(boolean dismissCastException) {
+		handlableTypes = initializeHandlable();
 		this.dismissCastException = dismissCastException;
 	}
 
@@ -40,6 +41,7 @@ public class NameBasedObjectMapper {
 		this.dismissCastException = dismissCastException;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T map(Map<String, Object> sources, Class<T> mapTo) {
 
 		/* =======================
@@ -69,7 +71,7 @@ public class NameBasedObjectMapper {
 		Class<?> propType = prop.getPropertyType();
 		Object source = sources.get(prop.getName());
 
-		if (source == null) {
+		if (source == null || (source instanceof String && ((String) source).trim().isEmpty())) {
 			return doMap(target, setters, sources);
 		}
 
@@ -146,6 +148,7 @@ public class NameBasedObjectMapper {
 		return findMap(keys, sources);
 	}
 
+	@SuppressWarnings("unchecked")
 	private Object findMap(LinkedList<String> keys, Map<String, Object> sources) {
 		if (keys.size() == 0) {
 			String key = keys.poll();

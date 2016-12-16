@@ -8,6 +8,19 @@ import java.util.stream.Collectors;
  * @author ubuntu 2016/10/12.
  */
 public class MappedRequestBody {
+
+
+
+
+
+
+
+
+
+
+
+
+
 	private Map<String, Object> requests;
 
 	public MappedRequestBody(Map<String, Object> requests) {

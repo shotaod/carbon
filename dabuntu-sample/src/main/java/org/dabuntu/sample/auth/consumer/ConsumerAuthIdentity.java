@@ -16,7 +16,7 @@ public class ConsumerAuthIdentity implements AuthIdentity{
 
 	@Override
 	public String username() {
-		return student.getUserName();
+		return student.getUsername();
 	}
 
 	@Override

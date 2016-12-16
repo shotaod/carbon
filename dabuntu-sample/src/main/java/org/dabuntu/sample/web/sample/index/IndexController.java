@@ -17,6 +17,8 @@ import org.dabuntu.web.core.response.HtmlResponse;
 import org.dabuntu.web.def.HttpMethod;
 import org.dabuntu.web.def.Logo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,20 +100,17 @@ public class IndexController {
 	//                                               RequestBody and Cookie binding
 	//                                               -------
 	@Action(url = "/request/test", method = HttpMethod.GET)
-	public HtmlResponse requestTestGet(@RequestCookie IndexCookie cookie,
-									   @RequestBody IndexForm form) {
+	public HtmlResponse requestTestGet(@RequestCookie IndexCookie cookie) {
 		HtmlResponse response = new HtmlResponse("sample");
 		TestResponseModel model = new TestResponseModel();
 
 		// of course can't get body, It is testing for miss
-		Optional<IndexForm> opForm = Optional.ofNullable(form);
-		model.setForm1(opForm.map(f -> f.getData1()).orElse("null"));
-		model.setForm2(opForm.map(f -> f.getData2()).orElse("null"));
-
 		model.setCookie1(cookie.getKey1());
 		model.setCookie2(cookie.getKey2());
 		response.putData("model", model);
-		response.putData("form", new IndexForm());
+		UserInfoForm form = new UserInfoForm();
+		form.setJobs(Arrays.asList(new JobForm(), new JobForm(), new JobForm()));
+		response.putData("form", form);
 		return response;
 	}
 
@@ -119,12 +118,10 @@ public class IndexController {
 	public HtmlResponse requestTestPost(// @Session SessionInfo userSession,
 								 // @PathVariable("userId") String userId,
 								 @RequestCookie IndexCookie cookie,
-								 @RequestBody IndexForm form) {
+								 @RequestBody UserInfoForm form) {
 
 		HtmlResponse response = new HtmlResponse("sample");
 		TestResponseModel model = new TestResponseModel();
-		model.setForm1(form.getData1());
-		model.setForm2(form.getData2());
 		model.setCookie1(cookie.getKey1());
 		model.setCookie2(cookie.getKey2());
 

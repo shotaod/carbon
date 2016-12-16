@@ -6,6 +6,10 @@ package org.dabuntu.web.core.response;
 public class RedirectOperation implements HttpOperation {
 	private String redirectTo;
 
+	public static RedirectOperation to(String to) {
+        return new RedirectOperation(to);
+    }
+
 	public RedirectOperation(String redirectTo) {
 		this.redirectTo = redirectTo;
 	}

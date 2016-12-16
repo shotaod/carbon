@@ -50,7 +50,7 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteReleases>true</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
@@ -60,6 +60,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -68,6 +69,16 @@
                             <mainClass>org.dabuntu.sample.UbuntuStarter</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>4.0.3</version>
+                <configuration>
+                    <user>root</user>
+                    <password>password</password>
+                    <url>jdbc:mysql://localhost:23306/dabuntdb</url>
                 </configuration>
             </plugin>
         </plugins>

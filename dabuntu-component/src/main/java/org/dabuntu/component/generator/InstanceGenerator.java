@@ -45,6 +45,7 @@ public class InstanceGenerator {
 			return this.c.hashCode();
 		}
 
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals(Object obj) {
 			return this.o.equals(obj);

@@ -69,6 +69,24 @@
             <version>9.0.0.M10</version>
         </dependency>
 
+        <!-- Validator -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.3.4.Final</version>
+        </dependency>
+        <!-- EL dependencies for validator -->
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+
         <!-- Json パーサー -->
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
@@ -92,6 +110,22 @@
             <artifactId>thymeleaf</artifactId>
             <version>3.0.2.RELEASE</version>
         </dependency>
+        <!-- Thymeleaf レイアウト拡張 -->
+        <!-- https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect -->
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <!-- Thymeleaf java8 LocalDateTime 対応-->
+        <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-java8time -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>3.0.0.RELEASE</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>

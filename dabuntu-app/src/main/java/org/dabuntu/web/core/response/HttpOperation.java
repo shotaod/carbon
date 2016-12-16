@@ -6,7 +6,8 @@ package org.dabuntu.web.core.response;
 public interface HttpOperation {
 	enum Strategy {
 		Forward("forward"),
-		Redirect("redirect")
+		Redirect("redirect"),
+        Noop("noop")
 		;
 		private String code;
 

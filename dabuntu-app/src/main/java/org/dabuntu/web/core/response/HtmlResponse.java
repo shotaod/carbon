@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * @author ubuntu 2016/10/14.
  */
-public class HtmlResponse {
+public class HtmlResponse{
 	private String htmlPath;
 	private Map<String, Object> data;
 

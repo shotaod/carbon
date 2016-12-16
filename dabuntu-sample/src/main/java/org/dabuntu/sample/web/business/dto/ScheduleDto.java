@@ -1,4 +1,4 @@
-package org.dabuntu.sample.web.business;
+package org.dabuntu.sample.web.business.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import org.dabunt.sample.tables.pojos.Student;
  */
 @Data
 @AllArgsConstructor
-public class ScheduleEntity {
+public class ScheduleDto {
 	private LecturerSchedule lecturerSchedule;
 	private Student student;
 }

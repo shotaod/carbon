@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xml:lang="ja" lang="ja"
+      layout:decorate="~{/business/layout}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">プロフィール</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <!--/*@thymesVar id="model" type="org.dabunt.sample.tables.pojos.Lecturer"*/-->
+    <!--/*@thymesVar id="errors" type="java.util.Map<String, String>"*/-->
+    <nav>
+        <div class="nav-wrapper">
+            <div class="col s12">
+                <a th:href="@{/business/home}" class="breadcrumb">HOME</a>
+                <a href="#" class="breadcrumb" th:text="プロフィール"></a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <form method="post" action="/business/profile/edit">
+            <div class="row">
+                <div class="input-field col s6 offset-s3">
+                    <i class="material-icons prefix">mode_edit</i>
+                    <th:block th:with="showError=${errors and errors.containsKey('name')}">
+                        <input id="name" type="text" name="name">
+                        <label for="name">名前</label>
+                        <span class="new badge red"
+                              data-badge-caption=""
+                              th:if="${showError}"
+                              th:text="${errors.get('name')}"
+                        ></span>
+                    </th:block>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 offset-s3">
+                    <i class="material-icons prefix">av_timer</i>
+                    <th:block th:with="showError=${errors and errors.containsKey('email')}">
+                        <input id="email" type="text" name="email">
+                        <label for="email">メールアドレス</label>
+                        <span class="new badge red"
+                              data-badge-caption=""
+                              th:if="${showError}"
+                              th:text="${errors.get('email')}"
+                        ></span>
+                    </th:block>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 offset-s3">
+                    <i class="material-icons prefix">assignment</i>
+                    <th:block th:with="showError=${errors and errors.containsKey('prShort')}">
+                        <textarea class="materialize-textarea" id="prShort" name="prShort"></textarea>
+                        <label for="prShort">プロフィール要約</label>
+                        <span class="new badge red"
+                              data-badge-caption=""
+                              th:if="${showError}"
+                              th:text="${errors.get('prShort')}"
+                        ></span>
+                    </th:block>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 offset-s3">
+                    <i class="material-icons prefix">av_timer</i>
+                    <th:block th:with="showError=${errors and errors.containsKey('prLong')}">
+                        <textarea class="materialize-textarea" id="prLong" name="prLong"></textarea>
+                        <label for="prLong">プロフィール詳細</label>
+                        <span class="new badge red"
+                              data-badge-caption=""
+                              th:if="${showError}"
+                              th:text="${errors.get('prLong')}"
+                        ></span>
+                    </th:block>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s4">
+                    <button class="waves-effect waves-light btn-large">
+                        <i class="material-icons left">mode_edit</i>
+                        更新
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

@@ -78,7 +78,7 @@ public class TomcatServerBridge implements EmbedServer{
 	}
 
 	@Override
-	public void run() throws Exception {
+	public void run(Class base) throws Exception {
 		_server.start();
 	}
 

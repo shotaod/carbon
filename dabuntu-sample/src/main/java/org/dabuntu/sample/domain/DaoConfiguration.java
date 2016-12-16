@@ -1,12 +1,6 @@
 package org.dabuntu.sample.domain;
 
-import org.dabunt.sample.tables.daos.LecturerApplyHistoryDao;
-import org.dabunt.sample.tables.daos.LecturerDao;
-import org.dabunt.sample.tables.daos.LecturerScheduleDao;
-import org.dabunt.sample.tables.daos.ProductDao;
-import org.dabunt.sample.tables.daos.RoleDao;
-import org.dabunt.sample.tables.daos.StudentDao;
-import org.dabunt.sample.tables.daos.UserDao;
+import org.dabunt.sample.tables.daos.*;
 import org.dabuntu.component.annotation.Component;
 import org.dabuntu.component.annotation.Configuration;
 import org.dabuntu.component.annotation.Inject;
@@ -33,6 +27,10 @@ public class DaoConfiguration {
 		return construct(LecturerScheduleDao.class);
 	}
 	@Component
+	public LecturerRoomDao lecturerRoomDao() {
+		return construct(LecturerRoomDao.class);
+	}
+	@Component
 	public ProductDao productDao() {
 		return construct(ProductDao.class);
 	}
@@ -53,8 +51,8 @@ public class DaoConfiguration {
 		T dao = null;
 		try {
 			dao = daoType.newInstance();
+			dao.setConfiguration(jooq.configuration());
 		} catch (InstantiationException | IllegalAccessException ignore) {}
-		dao.setConfiguration(jooq.configuration());
 		return dao;
 	}
 }

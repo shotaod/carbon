@@ -4,6 +4,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.dabuntu.component.annotation.Component;
 import org.dabuntu.util.SimpleKeyValue;
 import org.dabuntu.web.exception.RequestMappingException;
 
@@ -15,9 +16,14 @@ import java.util.stream.Collectors;
 /**
  * @author ubuntu 2016/10/12.
  */
-public class MultipartFormKeyValueMapper implements RequestMapper {
+@Component
+public class MultipartFormKeyValueRequestMapper implements TypeSafeRequestMapper {
 
 	@Override
+	public <T> T map(HttpServletRequest request, Class<T> mapTo) {
+		return null;
+	}
+
 	public Map<String, Object> map(HttpServletRequest request) {
 		ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
 		upload.setSizeMax(20 * 1024);

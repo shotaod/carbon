@@ -113,6 +113,10 @@ public class ConfigHolder {
 				return Collections.singletonList(type.cast(sourceValue));
 			}
 
+			if (value instanceof Map) {
+				return Collections.singletonList(mapper.map((Map)value, type));
+			}
+
 			return new ArrayList<T>();
 		});
 	}

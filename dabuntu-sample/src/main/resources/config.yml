@@ -1,16 +1,16 @@
+web:
+  port: 7927
+  resourceDirectory: static
+  resourceOutPath: /static
 persistent:
   implementation: jooq # jooq or hibernate
   dataSources:
-    - source:
-        url: jdbc:mysql://localhost/dabunt
-        user: root
-        password: ''
-        port: 3306
-    - source:
-        url: jdbc:mysql://localhost/twitterdb
-        user: root
-        password: ''
-        port: 3306
+    source:
+      url: 127.0.0.1
+      db: dabuntdb
+      user: root
+      password: password
+      port: 23306
   autoddl: create # none, create-only, drop, create, create-drop, validate, and update
 Logger:
   name: slf4j

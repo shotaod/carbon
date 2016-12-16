@@ -10,6 +10,7 @@ import org.dabuntu.component.ComponentFaced;
 import org.dabuntu.component.generator.CallbackConfiguration;
 import org.dabuntu.util.format.ChapterAttr;
 import org.dabuntu.web.conf.ConfigHolder;
+import org.dabuntu.web.conf.WebConfig;
 import org.dabuntu.web.context.ApplicationPool;
 import org.dabuntu.web.context.InstanceContainer;
 import org.dabuntu.web.context.MappedActionContainer;
@@ -64,13 +65,16 @@ public class WebStarter {
 
 		Map<Class, Object> dependency = setupPersistence(scanBase, configHolder);
 
-		// Must Call! to resolve configurations and web-managed instances
-		setupWeb(scanBase, dependency);
+        WebConfig webConfig = configHolder.find("web", WebConfig.class).get(0);
+        dependency.put(WebConfig.class, webConfig);
+
+        // Must Call! to resolve configurations and web-managed instances
+		setupWebPool(scanBase, dependency);
 
 		// get Server
 		InstanceContainer appInstancePool = ApplicationPool.instance.getAppPool();
 		EmbedServer embedServer = appInstancePool.getInstanceByType(JettyServerBridge.class);
-		embedServer.run();
+		embedServer.run(scanBase);
 
 		logger.info(ChapterAttr.get("Dabunt Initialize Finished"));
 
@@ -117,7 +121,7 @@ public class WebStarter {
 		return dependency;
 	}
 
-	private void setupWeb(Class scanBase, Map<Class, Object> dependency) throws Exception{
+	private void setupWebPool(Class scanBase, Map<Class, Object> dependency) throws Exception{
 		ComponentFaced componentFaced = new ComponentFaced();
 		ActionMapper actionMapper = new ActionMapper();
 		SecurityConfigurator securityConfigurator = new SecurityConfigurator();

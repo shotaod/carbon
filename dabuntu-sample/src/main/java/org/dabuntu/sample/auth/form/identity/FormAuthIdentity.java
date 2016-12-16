@@ -16,12 +16,12 @@ public class FormAuthIdentity implements AuthIdentity {
 
 	@Override
 	public String username() {
-		return user.getUserName();
+		return user.getUsername();
 	}
 
 	@Override
 	public String cryptPassword() {
-		return user.getUserPassword();
+		return user.getPassword();
 	}
 
 	@Override

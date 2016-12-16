@@ -25,7 +25,7 @@ public class StudentService {
 	}
 
 	public Optional<Student> selectOneByAddress(String address) {
-		return Optional.ofNullable(studentDao.fetchOneByAddress(address));
+		return Optional.ofNullable(studentDao.fetchOneByEmail(address));
 	}
 
 	public List<Student> findStudents() {

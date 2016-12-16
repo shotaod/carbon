@@ -1,14 +1,19 @@
 package org.dabuntu.sample.web.business;
 
+import org.dabunt.sample.tables.pojos.Lecturer;
 import org.dabuntu.component.annotation.Inject;
 import org.dabuntu.sample.auth.business.BusinessAuthIdentity;
+import org.dabuntu.sample.web.business.dto.LecturerRoomDto;
+import org.dabuntu.sample.web.business.dto.ScheduleDto;
 import org.dabuntu.web.annotation.Action;
 import org.dabuntu.web.annotation.Controller;
 import org.dabuntu.web.annotation.RequestBody;
 import org.dabuntu.web.annotation.Session;
+import org.dabuntu.web.annotation.Validate;
 import org.dabuntu.web.core.response.HtmlResponse;
 import org.dabuntu.web.core.response.HttpOperation;
 import org.dabuntu.web.core.response.RedirectOperation;
+import org.dabuntu.web.core.validation.SimpleValidationResult;
 import org.dabuntu.web.def.HttpMethod;
 
 import java.util.List;
@@ -27,6 +32,9 @@ public class LecturerController {
 		return new HtmlResponse("/business/login");
 	}
 
+	// -----------------------------------------------------
+	//                                               authentication
+	//                                               -------
 	@Action(url = "/business/login", method = HttpMethod.GET)
 	public HtmlResponse loginGet() {
 		return new HtmlResponse("/business/login");
@@ -34,19 +42,99 @@ public class LecturerController {
 
 	@Action(url = "/business/auth", method = HttpMethod.POST)
 	public HttpOperation authSuccessPost() {
-		return new RedirectOperation("/business/schedule");
+		return RedirectOperation.to("/business/home");
 	}
 
-	@Action(url = "/business/register", method = HttpMethod.GET)
-	public HtmlResponse registerGet(@Session BusinessAuthIdentity authIdentity) {
-		return new HtmlResponse("business/timeline");
+	// -----------------------------------------------------
+	//                                               pages
+	//                                               -------
+	@Action(url = "/business/home", method = HttpMethod.GET)
+    public HtmlResponse homeGet(@Session BusinessAuthIdentity authIdentity) {
+        HtmlResponse response = new HtmlResponse("/business/lecturer_room");
+
+        LecturerRoomDto model = appService.selectRooms(authIdentity.getUser().getId());
+        response.putData("model", model);
+        return response;
+    }
+
+    // -----------------------------------------------------
+    //                                               Room
+    //                                               -------
+	@Action(url = "/business/room", method = HttpMethod.GET)
+	public HtmlResponse roomGet(@Session BusinessAuthIdentity authIdentity) {
+		HtmlResponse response = new HtmlResponse("/business/lecturer_room");
+
+		LecturerRoomDto model = appService.selectRooms(authIdentity.getUser().getId());
+		response.putData("model", model);
+		return response;
 	}
 
+	@Action(url = "/business/room/create", method = HttpMethod.GET)
+	public HtmlResponse roomCreateGet(@Session BusinessAuthIdentity authIdentity) {
+		return new HtmlResponse("business/lecturer_room_create");
+	}
+
+	@Action(url = "/business/room/create", method = HttpMethod.POST)
+	public HtmlResponse roomCreatePost(@Session BusinessAuthIdentity authIdentity,
+									   @RequestBody @Validate RoomCreateForm form,
+									   SimpleValidationResult vr) {
+        if (vr.existError()) {
+            HtmlResponse response = new HtmlResponse("business/lecturer_room_create");
+            response.putData("errors", vr.getViolationResults());
+            return response;
+        }
+        Long lecturerId = authIdentity.getUser().getId();
+        appService.insertRoom(form, lecturerId);
+        LecturerRoomDto model = appService.selectRooms(lecturerId);
+        HtmlResponse response = new HtmlResponse("business/lecturer_room");
+        response.putData("model", model);
+        return response;
+	}
+
+	// -----------------------------------------------------
+	//                                               profile
+	//                                               -------
+    @Action(url="/business/profile", method = HttpMethod.GET)
+    public HtmlResponse profileGet(@Session BusinessAuthIdentity authIdentity) {
+        Lecturer lecturer = appService.selectLecturer(authIdentity.getUser().getId());
+
+        HtmlResponse response = new HtmlResponse("/business/lecturer_profile");
+        response.putData("model", lecturer);
+        return response;
+    }
+
+    @Action(url="/business/profile/edit", method = HttpMethod.GET)
+    public HtmlResponse profileEditGet(@Session BusinessAuthIdentity authIdentity) {
+        Lecturer model = appService.selectLecturer(authIdentity.getUser().getId());
+        HtmlResponse response = new HtmlResponse("/business/lecturer_profile_edit");
+        response.putData("model", model);
+        return response;
+    }
+
+    @Action(url="/business/profile/edit", method = HttpMethod.POST)
+    public HtmlResponse profileEditPost(@Session BusinessAuthIdentity authIdentity,
+                                        @RequestBody @Validate LecturerProfileForm form,
+                                        SimpleValidationResult vr) {
+        if (vr.existError()) {
+            HtmlResponse response = new HtmlResponse("/buisness/lecturer_profile_edit");
+            response.putData("model", vr.getViolationResults());
+            return response;
+        }
+        Lecturer model = appService.updateProfile(form, authIdentity.getUser().getId());
+
+        HtmlResponse response = new HtmlResponse("/business/lecturer_profile");
+        response.putData("model", model);
+        return response;
+    }
+
+	// -----------------------------------------------------
+	//                                               schedule
+	//                                               -------
 	@Action(url = "/business/schedule", method = HttpMethod.GET)
 	public HtmlResponse scheduleGet(@Session BusinessAuthIdentity authIdentity) {
 		HtmlResponse response = new HtmlResponse("/business/schedule");
 
-		List<ScheduleEntity> schedules = appService.selectSchedules(authIdentity.getUser().getId());
+		List<ScheduleDto> schedules = appService.selectSchedules(authIdentity.getUser().getId());
 		response.putData("models", schedules);
 
 		return response;
@@ -59,7 +147,7 @@ public class LecturerController {
 
 		HtmlResponse response = new HtmlResponse("/business/schedule");
 
-		List<ScheduleEntity> schedules = appService.selectSchedules(authIdentity.getUser().getId());
+		List<ScheduleDto> schedules = appService.selectSchedules(authIdentity.getUser().getId());
 		response.putData("models", schedules);
 
 		return response;

@@ -26,8 +26,6 @@ public class DabuntCore {
 	@Inject
 	private Authenticator authenticator;
 	@Inject
-	private RequestParser requestParser;
-	@Inject
 	private ActionArgumentResolver actionArgumentResolver;
 	@Inject
 	private ActionExecutor actionExecutor;
@@ -44,11 +42,8 @@ public class DabuntCore {
 		// with auth
 		ActionContainer actionContainer = actionFinder.find(request, pool.getActionPool());
 
-		// parse Request for argument Resolver
-		ParsedRequest parsedRequest = requestParser.parse(request);
-
 		// create new action container which method param is resolve from request header & request body
-		ActionContainer argResolvedActionContainer = actionArgumentResolver.resolve(parsedRequest, pool.getSessionPool(), actionContainer);
+		ActionContainer argResolvedActionContainer = actionArgumentResolver.resolve(request, pool.getSessionPool(), actionContainer);
 
 		// execute action container
 		ActionResult actionResult = actionExecutor.execute(argResolvedActionContainer, pool.getAppPool());

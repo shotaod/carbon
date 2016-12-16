@@ -7,7 +7,22 @@
     <title>Dabunt Sample</title>
 </head>
 <body>
-<h1>生徒ホーム</h1>
+<header class="nav">
+    <div class="container">
+        <div class="row-fluid">
+            <div class="brand">
+                <a href="#" class="">生徒ホーム</a>
+            </div>
+            <nav class="right-float">
+                <a href="#" class="btn-pill">Link</a>
+                <a href="#" class="btn-pill">Link Two</a>
+                <a href="#" class="btn-pill">Link Three</a>
+                <a href="#" class="btn-pill">Link Four</a>
+                <a href="#" class="btn btn-pill btn-primary-outline">Link Outline</a>
+            </nav>
+        </div>
+    </div>
+</header>
 <!--/*@thymesVar id="models" type="java.util.List<org.dabuntu.sample.web.consumer.ScheduleEntity>"*/-->
 <ol>
     <li th:each="schedule : ${models}">

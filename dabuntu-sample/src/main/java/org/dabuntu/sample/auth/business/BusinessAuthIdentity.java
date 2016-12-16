@@ -16,7 +16,7 @@ public class BusinessAuthIdentity implements AuthIdentity{
 
 	@Override
 	public String username() {
-		return user.getUserName();
+		return user.getUsername();
 	}
 
 	@Override
