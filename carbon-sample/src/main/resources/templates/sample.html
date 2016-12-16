@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dabunt Sample</title>
+</head>
+<body>
+<h1>Test Result Below</h1>
+<p>
+    about cookie and form data
+</p>
+<!--/*@thymesVar id="form" type="org.carbon.sample.web.sample.index.UserInfoForm"*/-->
+<form action="/rewRequest/test" method="POST">
+    <label>名前</label><input type="text" name="user[0].name">
+    <label>年齢</label><input type="text" name="user[0].age">
+    <label>誕生日</label><input type="text" name="user[0].birthDate" value="2016-10-25 12:34:56">
+    <h3>職業</h3>
+    <ul>
+        <li th:each="job,i : ${form.jobs}">
+            <label th:for="'job_name_' + ${i.index}">名称</label><input th:name="'job[' + ${i.index} + '].name'">
+            <label th:for="'job_year_' + ${i.index}">勤続年数</label><input th:name="'job[' + ${i.index} + '].year'">
+        </li>
+    </ul>
+    <input type="submit" value="送信">
+</form>
+</body>
+</html>

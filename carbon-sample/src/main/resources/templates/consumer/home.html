@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xml:lang="ja" lang="ja">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dabunt Sample</title>
+</head>
+<body>
+<header class="nav">
+    <div class="container">
+        <div class="row-fluid">
+            <div class="brand">
+                <a href="#" class="">生徒ホーム</a>
+            </div>
+            <nav class="right-float">
+                <a href="#" class="btn-pill">Link</a>
+                <a href="#" class="btn-pill">Link Two</a>
+                <a href="#" class="btn-pill">Link Three</a>
+                <a href="#" class="btn-pill">Link Four</a>
+                <a href="#" class="btn btn-pill btn-primary-outline">Link Outline</a>
+            </nav>
+        </div>
+    </div>
+</header>
+<!--/*@thymesVar id="models" type="java.util.List<org.carbon.sample.web.consumer.ScheduleEntity>"*/-->
+<ol>
+    <li th:each="schedule : ${models}">
+        <pre>枠</pre>
+        <p>講師 : </p>
+        <p th:if="${schedule.student}" th:text="${schedule.lecturer.userName}"></p>
+        <br>
+        <p>開始時刻 : </p><p th:text="${schedule.lecturerSchedule.beginDatetime}"></p>
+        <br>
+        <p>終了時刻 : </p><p th:text="${schedule.lecturerSchedule.endDatetime}"></p>
+    </li>
+</ol>
+</body>
+</html>
