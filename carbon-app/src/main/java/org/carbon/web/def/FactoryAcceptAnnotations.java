@@ -12,11 +12,9 @@ import java.util.stream.Stream;
  * @author Shota Oda 2016/10/07.
  */
 public final class FactoryAcceptAnnotations {
-	public static Set<Class> basic() {
-		return Stream.of(
-				Controller.class,
-				Component.class,
-				Configuration.class
-		).collect(Collectors.toSet());
-	}
+	public static Set<Class> basic = Stream.of(
+		Controller.class,
+		Component.class,
+		Configuration.class
+	).collect(Collectors.toSet());
 }

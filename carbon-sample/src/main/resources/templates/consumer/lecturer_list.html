@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row">
             <!--/*@thymesVar id="models" type="java.util.List<org.carbon.sample.web.consumer.dto.LecturerIndex>"*/-->
-            <div class="col s4" th:each="index : ${models}">
+            <div class="col s12 m6" th:each="index : ${models}">
                 <div class="card medium sticky-action">
                     <div class="card-image">
                         <img th:src="${index.asset.assetPath}" />

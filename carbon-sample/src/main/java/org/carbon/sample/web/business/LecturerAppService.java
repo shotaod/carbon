@@ -17,6 +17,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,11 +49,14 @@ public class LecturerAppService {
 
 	public LecturerRoomDto selectRooms(Long lecturerId) {
 		Result<Record> records = jooq.select()
-				.from(Tables.LECTURER.join(Tables.LECTURER_ROOM).onKey())
+				.from(Tables.LECTURER.leftJoin(Tables.LECTURER_ROOM).onKey())
 				.where(Tables.LECTURER.ID.eq(lecturerId))
 				.fetch();
 		Lecturer lecturer = records.into(Lecturer.class).get(0);
 		List<LecturerRoom> rooms = records.into(LecturerRoom.class);
+		if (rooms.get(0).getId() == null) {
+            rooms = new ArrayList<>();
+        }
         return new LecturerRoomDto(lecturer, rooms);
 	}
 

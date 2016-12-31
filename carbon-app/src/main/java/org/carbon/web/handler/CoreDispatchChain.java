@@ -2,7 +2,7 @@ package org.carbon.web.handler;
 
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-import org.carbon.web.core.DabuntCore;
+import org.carbon.web.core.CarbonCore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class CoreDispatchChain extends HttpHandlerChain {
 	@Inject
-	private DabuntCore core;
+	private CarbonCore core;
 
 	@Override
 	protected void chain(HttpServletRequest request, HttpServletResponse response) {

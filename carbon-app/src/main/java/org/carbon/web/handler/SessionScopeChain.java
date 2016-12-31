@@ -1,7 +1,8 @@
 package org.carbon.web.handler;
 
-import org.carbon.web.context.ApplicationPool;
+import org.carbon.component.annotation.Inject;
 import org.carbon.component.annotation.Component;
+import org.carbon.web.context.session.SessionContainer;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Component
 public class SessionScopeChain extends HttpScopeChain{
 
-	private String cookieName = "DBTSESSIONID";
+	private String cookieName = "CRBS";
 	private static ThreadLocal<Optional<String>> tmpSessionKey = new ThreadLocal<Optional<String>>() {
 		@Override
 		protected Optional<String> initialValue() {
@@ -24,18 +25,21 @@ public class SessionScopeChain extends HttpScopeChain{
 		}
 	};
 
+	@Inject
+    private SessionContainer sessionContainer;
+
 	@Override
 	protected void in(HttpServletRequest request, HttpServletResponse response) {
 		String sessionKey = Arrays.stream(request.getCookies())
 				.filter(cookie -> cookie.getName().equals(cookieName))
 				.findFirst()
-				.map(cookie -> cookie.getValue())
+				.map(Cookie::getValue)
 				.orElseGet(() -> {
 					String uuid = UUID.randomUUID().toString();
 					tmpSessionKey.set(Optional.of(uuid));
 					return uuid;
 				});
-		ApplicationPool.instance.getSessionPool().setSessionKey(sessionKey);
+		sessionContainer.setSessionKey(sessionKey);
 	}
 
 	@Override
@@ -49,7 +53,7 @@ public class SessionScopeChain extends HttpScopeChain{
 			});
 		} finally {
 			tmpSessionKey.remove();
-			ApplicationPool.instance.getSessionPool().clear();
+			sessionContainer.clear();
 		}
 	}
 }

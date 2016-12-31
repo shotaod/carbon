@@ -123,15 +123,6 @@ public class IndexController {
 		model.setCookie1(cookie.getKey1());
 		model.setCookie2(cookie.getKey2());
 
-		ApplicationPool.instance.getSessionPool().getObject(TestResponseModel.class)
-			.ifPresent(beforeModel -> {
-			if (beforeModel != null) {
-				model.setBefore1(beforeModel.getForm1());
-				model.setBefore2(beforeModel.getForm2());
-			}
-			ApplicationPool.instance.getSessionPool().setObject(model);
-		});
-
 		response.putData("model", model);
 
 		return response;

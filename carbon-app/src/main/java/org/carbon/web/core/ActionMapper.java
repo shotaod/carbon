@@ -105,6 +105,6 @@ public class ActionMapper {
 		}).collect(Collectors.toList());
 		String boxedTitleLines = BoxedTitleMessage.produceLeft(kvs);
 		String s = ChapterAttr.getBuilder("Mapping Result").appendLine(boxedTitleLines).toString();
-		logger.debug(s);
+		logger.info(s);
 	}
 }

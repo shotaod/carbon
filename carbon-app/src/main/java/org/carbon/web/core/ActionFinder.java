@@ -86,6 +86,9 @@ public class ActionFinder {
 	private UrlMatchResult matchUrl(String requestPath, DefinedAction action) {
 		UrlMatchResult result = new UrlMatchResult();
 		String[] requestParts = requestPath.split("/");
+		if (requestParts.length == 0) {
+			requestParts = new String[] {""};
+		}
 		String[] computedParts = action.getComputedUriVariableContainer().getComputedUri().split("/");
 
 		if(requestParts.length != computedParts.length) {

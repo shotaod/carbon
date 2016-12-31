@@ -142,22 +142,22 @@ public class NameBasedObjectMapper {
 		}
 	}
 
-	private Object findMap(String key, Map<String, Object> sources) {
-		LinkedList<String> keys = new LinkedList<>();
-		keys.addAll(Arrays.asList(key.split("\\.")));
-		return findMap(keys, sources);
-	}
-
-	@SuppressWarnings("unchecked")
-	private Object findMap(LinkedList<String> keys, Map<String, Object> sources) {
-		if (keys.size() == 0) {
-			String key = keys.poll();
-			return sources.get(key);
-		}
-		String key = keys.poll();
-		Map map = Optional.ofNullable(sources.get(keys.poll())).map(obj -> (Map) obj).orElse(null);
-		return findMap(keys, map);
-	}
+//	private Object findMap(String key, Map<String, Object> sources) {
+//		LinkedList<String> keys = new LinkedList<>();
+//		keys.addAll(Arrays.asList(key.split("\\.")));
+//		return findMap(keys, sources);
+//	}
+//
+//	@SuppressWarnings("unchecked")
+//	private Object findMap(LinkedList<String> keys, Map<String, Object> sources) {
+//		if (keys.size() == 0) {
+//			String key = keys.poll();
+//			return sources.get(key);
+//		}
+//		String key = keys.poll();
+//		Map map = Optional.ofNullable(sources.get(keys.poll())).map(obj -> (Map) obj).orElse(null);
+//		return findMap(keys, map);
+//	}
 
 	private <T> T newInstance(Class<T> type, Object parentIfAny) {
 		boolean isInnerClass = type.isMemberClass();
@@ -202,27 +202,14 @@ public class NameBasedObjectMapper {
 
 	private Map<Class, Caster> initializeHandlable() {
 		Map<Class, Caster> map = new HashMap<>();
-		Caster intCaster = (t, s) -> {
-			return Integer.parseInt(s);
-		};
-		Caster longCaster = (t, s) -> {
-			return Long.parseLong(s);
-		};
-		Caster floatCaster = (t, s) -> {
-			return Float.parseFloat(s);
-		};
-		Caster doubleCaster = (t, s) -> {
-			return Double.parseDouble(s);
-		};
-		Caster byteCaster = (t, s) -> {
-			return Byte.parseByte(s);
-		};
-		Caster shortCaster = (t, s) -> {
-			return Short.parseShort(s);
-		};
-		Caster boolCaster = (t, s) -> {
-			return Boolean.parseBoolean(s);
-		};
+		Caster intCaster = (t, s) -> Integer.parseInt(s);
+		Caster longCaster = (t, s) -> Long.parseLong(s);
+		Caster floatCaster = (t, s) -> Float.parseFloat(s);
+		Caster doubleCaster = (t, s) -> Double.parseDouble(s);
+		Caster byteCaster = (t, s) -> Byte.parseByte(s);
+		Caster shortCaster = (t, s) -> Short.parseShort(s);
+		Caster boolCaster = (t, s) -> Boolean.parseBoolean(s);
+		Caster charCaster = (t, s) -> s.charAt(0);
 
 		map.put(int.class, intCaster);
 		map.put(Integer.class, intCaster);
@@ -239,12 +226,8 @@ public class NameBasedObjectMapper {
 		map.put(boolean.class, boolCaster);
 		map.put(Boolean.class, boolCaster);
 
-		map.put(char.class, (t, s) -> {
-			return s.charAt(0);
-		});
-		map.put(Character.class, (t, s) -> {
-			return s.charAt(0);
-		});
+		map.put(char.class, charCaster);
+		map.put(Character.class, charCaster);
 
 		DateTimeFormatter dFormatter = DateTimeFormatter.ISO_DATE;
 		DateTimeFormatter dtFormatter = DateTimeFormatter.ISO_DATE_TIME;

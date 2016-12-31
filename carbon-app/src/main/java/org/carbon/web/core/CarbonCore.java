@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServletResponse;
  * @author Shota Oda 2016/10/16.
  */
 @Component
-public class DabuntCore {
+public class CarbonCore {
 
-	private Logger logger = LoggerFactory.getLogger(DabuntCore.class);
+	private Logger logger = LoggerFactory.getLogger(CarbonCore.class);
 
 	private ApplicationPool pool = ApplicationPool.instance;
 	@Inject
@@ -33,7 +33,7 @@ public class DabuntCore {
 
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 
-		boolean authenticate = authenticator.authenticate(pool.getAuthLogicPool(), pool.getSessionPool(), request, response);
+		boolean authenticate = authenticator.authenticate(pool.getAuthLogicPool(), request, response);
 		if (!authenticate) return;
 
 		// create action container by url
@@ -42,7 +42,7 @@ public class DabuntCore {
 		ActionContainer actionContainer = actionFinder.find(request, pool.getActionPool());
 
 		// create new action container which method param is resolve from request header & request body
-		ActionContainer argResolvedActionContainer = actionArgumentResolver.resolve(request, pool.getSessionPool(), actionContainer);
+		ActionContainer argResolvedActionContainer = actionArgumentResolver.resolve(request, actionContainer);
 
 		// execute action container
 		ActionResult actionResult = actionExecutor.execute(argResolvedActionContainer, pool.getAppPool());

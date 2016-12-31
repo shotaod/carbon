@@ -14,9 +14,11 @@
     <!--/*@thymesVar id="model" type="org.dabunt.sample.tables.pojos.Lecturer"*/-->
     <nav>
         <div class="nav-wrapper">
-            <div class="col s12">
-                <a th:href="@{/business/home}" class="breadcrumb">HOME</a>
-                <a href="#" class="breadcrumb" th:text="プロフィール"></a>
+            <div class="container">
+                <div class="col s12">
+                    <a th:href="@{/business/home}" class="breadcrumb">HOME</a>
+                    <a href="#" class="breadcrumb" th:text="プロフィール"></a>
+                </div>
             </div>
         </div>
     </nav>
@@ -34,14 +36,10 @@
                     <p>プロフィール詳細: <span th:text="${model.prText}"></span></p>
                     <br />
                 </div>
-                <div class="card-action">
-                    <a href="#">This is a link</a>
-                    <a href="#">This is a link</a>
-                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col s4">
+            <div class="col s6 m4">
                 <a class="waves-effect waves-light btn-large"
                    th:href="@{/business/profile/edit}"
                 >

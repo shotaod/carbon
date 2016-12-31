@@ -1,6 +1,6 @@
 package org.carbon.component.scan;
 
-import org.carbon.component.exception.ProtocolUnsupportedException;
+import org.carbon.component.exception.UnsupportedProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +90,7 @@ public class TargetBaseScanner {
 				addClass(className);
 			}
 		} else {
-			throw new ProtocolUnsupportedException("protocol:[" + protocol + "] is not supported.");
+			throw new UnsupportedProtocolException("protocol:[" + protocol + "] is not supported.");
 		}
 	}
 

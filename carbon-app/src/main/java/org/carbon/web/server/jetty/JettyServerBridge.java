@@ -20,6 +20,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -39,13 +41,17 @@ public class JettyServerBridge implements EmbedServer {
         server = new Server();
     }
 
+    private void commonSetting(ContextHandler handler) {
+        handler.setMaxFormContentSize(config.getMaxContentSize());
+    }
+
     private ContextHandler dispatchHandler() {
         ContextHandler contextHandler = new ContextHandler("/");
         HandlerWrapper dispatchHandler = new HandlerWrapper() {
             @Override
             public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
                 factory.superChain().startAsync(request, response);
-                // Dabunt handle Any Case, so we don't delegate jetty
+                // Carbon handle Any Case, so we don't delegate jetty
                 baseRequest.setHandled(true);
             }
         };
@@ -59,29 +65,34 @@ public class JettyServerBridge implements EmbedServer {
         resourceServletHolder.setInitParameter("dirAllowed","false");
         resourceServletHolder.setInitParameter("redirectWelcome","false");
         String resourceBase = Optional.ofNullable(base.getClassLoader().getResource(config.getResourceDirectory()))
-                .map(url -> url.toString())
+                .map(URL::toString)
                 .orElseThrow(ServerStartupException::new);
         resourceServletHolder.setInitParameter("resourceBase", resourceBase);
 
         ServletContextHandler servletContextHandler = new ServletContextHandler();
-        servletContextHandler.setContextPath(config.getResourceOutPath());
+        servletContextHandler.setContextPath("/" + config.getResourceOutPath());
         servletContextHandler.addServlet(resourceServletHolder, "/");
         return servletContextHandler;
     }
 
 	@Override
 	public void run(Class base) throws Exception {
+
         // context(/{STATIC_PATH}) -> resource
         // context(/) -> dispatch
-
-        // Resource
         ContextHandler resourceContext = resourceHandler(base);
+        ContextHandler dispatchHandler = dispatchHandler();
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
-        contexts.setHandlers(new Handler[]{resourceContext, dispatchHandler()});
+        ContextHandler[] handlers = Arrays.stream(new ContextHandler[]{resourceContext, dispatchHandler})
+                .peek(handler -> handler.setMaxFormContentSize(config.getMaxContentSize()))
+                .toArray(ContextHandler[]::new);
+        contexts.setHandlers(handlers);
 
         SelectChannelConnector connector = new SelectChannelConnector();
         connector.setPort(config.getPort());
+        connector.setRequestHeaderSize(config.getMaxHeaderSize());
+
         server.setHandler(contexts);
         server.setConnectors(new Connector[]{connector});
 		server.start();

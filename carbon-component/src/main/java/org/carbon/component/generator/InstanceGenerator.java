@@ -65,7 +65,7 @@ public class InstanceGenerator {
 					try {
 						return new ClassAndObject(clazz, clazz.newInstance());
 					} catch (InstantiationException | IllegalAccessException e) {
-						throw new ConstructInstanceException("Failed to perform Construct Instance", e);
+						throw new ConstructInstanceException("Failed to perform Construct Instance " + clazz.getName(), e);
 					}
 				}
 

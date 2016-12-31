@@ -2,6 +2,8 @@ package org.carbon.web.conf;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.carbon.util.SimpleKeyValue;
+import org.carbon.util.format.BoxedTitleMessage;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.util.mapper.NameBasedObjectMapper;
 import org.slf4j.Logger;
@@ -31,17 +33,36 @@ public class ConfigHolder {
 	private Map<String, Object> config;
 	private List<Config> flatConfig;
 
-	@Data
-	@NoArgsConstructor
 	public class Config {
 		private String key;
 		private Object value;
 		private Throwable error;
-		public Config(String key, Object value) {
+
+        public Config(Throwable error) {
+            this.error = error;
+        }
+        public Config(String key, Object value) {
 			this.key = key;
 			this.value = value;
 		}
-	}
+
+        public String getKey() {
+            return key;
+        }
+        public Object getValue() {
+            return value;
+        }
+        public Throwable getError() {
+            return error;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+        public void setValue(Object value) {
+            this.value = value;
+        }
+    }
 
 	@SuppressWarnings("unchecked")
 	public ConfigHolder(String configFileName) {
@@ -52,19 +73,23 @@ public class ConfigHolder {
 					.map(yamlStream -> this.yaml.loadAs(yamlStream, Map.class))
 					.orElse(new HashMap());
 			this.flatConfig = deep(config, null);
-			this.flatConfig.forEach(flat -> logger.debug(flat.toString()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		logResult();
 	}
 
-	public <T> T mappingConf(Class<T> target) {
-		try (InputStream stream = getConfigStream()) {
-			return this.yaml.loadAs(stream, target);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public void logResult() {
+        List<SimpleKeyValue> kvs = flatConfig.stream().map(conf -> {
+            Object value;
+            if (conf.getError() != null) value = conf.getError();
+            else value = conf.getValue();
+            return new SimpleKeyValue(conf.getKey(), value);
+        }).collect(Collectors.toList());
+        String boxedLines = BoxedTitleMessage.produceLeft(kvs);
+        String info = ChapterAttr.getBuilder("Configuration Result").appendLine(boxedLines).toString();
+        logger.info(info);
+    }
 
 	public <T> Optional<T> findPrimitive(String key, Class<T> type) {
 		return flatConfig.stream()
@@ -73,15 +98,12 @@ public class ConfigHolder {
 				.findFirst();
 	}
 
+	public <T> T findOne(String key, Class<T> type) {
+        return find(key, type).get(0);
+    }
+
 	public <T> List<T> find(String key, Class<T> type) {
-		List<T> confs = findDeep(config, Arrays.asList(key.split("\\.")), type).orElse(new ArrayList<>());
-
-		String chapter = ChapterAttr.get("Configuration Result");
-		String results = confs.stream().map(conf -> conf.toString()).collect(Collectors.joining("\n"));
-
-		logger.debug(chapter + results + "\n");
-
-		return confs;
+		return findDeep(config, Arrays.asList(key.split("\\.")), type).orElse(new ArrayList<>());
 	}
 
 	private InputStream getConfigStream() {
@@ -141,13 +163,12 @@ public class ConfigHolder {
 						if (item instanceof Map) {
 							return (Stream<Config>) deep((Map) item, key).stream();
 						}
-						Config error = new Config();
+						Config error = new Config(new IllegalArgumentException(item.getClass() + " is not allowed under list\n list can contain Map<K, V> only."));
 						return Collections.singleton(error).stream();
 					});
 				}
 
-				Config error = new Config();
-				error.setError(new IllegalArgumentException(value.getClass().toString()));
+				Config error = new Config(new IllegalArgumentException(value.getClass().toString()));
 				return Collections.singleton(error).stream();
 			})
 			.collect(Collectors.toList());

@@ -5,7 +5,7 @@ import org.carbon.web.annotation.RequestCookie;
 import org.carbon.web.annotation.Session;
 import org.carbon.web.annotation.Validate;
 import org.carbon.web.container.ResolvedArgument;
-import org.carbon.web.context.SessionContainer;
+import org.carbon.web.context.session.SessionContainer;
 import org.carbon.web.core.request.RequestMapper;
 import org.carbon.web.core.validation.SimpleValidationResult;
 import org.carbon.web.core.validation.ValidationResult;
@@ -35,8 +35,10 @@ public class ActionArgumentResolver {
 	private NameBasedObjectMapper objectMapper;
     @Inject
     private Validator validator;
+	@Inject
+    private SessionContainer sessionContainer;
 
-	public ActionContainer resolve(HttpServletRequest request, SessionContainer sessionContainer, ActionContainer actionContainer) {
+	public ActionContainer resolve(HttpServletRequest request, ActionContainer actionContainer) {
 
 		HttpMethod method = HttpMethod.codeOf(request.getMethod());
 

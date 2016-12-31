@@ -1,7 +1,7 @@
 package org.carbon.component.inject;
 
 import org.carbon.component.annotation.Inject;
-import org.carbon.component.exception.ClassNotRegisterdException;
+import org.carbon.component.exception.ClassNotRegisteredException;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.util.format.StringLineBuilder;
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class InstanceInjector {
 	}
 
 	private void throwClassNotRegisteredException(Class parent, Class child) {
-		throw new ClassNotRegisterdException(String.format("class '%s' need @Inject '%s', but not registered", parent.getName(), child.getName()));
+		throw new ClassNotRegisteredException(String.format("class '%s' need @Inject '%s', but not registered", parent.getName(), child.getName()));
 	}
 
 	// ===================================================================================

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.carbon.sample.tables.pojos.Lecturer;
 import org.carbon.web.auth.AuthIdentity;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * @author Shota Oda 2016/11/23.
@@ -26,6 +27,6 @@ public class BusinessAuthIdentity implements AuthIdentity{
 
 	@Override
 	public boolean confirm(String plainPassword) {
-		return cryptPassword().equals(plainPassword);
+        return BCrypt.checkpw(plainPassword, cryptPassword());
 	}
 }

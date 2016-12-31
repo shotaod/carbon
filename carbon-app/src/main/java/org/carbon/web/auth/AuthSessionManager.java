@@ -1,6 +1,6 @@
 package org.carbon.web.auth;
 
-import org.carbon.web.context.SessionContainer;
+import org.carbon.web.context.session.SessionContainer;
 
 import java.util.Optional;
 

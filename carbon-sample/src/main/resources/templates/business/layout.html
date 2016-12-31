@@ -10,12 +10,21 @@
 
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" th:href="@{/static/business/css/materialize.css}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/static/business/css/common.css}" />
 </head>
 <body>
 <nav>
     <div class="nav-wrapper">
         <a th:href="@{/business/home}" class="brand-logo">講師プロトタイプ</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <a href="#" data-activates="business-mobile__side" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li><a th:href="@{/business/profile}">プロフィール</a></li>
+            <li><a th:href="@{/business/room}">講義一覧</a></li>
+            <li><a href="#">申込一覧</a></li>
+            <li><a href="#">カレンダー</a></li>
+            <li><a th:href="@{/business/logout}">ログアウト</a></li>
+        </ul>
+        <ul id="business-mobile__side" class="side-nav">
             <li><a th:href="@{/business/profile}">プロフィール</a></li>
             <li><a th:href="@{/business/room}">講義一覧</a></li>
             <li><a href="#">申込一覧</a></li>
@@ -27,5 +36,6 @@
 <section layout:fragment="content"></section>
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" th:src="@{/static/js/materialize.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/business/js/layout.js}"></script>
 </body>
 </html>

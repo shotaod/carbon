@@ -12,7 +12,7 @@
         <appender-ref ref="STDOUT" />
     </root>
     <logger name="org.thymeleaf" level="info"/>
-    <logger name="org.eclipse.jetty" level="info"/>
+    <logger name="org.eclipse.jetty" level="WARN"/>
 
     <logger name="org.hibernate" level="INFO" />
     <logger name="org.hibernate.SQL" level="DEBUG" />

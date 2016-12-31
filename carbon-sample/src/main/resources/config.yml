@@ -1,7 +1,9 @@
 web:
   port: 7927
   resourceDirectory: static
-  resourceOutPath: /static
+  resourceOutPath: static
+  maxHeaderSize: 512000 #500KB
+  maxContentSize: 2097152 #2MB
 persistent:
   implementation: jooq # jooq or hibernate
   dataSources:
@@ -14,3 +16,8 @@ persistent:
   autoddl: create # none, create-only, drop, create, create-drop, validate, and update
 Logger:
   name: slf4j
+
+sample:
+  redis:
+    host: 127.0.0.1
+    port: 26379

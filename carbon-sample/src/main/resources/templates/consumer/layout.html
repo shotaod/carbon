@@ -9,13 +9,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" th:href="@{/static/css/materialize.min.css}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/static/css/materialize.min.css}"  media="screen,projection" />
+    <link type="text/css" rel="stylesheet" th:href="@{/static/css/common.css}" />
 </head>
 <body>
 <nav>
     <div class="nav-wrapper">
         <a href="#" class="brand-logo">受講者プロトタイプ</a>
+        <a href="#" data-activates="consumer-mobile__side" class="button-collapse"><i class="material-icons">menu</i></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#">講師一覧</a></li>
+            <li><a href="#">予約一覧</a></li>
+            <li><a href="#">カレンダー</a></li>
+            <li><a th:href="@{/consumer/logout}">ログアウト</a></li>
+        </ul>
+        <ul id="consumer-mobile__side" class="side-nav">
             <li><a href="#">講師一覧</a></li>
             <li><a href="#">予約一覧</a></li>
             <li><a href="#">カレンダー</a></li>
@@ -29,5 +37,6 @@
 </footer>
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" th:src="@{/static/js/materialize.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/layout.js}"></script>
 </body>
 </html>

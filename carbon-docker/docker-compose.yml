@@ -9,3 +9,17 @@ services:
       - "23306:3306"
     volumes:
       - ./mysql_conf:/etc/mysql/conf.d
+  redis:
+    image: redis:3.2.6
+    ports:
+      - "26379:6379"
+  # influxdb:
+  #   image: influxdb:1.1.1
+  #   ports:
+  #     - "28086:8086"
+  #     - "28083:8083"
+  # grafana:
+  #   image: grafana/grafana:4.0.2
+  #   environment:
+  #     GF_SECURITY_ADMIN_USER: admin
+  #     GF_SECURITY_ADMIN_PASSOWRD: password

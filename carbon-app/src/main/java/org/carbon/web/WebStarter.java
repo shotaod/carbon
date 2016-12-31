@@ -52,20 +52,24 @@ public class WebStarter {
 	//                                                                              ======
 	public void start(Class scanBase) {
 		try {
-			doStart(scanBase);
+			prepare(scanBase);
 		} catch (Exception e) {
 			logger.error("Application Start-Up Error", e);
 		}
 	}
-	private void doStart(Class scanBase) throws Exception{
+
+	private void prepare(Class scanBase) throws Exception{
 		logger.info(new Logo().logo);
-		logger.info(ChapterAttr.get("Dabunt Initialize Started"));
+		logger.info(ChapterAttr.get("Carbon Initialize Started"));
 
-		ConfigHolder configHolder = new ConfigHolder("config.yml");
+        Map<Class, Object> dependency = new HashMap<>();
 
-		Map<Class, Object> dependency = setupPersistence(scanBase, configHolder);
+        ConfigHolder configHolder = new ConfigHolder("config.yml");
+        dependency.put(ConfigHolder.class, configHolder);
 
-        WebConfig webConfig = configHolder.find("web", WebConfig.class).get(0);
+        dependency.putAll(setupPersistence(scanBase, configHolder));
+
+        WebConfig webConfig = configHolder.findOne("web", WebConfig.class);
         dependency.put(WebConfig.class, webConfig);
 
         // Must Call! to resolve configurations and web-managed instances
@@ -76,7 +80,7 @@ public class WebStarter {
 		EmbedServer embedServer = appInstancePool.getInstanceByType(JettyServerBridge.class);
 		embedServer.run(scanBase);
 
-		logger.info(ChapterAttr.get("Dabunt Initialize Finished"));
+		logger.info(ChapterAttr.get("Carbon Initialize Finished"));
 
 		embedServer.await();
 	}
@@ -127,8 +131,8 @@ public class WebStarter {
 		SecurityConfigurator securityConfigurator = new SecurityConfigurator();
 
 		// load component -> create component
-		Set<Class> frameworkManaged = componentFaced.scan(ConfigurationBase.class, FactoryAcceptAnnotations.basic());
-		Set<Class> clientManaged = componentFaced.scan(scanBase, FactoryAcceptAnnotations.basic());
+		Set<Class> frameworkManaged = componentFaced.scan(ConfigurationBase.class, FactoryAcceptAnnotations.basic);
+		Set<Class> clientManaged = componentFaced.scan(scanBase, FactoryAcceptAnnotations.basic);
 		Set<Class> allManaged = Stream.concat(frameworkManaged.stream(), clientManaged.stream()).collect(Collectors.toSet());
 
 		Map<Class, Object> webInstances = componentFaced.generate(allManaged, dependency, setupCallbackConfiguration());

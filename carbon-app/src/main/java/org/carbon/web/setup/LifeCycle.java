@@ -1,4 +1,4 @@
-package org.carbon.web.lifecycle;
+package org.carbon.web.setup;
 
 /**
  * @author Shota Oda 2016/11/15.

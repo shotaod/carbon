@@ -40,7 +40,7 @@ public class StudentAppService {
 
     public List<LecturerIndex> selectLecturers() {
         return jooq.select()
-                .from(Tables.LECTURER.join(Tables.ASSET).onKey())
+                .from(Tables.LECTURER.leftJoin(Tables.ASSET).onKey())
                 .fetch()
                 .stream()
                 .map(record -> {
