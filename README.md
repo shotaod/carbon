@@ -233,6 +233,7 @@ By default, carbon use ```InMemorySessionStore``` for storing session info.
 However, you can use any session store you want, by implementing SessionStore, and register dependency.
 Carbon provide ```RedisSessionStore.class``` that implements ```SessionStore.class```.
 carbon-sample's code likes
+
 config.yaml
 ``` yaml
 sample:
@@ -256,8 +257,9 @@ public class SampleConfiguration {
 ```
 
 # WebSocket Support
-Annotation based and pub-sub pattern web socket.
-code looks likes. you can find ```package org.carbon.sample.web.message``` in carbon-sample fully detail code.
+Annotation based and pub-sub pattern web socket.  
+code looks likes.   
+(you can find ```package org.carbon.sample.web.message``` in carbon-sample fully detail code.)
 
 ``` java
 @Component

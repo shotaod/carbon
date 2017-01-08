@@ -13,7 +13,7 @@ import org.carbon.web.context.session.SessionStore;
 @Configuration
 public class SampleConfiguration {
     @Inject
-    ConfigHolder config;
+    private ConfigHolder config;
     @Component
     public SessionStore redisSession() {
         RedisConfig redis = config.findOne("sample.redis", RedisConfig.class);
