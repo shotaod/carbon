@@ -297,15 +297,15 @@ Called when WebSocket start.
 Called when WebSocket close
 - ```@OnReceive```  
 Called when message is received.
-```Message.class`` contains sender info and content.
-You can return Anything by this method.
-if this annotated method return ```object``` excepting ```String.class```,
-```object``` is converted to json string.
+```Message.class``` contains sender info and content.  
+You can return Anything by this method.  
+if this annotated method return ```object``` excepting ```String.class```,  
+```object``` is converted to json string.  
 - ```@Channeld```  
-Configure ChannelConfiguration.
-ChannelConfiguration represents
+Configure ChannelConfiguration.  
+ChannelConfiguration represents  
 - 'the WebSocket endpoint identity'
-and
+and  
 - 'to'.
-'the WebSocket endpoint identity' is put on ```Message.class```.
+'the WebSocket endpoint identity' is put on ```Message.class```.  
 'to' is used for Where channel message send.
