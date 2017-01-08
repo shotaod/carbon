@@ -304,8 +304,8 @@ if this annotated method return ```object``` excepting ```String.class```,
 - ```@Channeld```  
 Configure ChannelConfiguration.  
 ChannelConfiguration represents  
-- 'the WebSocket endpoint identity'
+  - 'the WebSocket endpoint identity'  
 and  
-- 'to'.
+  - 'to'.  
 'the WebSocket endpoint identity' is put on ```Message.class```.  
 'to' is used for Where channel message send.
