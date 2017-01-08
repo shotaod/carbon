@@ -91,6 +91,7 @@ public class IndexController {
 
 # Type Safe Config
 powerd by [snakeyaml](http://www.yahoo.co.jp/)
+
 code looks like
 
 config.yaml
