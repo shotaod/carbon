@@ -288,20 +288,20 @@ public class MessageSocket {
     }
 }
 ```
-- ```@Socket```
+- ```@Socket```  
 Represent WebSocket endpoint.
 Argument ```url``` can be set path variable, and variable inject into method parameter (annotated by ```@OnOpen```, ```@OnClose```, ```@OnReceive```, ```@Channeld```)
-- ```@OnOpen```
+- ```@OnOpen```  
 Called when WebSocket start.
-- ```@OnClose```
+- ```@OnClose```  
 Called when WebSocket close
-- ```@OnReceive```
+- ```@OnReceive```  
 Called when message is received.
 ```Message.class`` contains sender info and content.
 You can return Anything by this method.
 if this annotated method return ```object``` excepting ```String.class```,
 ```object``` is converted to json string.
-- ```@Channeld```
+- ```@Channeld```  
 Configure ChannelConfiguration.
 ChannelConfiguration represents
 - 'the WebSocket endpoint identity'
