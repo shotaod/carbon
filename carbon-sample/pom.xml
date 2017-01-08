@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>carbon</groupId>
-            <artifactId>carbon-app</artifactId>
+            <artifactId>carbon-web</artifactId>
             <version>0.1.0-BETA</version>
         </dependency>
         <dependency>

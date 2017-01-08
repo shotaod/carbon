@@ -6,6 +6,7 @@ import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.exception.ConstructInstanceException;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class InstanceGenerator {
 
 	private Map<Class, Callback> tmpCallbacks = new HashMap<>();
 
-	public Map<Class, Object> generate(Set<Class> classes, CallbackConfiguration callbackConfiguration) {
+	public Map<Class, Object> generate(Set<Class<?>> classes, CallbackConfiguration callbackConfiguration) {
 		Map<Class, Object> result = classes.stream()
 			.filter(clazz -> {
 				return !clazz.isInterface() && !clazz.isAnnotation();
@@ -63,11 +64,13 @@ public class InstanceGenerator {
 				List<Class<? extends Callback>> callbackClasses = callbackConfiguration.getCallback(clazz);
 				if (callbackClasses.isEmpty()) {
 					try {
-						return new ClassAndObject(clazz, clazz.newInstance());
-					} catch (InstantiationException | IllegalAccessException e) {
+                        Constructor<?> constructor = clazz.getDeclaredConstructor();
+                        constructor.setAccessible(true);
+						return new ClassAndObject(clazz, constructor.newInstance());
+					} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 						throw new ConstructInstanceException("Failed to perform Construct Instance " + clazz.getName(), e);
 					}
-				}
+                }
 
 				// if exist callback, generate by cglib
 				Enhancer enhancer = new Enhancer();

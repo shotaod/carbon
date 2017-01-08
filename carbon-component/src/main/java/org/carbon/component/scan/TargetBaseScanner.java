@@ -38,19 +38,19 @@ public class TargetBaseScanner {
 	//                                                                       Private Field
 	//                                                                       =============
 	private ClassLoader classLoader;
-	private List<Class> classes = new ArrayList<>();
+	private List<Class<?>> classes = new ArrayList<>();
 
 
 	// ===================================================================================
 	//                                                                       Public Method
 	//                                                                       =============
-	public List<Class> scan(Class scanBase) throws IOException {
+	public List<Class<?>> scan(Class scanBase) throws IOException {
+		this.classes = new ArrayList<>();
 		walkPackage(scanBase.getPackage());
-
 		return this.classes;
 	}
 
-	public List<Class> getClasses() {
+	public List<Class<?>> getClasses() {
 		return classes;
 	}
 

@@ -54,14 +54,11 @@ public class ComponentFaced {
 		return scanner.scan(scanBase).stream().collect(Collectors.toSet());
 	}
 
-	public Set<Class> scan(Class scanBase, Set<Class> whiteAnnotationList) throws Exception {
+	public Set<Class<?>> scan(Class scanBase, Set<Class<?>> whiteAnnotationList) throws Exception {
 		return scanner.scan(scanBase).stream()
-			.filter(clazz -> {
-				return Arrays.stream(clazz.getAnnotations())
-						.anyMatch(annotation -> {
-							return whiteAnnotationList.contains(annotation.annotationType());
-						});
-			}).collect(Collectors.toSet());
+			.filter(clazz -> Arrays.stream(clazz.getAnnotations())
+				.anyMatch(annotation -> whiteAnnotationList.contains(annotation.annotationType())))
+				.collect(Collectors.toSet());
 	}
 
 	/**
@@ -72,7 +69,7 @@ public class ComponentFaced {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<Class, Object> generate(Set<Class> classes, Map<Class,Object> dependency, CallbackConfiguration configuration) throws Exception{
+	public Map<Class, Object> generate(Set<Class<?>> classes, Map<Class,Object> dependency, CallbackConfiguration configuration) throws Exception{
 		Map<Class, Object> instances = generator.generate(classes, configuration);
 		instances.putAll(dependency);
 

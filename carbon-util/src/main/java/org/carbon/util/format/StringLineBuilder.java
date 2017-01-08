@@ -25,6 +25,11 @@ public class StringLineBuilder {
 		sb.append("\n");
 		return this;
 	}
+	public StringLineBuilder appendLine(String s, Object... arg) {
+		sb.append(String.format(s, arg));
+		sb.append("\n");
+		return this;
+	}
 
 	@Override
 	public String toString() {

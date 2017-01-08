@@ -37,11 +37,11 @@ public class DataSourceConfig {
 		dataSource.setPort(port);
 		dataSource.setUser(user);
 		dataSource.setPassword(password);
-		try {
-			dataSource.getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			dataSource.getConnection();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 		return dataSource;
 	}
 }
