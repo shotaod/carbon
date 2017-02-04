@@ -57,9 +57,7 @@ public class InstanceGenerator {
 
 	public Map<Class, Object> generate(Set<Class<?>> classes, CallbackConfiguration callbackConfiguration) {
 		Map<Class, Object> result = classes.stream()
-			.filter(clazz -> {
-				return !clazz.isInterface() && !clazz.isAnnotation();
-			})
+			.filter(clazz -> !clazz.isInterface() && !clazz.isAnnotation())
 			.map(clazz -> {
 				List<Class<? extends Callback>> callbackClasses = callbackConfiguration.getCallback(clazz);
 				if (callbackClasses.isEmpty()) {

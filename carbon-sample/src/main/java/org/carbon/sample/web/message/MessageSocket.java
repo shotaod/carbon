@@ -15,18 +15,17 @@ import org.carbon.web.ws.Message;
 /**
  * @author Shota Oda 2017/01/01.
  */
-@Component
 @Socket(url = "/message/socket/{userName}/{roomId}")
 public class MessageSocket {
 
     @OnOpen
     public void onConnect() {
-
+        // do something ...
     }
 
     @OnClose
     public void onClose() {
-
+        // do something ...
     }
 
     @OnReceive

@@ -1,5 +1,7 @@
 package org.carbon.component;
 
+import org.carbon.component.annotation.Component;
+import org.carbon.component.exception.PackageScanException;
 import org.carbon.component.generator.InstanceGenerator;
 import org.carbon.component.inject.InstanceInjector;
 import org.carbon.component.annotation.Configuration;
@@ -7,6 +9,8 @@ import org.carbon.component.generator.CallbackConfiguration;
 import org.carbon.component.scan.TargetBaseScanner;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,55 +24,16 @@ public class ComponentFaced {
 	private InstanceGenerator generator = new InstanceGenerator();
 	private InstanceInjector injector  = new InstanceInjector();
 
-//	/**
-//	 * for Simple use
-//	 * @param scanBase
-//	 * @param acceptAnnotations
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public Map<Class, Object> inject(Class scanBase, List<Class> acceptAnnotations) throws Exception {
-//
-//		// scan all classes under or flat to scanBase
-//		TargetBaseScanner scanner = new TargetBaseScanner();
-//		List<Class> classes = scanner.inject(scanBase);
-//
-//		// create Object
-//		InstanceGenerator instanceGenerator = new InstanceGenerator();
-//		instanceGenerator.setCallbacks(Collections.singletonList(new InOutLoggingInterceptor()));
-//		Map<Class, Object> instanceMap = instanceGenerator.generate(classes);
-//
-//		// inject Dependency
-//		InstanceInjector instanceInjector = new InstanceInjector(instanceMap);
-//		instanceInjector.setTargets(acceptAnnotations);
-//		Map<Class, Object> instanceResolvedMap = instanceInjector.inject();
-//
-//		return instanceResolvedMap;
-//	}
-
-	// ===================================================================================
-	//                                                                      For Manual Use
-	//                                                                      ==============
-
-	public Set<Class> scan(Class scanBase) throws Exception{
-		return scanner.scan(scanBase).stream().collect(Collectors.toSet());
+    public Set<Class<?>> scanComponent (Class scanBase) throws PackageScanException {
+        return scanner.scan(scanBase, Collections.singleton(Component.class));
+    }
+	public Set<Class<?>> scan(Class scanBase, Set<Class<?>> additionalScanTargets) throws PackageScanException {
+        Set<Class<?>> targets = new HashSet<>();
+        targets.add(Component.class);
+        targets.addAll(additionalScanTargets);
+        return scanner.scan(scanBase, targets);
 	}
 
-	public Set<Class<?>> scan(Class scanBase, Set<Class<?>> whiteAnnotationList) throws Exception {
-		return scanner.scan(scanBase).stream()
-			.filter(clazz -> Arrays.stream(clazz.getAnnotations())
-				.anyMatch(annotation -> whiteAnnotationList.contains(annotation.annotationType())))
-				.collect(Collectors.toSet());
-	}
-
-	/**
-	 *
-	 * @param classes
-	 * @param dependency
-	 * @param configuration
-	 * @return
-	 * @throws Exception
-	 */
 	public Map<Class, Object> generate(Set<Class<?>> classes, Map<Class,Object> dependency, CallbackConfiguration configuration) throws Exception{
 		Map<Class, Object> instances = generator.generate(classes, configuration);
 		instances.putAll(dependency);

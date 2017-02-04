@@ -27,14 +27,14 @@ public class ErrorWrapperChain extends HttpHandlerChain{
 		try {
 			super.chain(request, response);
 		} catch (Throwable throwable) {
-			if (!this.handleThrowable(response, throwable)) {
-				logger.warn("Error that can't be handled is Occurred", throwable);
+			if (!handleThrowable(response, throwable)) {
+				logger.error("Error that can't be handled is Occurred", throwable);
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				try {
 					response.getWriter().println("<h1>Error</h1>");
 				} catch (IOException ignored) {}
 			} else {
-				logger.warn("Handled Error", throwable);
+				logger.warn("Handled Error: " + throwable.getMessage());
 			}
 		}
 	}

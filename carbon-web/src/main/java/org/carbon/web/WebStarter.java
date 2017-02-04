@@ -1,5 +1,17 @@
 package org.carbon.web;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.persistence.Entity;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
 import org.carbon.component.ComponentFaced;
 import org.carbon.component.generator.CallbackConfiguration;
 import org.carbon.persistent.DataSourceConfig;
@@ -11,32 +23,18 @@ import org.carbon.persistent.proxy.TransactionInterceptor;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.web.conf.ConfigHolder;
 import org.carbon.web.conf.WebConfig;
+import org.carbon.web.context.ActionDefinitionContainer;
 import org.carbon.web.context.ApplicationPool;
 import org.carbon.web.context.InstanceContainer;
-import org.carbon.web.context.ActionDefinitionContainer;
-import org.carbon.web.context.RequestContainer;
 import org.carbon.web.context.SecurityContainer;
 import org.carbon.web.core.SecurityConfigurator;
 import org.carbon.web.core.mapping.ActionMapper;
-import org.carbon.web.def.FactoryAcceptAnnotations;
 import org.carbon.web.def.Logo;
 import org.carbon.web.server.EmbedServer;
 import org.carbon.web.server.jetty.JettyServerBridge;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Shota Oda 2016/10/06.
@@ -55,7 +53,7 @@ public class WebStarter {
 		try {
 			prepare(scanBase);
 		} catch (Exception e) {
-			logger.error("Application Start-Up Error", e);
+			logger.error("Application StartUp Error", e);
 		}
 	}
 
@@ -67,13 +65,13 @@ public class WebStarter {
 
         ConfigHolder configHolder = new ConfigHolder("config.yml");
         dependency.put(ConfigHolder.class, configHolder);
-
         dependency.putAll(setupPersistence(scanBase, configHolder));
 
         WebConfig webConfig = configHolder.findOne("web", WebConfig.class);
         dependency.put(WebConfig.class, webConfig);
 
         resolveDependency(scanBase, dependency);
+
         setupWeb();
         setupSecurity();
 
@@ -131,8 +129,8 @@ public class WebStarter {
 		ComponentFaced componentFaced = new ComponentFaced();
 
 		// load component -> create component
-		Set<Class<?>> frameworkManaged = componentFaced.scan(ConfigurationBase.class, FactoryAcceptAnnotations.basic);
-		Set<Class<?>> clientManaged = componentFaced.scan(scanBase, FactoryAcceptAnnotations.basic);
+		Set<Class<?>> frameworkManaged = componentFaced.scanComponent(ConfigurationBase.class);
+		Set<Class<?>> clientManaged = componentFaced.scanComponent(scanBase);
 		Set<Class<?>> allManaged = Stream.concat(frameworkManaged.stream(), clientManaged.stream()).collect(Collectors.toSet());
 
         Map<Class, Object> instances = componentFaced.generate(allManaged, dependency, setupCallbackConfiguration());

@@ -26,10 +26,7 @@ import java.util.List;
 @Controller
 public class IndexController {
 
-	// ===================================================================================
-	//                                                                          @Inject
-	//                                                                          ==========
-	@Inject
+    @Inject
 	private RootProp prop;
 	@Inject
 	private ProductService productService;
@@ -42,7 +39,7 @@ public class IndexController {
 	// -----------------------------------------------------
 	//                                               Basic
 	//                                               -------
-	@Action(url = "/about", method = HttpMethod.GET)
+	@Action(url = "/about", method = HttpMethod.POST)
 	public HtmlResponse carbon() {
 		String htmlString = new Logo().logo.replace("<", "・").replace(">", "・").replace("\n", "<br>").replaceAll("\\s", "&nbsp;");
 		HtmlResponse response = new HtmlResponse("about");
@@ -113,11 +110,8 @@ public class IndexController {
 	}
 
 	@Action(url = "/request/test", method = HttpMethod.POST)
-	public HtmlResponse requestTestPost(// @Session SessionInfo userSession,
-								 // @PathVariable("userId") String userId,
-								 @RequestCookie IndexCookie cookie,
-								 @RequestBody UserInfoForm form) {
-
+	public HtmlResponse requestTestPost(@RequestCookie IndexCookie cookie,
+										@RequestBody UserInfoForm form) {
 		HtmlResponse response = new HtmlResponse("sample");
 		TestResponseModel model = new TestResponseModel();
 		model.setCookie1(cookie.getKey1());

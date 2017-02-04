@@ -1,11 +1,11 @@
 package org.carbon.component.scan;
 
-import org.carbon.component.exception.UnsupportedProtocolException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -13,9 +13,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.carbon.component.annotation.Component;
+import org.carbon.component.exception.PackageScanException;
+import org.carbon.component.exception.UnsupportedProtocolException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Shota Oda 2016/10/01
@@ -26,42 +38,36 @@ public class TargetBaseScanner {
 
 	private static final String Protocol_File = "file";
 	private static final String Protocol_Jar = "jar";
+    private static final String Class_Suffix = ".class";
+    private static final int Class_Suffix_Length = Class_Suffix.length();
 
-	// ===================================================================================
-	//                                                                          Singleton
-	//                                                                          ==========
-	public TargetBaseScanner() {
+    // ===================================================================================
+    //                                                                       Private Field
+    //                                                                       =============
+    private ClassLoader classLoader;
+
+    public TargetBaseScanner() {
 		this.classLoader = ClassLoader.getSystemClassLoader();
 	}
 
 	// ===================================================================================
-	//                                                                       Private Field
-	//                                                                       =============
-	private ClassLoader classLoader;
-	private List<Class<?>> classes = new ArrayList<>();
-
-
-	// ===================================================================================
 	//                                                                       Public Method
 	//                                                                       =============
-	public List<Class<?>> scan(Class scanBase) throws IOException {
-		this.classes = new ArrayList<>();
-		walkPackage(scanBase.getPackage());
-		return this.classes;
-	}
-
-	public List<Class<?>> getClasses() {
-		return classes;
-	}
+	public Set<Class<?>> scan(Class scanBase, Set<Class<?>> scanTargets) throws PackageScanException {
+        return walkPackage(scanBase.getPackage()).stream()
+            .map(this::getClass)
+            .filter(clazz -> isScanTarget(clazz, scanTargets))
+            .collect(Collectors.toSet());
+    }
 
 	// ===================================================================================
 	//                                                                      Private Method
 	//                                                                      ==============
-	private void walkPackage(Package scanBasePack) throws IOException {
-
-		String packagePath = getPath(scanBasePack);
+	private List<String> walkPackage(Package scanBasePack) throws PackageScanException {
+        List<String> classNames = new ArrayList<>();
+        String packagePath = getPath(scanBasePack);
 		URL url = classLoader.getResource(packagePath);
-		String protocol = url.getProtocol();
+		String protocol = url != null ? url.getProtocol() : null;
 		// Scan 対象のパス
 		if (Protocol_File.equals(protocol)) {
 			Path scanBasePath = Paths.get(url.getPath());
@@ -73,25 +79,37 @@ public class TargetBaseScanner {
 			String fileRoot = scanBasePath.toString().substring(0, packageStart);
 			Path fileRootPath = Paths.get(fileRoot);
 
-			Files.find(scanBasePath, Integer.MAX_VALUE, (path, attr) -> isClassFile(path))
-				.forEach(path -> {
-					String fqn = getClassFqn(fileRootPath, path);
-					addClass(fqn);
-				});
-		} else if (Protocol_Jar.equals(protocol)) {
-			JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
-			Enumeration<JarEntry> entries = jarURLConnection.getJarFile().entries();
-			URL[] urls = { url };
+            try {
+                Files.find(scanBasePath, Integer.MAX_VALUE, (path, attr) -> isClassFile(path))
+                    .forEach(path -> {
+                        String fqn = getClassFqn(fileRootPath, path);
+                        classNames.add(fqn);
+                    });
+            } catch (IOException e) {
+                throw new PackageScanException(protocol, e);
+            }
+        } else if (Protocol_Jar.equals(protocol)) {
+            Enumeration<JarEntry> entries;
+            try {
+                JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
+                entries = jarURLConnection.getJarFile().entries();
+            } catch (IOException e) {
+                throw new PackageScanException(protocol, e);
+            }
+            URL[] urls = { url };
 			classLoader = URLClassLoader.newInstance(urls);
 			while (entries.hasMoreElements()) {
 				JarEntry je = entries.nextElement();
-				if(je.isDirectory() || !je.getName().endsWith(".class")) continue;
-				String className = je.getName().substring(0,je.getName().length()-6).replace('/', '.');
-				addClass(className);
+
+                if(je.isDirectory() || !je.getName().endsWith(Class_Suffix)) continue;
+				String className = je.getName().substring(0,je.getName().length()-Class_Suffix_Length).replace('/', '.');
+				classNames.add(className);
 			}
-		} else {
+        } else {
 			throw new UnsupportedProtocolException("protocol:[" + protocol + "] is not supported.");
 		}
+
+		return classNames;
 	}
 
 	private String getPath(Package pack) {
@@ -100,7 +118,7 @@ public class TargetBaseScanner {
 
 	private boolean isClassFile(Path path) {
 		File file = path.toFile();
-		return file.isFile() && file.getName().endsWith(".class");
+		return file.isFile() && file.getName().endsWith(Class_Suffix);
 	}
 
 	private String getClassFqn(Path fileRoot, Path classFilePath) {
@@ -119,17 +137,29 @@ public class TargetBaseScanner {
 			classFQN = classFQN.substring(1, classFQN.length());
 		}
 
-
 		return classFQN;
 	}
 
-	private void addClass(String className) {
+	private Class<?> getClass(String className) {
 		try {
-			Class<?> clazz = classLoader.loadClass(className);
-			this.classes.add(clazz);
-		} catch (ClassNotFoundException e) {
+            Class<?> clazz = classLoader.loadClass(className);
+            if (clazz.isAnnotation() || clazz.isInterface()) return null;
+            return clazz;
+        } catch (ClassNotFoundException impossible) {
 			logger.error("Not found Class:[%s]", className);
-			System.exit(0);
+            throw new RuntimeException(impossible);
 		}
 	}
+
+	private boolean isScanTarget(Class clazz, Set<Class<?>> scanTargets) {
+        if (clazz == null) return false;
+        Annotation[] declaredAnnotations = clazz.getDeclaredAnnotations();
+        if (declaredAnnotations.length == 0) return false;
+        if (clazz.equals(Documented.class) || clazz.equals(Retention.class) || clazz.equals(Target.class)) return false;
+        if (scanTargets.stream().anyMatch(clazz::isAnnotationPresent)) return true;
+
+        return Arrays.stream(declaredAnnotations)
+            .map(Annotation::annotationType)
+            .anyMatch(type -> isScanTarget(type, scanTargets));
+    }
 }

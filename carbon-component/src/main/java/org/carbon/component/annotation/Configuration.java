@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
  * @see Component
  * @author Shota Oda 2016/10/15.
  */
+@Component
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Configuration {
