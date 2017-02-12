@@ -6,7 +6,7 @@ import spock.lang.Specification
 import javax.servlet.http.HttpServletRequest
 
 /**
- * @author ubuntu 2016/12/04.
+ * @author Shota Oda 2016/12/04.
  */
 class FormUrlEncodeRequestMapperSpec extends Specification {
     class Target {

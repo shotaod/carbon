@@ -20,14 +20,14 @@ import javax.persistence.ManyToOne;
 @Setter
 @Entity
 public class Role {
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_User_Role_Id"))
-	private User user;
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_User_Role_Id"))
+    private User user;
 
-	private String name;
+    private String name;
 }

@@ -21,20 +21,20 @@ import javax.persistence.ManyToOne;
 @Setter
 @Entity
 public class LectureApplyHistory {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "student_id", foreignKey = @ForeignKey(name = "FK_lecturer_apply_history_student"))
-	private Student student;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", foreignKey = @ForeignKey(name = "FK_lecturer_apply_history_student"))
+    private Student student;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "lecture_id", foreignKey = @ForeignKey(name = "FK_lecturer_apply_history_lecturer"))
-	private Lecturer lecturer;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "lecture_id", foreignKey = @ForeignKey(name = "FK_lecturer_apply_history_lecturer"))
+    private Lecturer lecturer;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "lectureSchedule_id", foreignKey = @ForeignKey(name = "FK_lecturer_apply_history_lecturer_schedule"))
-	private LecturerSchedule lecturerSchedule;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "lectureSchedule_id", foreignKey = @ForeignKey(name = "FK_lecturer_apply_history_lecturer_schedule"))
+    private LecturerSchedule lecturerSchedule;
 }

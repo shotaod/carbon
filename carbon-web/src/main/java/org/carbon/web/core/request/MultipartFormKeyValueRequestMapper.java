@@ -19,34 +19,34 @@ import java.util.stream.Collectors;
 @Component
 public class MultipartFormKeyValueRequestMapper implements TypeSafeRequestMapper {
 
-	@Override
-	public <T> T map(HttpServletRequest request, Class<T> mapTo) {
-		return null;
-	}
+    @Override
+    public <T> T map(HttpServletRequest request, Class<T> mapTo) {
+        return null;
+    }
 
-	public Map<String, Object> map(HttpServletRequest request) {
-		ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
-		upload.setSizeMax(20 * 1024);
-		upload.setFileSizeMax(10 * 1024);
+    public Map<String, Object> map(HttpServletRequest request) {
+        ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
+        upload.setSizeMax(20 * 1024);
+        upload.setFileSizeMax(10 * 1024);
 
-		List<FileItem> items;
-		try {
-			items = upload.parseRequest(request);
-		} catch (FileUploadException e) {
-			throw new RequestMappingException("", e);
-		}
+        List<FileItem> items;
+        try {
+            items = upload.parseRequest(request);
+        } catch (FileUploadException e) {
+            throw new RequestMappingException("", e);
+        }
 
-		return items.stream().map(item -> {
-			String key = item.getFieldName();
-			if (item.isFormField()) {
-				String value = item.getString();
-				return new SimpleKeyValue(key, value);
-			} else {
-				return new SimpleKeyValue(key, item);
-			}
-		}).collect(Collectors.toMap(
-				kv -> kv.getKey(),
-				kv -> kv.getValue()
-		));
-	}
+        return items.stream().map(item -> {
+            String key = item.getFieldName();
+            if (item.isFormField()) {
+                String value = item.getString();
+                return new SimpleKeyValue(key, value);
+            } else {
+                return new SimpleKeyValue(key, item);
+            }
+        }).collect(Collectors.toMap(
+                kv -> kv.getKey(),
+                kv -> kv.getValue()
+        ));
+    }
 }

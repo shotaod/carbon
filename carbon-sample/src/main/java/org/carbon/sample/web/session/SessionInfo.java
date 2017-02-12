@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
  */
 @Data
 public class SessionInfo {
-	private String username;
-	private LocalDateTime dateTime;
+    private String username;
+    private LocalDateTime dateTime;
 }

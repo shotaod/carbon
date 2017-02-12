@@ -9,6 +9,6 @@ import org.carbon.sample.prop.sub.supersub.SuperSubProp1;
  */
 @Component
 public class SubProp1 {
-	@Inject
-	private SuperSubProp1 ssProp1;
+    @Inject
+    private SuperSubProp1 ssProp1;
 }

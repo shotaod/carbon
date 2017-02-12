@@ -7,7 +7,7 @@ import org.carbon.web.core.response.RedirectOperation;
 import org.carbon.web.def.HttpMethod;
 
 /**
- * @author ubuntu 2016/12/18.
+ * @author Shota Oda 2016/12/18.
  */
 @Controller
 public class RootController {

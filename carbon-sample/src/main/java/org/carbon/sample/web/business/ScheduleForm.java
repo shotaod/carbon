@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
  */
 @Data
 public class ScheduleForm {
-	private LocalDateTime beginDatetime;
-	private LocalDateTime endDatetime;
+    private LocalDateTime beginDatetime;
+    private LocalDateTime endDatetime;
 
-	public LecturerSchedule toEntity(Long lecturerId) {
+    public LecturerSchedule toEntity(Long lecturerId) {
         LecturerSchedule entity = new LecturerSchedule();
         entity.setLecturerId(lecturerId);
         entity.setBeginDatetime(beginDatetime);

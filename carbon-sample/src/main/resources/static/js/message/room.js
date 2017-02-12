@@ -80,7 +80,9 @@
 	};
 	
 	var startMessage = function startMessage(username, roomId) {
-	  connection = new WebSocket('ws://localhost:7927/message/socket/' + username + '/' + roomId, ['soap']);
+	  var socketProtocol = document.location.protocol === 'https:' ? 'wss:' : 'ws:';
+	  var socketUrl = socketProtocol + '://' + location.host + '/message/socket/' + username + '/' + roomId;
+	  connection = new WebSocket(socketUrl, ['soap']);
 	  connection.onmessage = function (data) {
 	    var message = JSON.parse(data.data);
 	    content.appendChild(createMessageCard(message.sender, message.content));

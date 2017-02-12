@@ -17,43 +17,43 @@ import java.util.UUID;
 @Component
 public class SessionScopeChain extends HttpScopeChain{
 
-	private String cookieName = "CRBS";
-	private static ThreadLocal<Optional<String>> tmpSessionKey = new ThreadLocal<Optional<String>>() {
-		@Override
-		protected Optional<String> initialValue() {
-			return Optional.empty();
-		}
-	};
+    private String cookieName = "CRBS";
+    private static ThreadLocal<Optional<String>> tmpSessionKey = new ThreadLocal<Optional<String>>() {
+        @Override
+        protected Optional<String> initialValue() {
+            return Optional.empty();
+        }
+    };
 
-	@Inject
+    @Inject
     private SessionContainer sessionContainer;
 
-	@Override
-	protected void in(HttpServletRequest request, HttpServletResponse response) {
-		String sessionKey = Arrays.stream(request.getCookies())
-				.filter(cookie -> cookie.getName().equals(cookieName))
-				.findFirst()
-				.map(Cookie::getValue)
-				.orElseGet(() -> {
-					String uuid = UUID.randomUUID().toString();
-					tmpSessionKey.set(Optional.of(uuid));
-					return uuid;
-				});
-		sessionContainer.setSessionKey(sessionKey);
-	}
+    @Override
+    protected void in(HttpServletRequest request, HttpServletResponse response) {
+        String sessionKey = Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals(cookieName))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElseGet(() -> {
+                    String uuid = UUID.randomUUID().toString();
+                    tmpSessionKey.set(Optional.of(uuid));
+                    return uuid;
+                });
+        sessionContainer.setSessionKey(sessionKey);
+    }
 
-	@Override
-	protected void out(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			tmpSessionKey.get().ifPresent(sessionKey -> {
-				Cookie cookie = new Cookie(this.cookieName, sessionKey);
-				cookie.setHttpOnly(true);
-				cookie.setPath("/");
-				response.addCookie(cookie);
-			});
-		} finally {
-			tmpSessionKey.remove();
-			sessionContainer.clear();
-		}
-	}
+    @Override
+    protected void out(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            tmpSessionKey.get().ifPresent(sessionKey -> {
+                Cookie cookie = new Cookie(this.cookieName, sessionKey);
+                cookie.setHttpOnly(true);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+            });
+        } finally {
+            tmpSessionKey.remove();
+            sessionContainer.clear();
+        }
+    }
 }

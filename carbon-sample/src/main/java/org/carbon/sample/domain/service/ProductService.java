@@ -12,14 +12,14 @@ import java.util.List;
  */
 @Component
 public class ProductService {
-	@Inject
-	private DSLContext jooq;
+    @Inject
+    private DSLContext jooq;
 
-	public List<Product> getProductsAll() {
-		return null;
-	}
+    public List<Product> getProductsAll() {
+        return null;
+    }
 
-	public Product getProduct(Long productId) {
-		return null;
-	}
+    public Product getProduct(Long productId) {
+        return null;
+    }
 }

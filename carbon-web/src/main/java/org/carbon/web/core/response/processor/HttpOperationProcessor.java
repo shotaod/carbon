@@ -13,20 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class HttpOperationProcessor extends AbstractResponseProcessor {
 
-	private HttpOperation httpOperation;
+    private HttpOperation httpOperation;
 
-	public HttpOperationProcessor with(HttpOperation httpOperation) {
-		this.httpOperation = httpOperation;
-		return this;
-	}
+    public HttpOperationProcessor with(HttpOperation httpOperation) {
+        this.httpOperation = httpOperation;
+        return this;
+    }
 
-	@Override
-	public boolean process(HttpServletResponse response) {
-		switch (httpOperation.getStrategy()) {
-			case Forward:
-			case Redirect:
-				ResponseUtil.redirect(response, httpOperation.getPathTo());
-		}
-		return true;
-	}
+    @Override
+    public boolean process(HttpServletResponse response) {
+        switch (httpOperation.getStrategy()) {
+            case Forward:
+            case Redirect:
+                ResponseUtil.redirect(response, httpOperation.getPathTo());
+        }
+        return true;
+    }
 }

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * @author ubuntu 2017/01/07.
+ * @author Shota Oda 2017/01/07.
  */
 public class ExecutableAction<RETURN> {
     private Object instance;

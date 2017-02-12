@@ -10,12 +10,12 @@ import org.carbon.sample.prop.sub.SubProp2;
  */
 @Component
 public class RootProp {
-	@Inject
-	private SubProp1 subProp1;
-	@Inject
-	private SubProp2 subProp2;
-	@Inject
-	private BrotherProp broProp;
-	@Inject
-	private SisterProp sisProp;
+    @Inject
+    private SubProp1 subProp1;
+    @Inject
+    private SubProp2 subProp2;
+    @Inject
+    private BrotherProp broProp;
+    @Inject
+    private SisterProp sisProp;
 }

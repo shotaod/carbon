@@ -4,19 +4,19 @@ package org.carbon.web.core.response;
  * @author Shota Oda 2016/11/28.
  */
 public class ForwardOperation implements HttpOperation {
-	private String forwardTo;
+    private String forwardTo;
 
-	public ForwardOperation(String forwardTo) {
-		this.forwardTo = forwardTo;
-	}
+    public ForwardOperation(String forwardTo) {
+        this.forwardTo = forwardTo;
+    }
 
-	@Override
-	public Strategy getStrategy() {
-		return Strategy.Forward;
-	}
+    @Override
+    public Strategy getStrategy() {
+        return Strategy.Forward;
+    }
 
-	@Override
-	public String getPathTo() {
-		return forwardTo;
-	}
+    @Override
+    public String getPathTo() {
+        return forwardTo;
+    }
 }

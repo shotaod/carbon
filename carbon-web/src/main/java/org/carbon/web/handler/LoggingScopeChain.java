@@ -20,37 +20,37 @@ import java.util.stream.Collectors;
 @Component
 public class LoggingScopeChain extends HttpScopeChain {
 
-	private static Logger logger = LoggerFactory.getLogger(LoggingScopeChain.class);
+    private static Logger logger = LoggerFactory.getLogger(LoggingScopeChain.class);
 
-	@Override
-	protected void in(HttpServletRequest request, HttpServletResponse response) {
-		Enumeration<String> headerNames = request.getHeaderNames();
-		List<SimpleKeyValue> headers = new ArrayList<>();
-		while(headerNames.hasMoreElements()) {
-			String hName = headerNames.nextElement();
-			headers.add(new SimpleKeyValue(hName, request.getHeader(hName)));
-		}
-		if (headers.size() > 0) {
-			headers.add(0, new SimpleKeyValue("Request Headers", "↓↓↓Values Below↓↓↓↓↓↓"));
-			headers.add(new SimpleKeyValue("Request Headers", "↑↑↑End Of Values↑↑↑↑↑↑"));
-			logger.debug(ChapterAttr.getBuilder("Request").appendLine(BoxedTitleMessage.produceLeft(headers)).toString());
-		}
+    @Override
+    protected void in(HttpServletRequest request, HttpServletResponse response) {
+        Enumeration<String> headerNames = request.getHeaderNames();
+        List<SimpleKeyValue> headers = new ArrayList<>();
+        while(headerNames.hasMoreElements()) {
+            String hName = headerNames.nextElement();
+            headers.add(new SimpleKeyValue(hName, request.getHeader(hName)));
+        }
+        if (headers.size() > 0) {
+            headers.add(0, new SimpleKeyValue("Request Headers", "↓↓↓Values Below↓↓↓↓↓↓"));
+            headers.add(new SimpleKeyValue("Request Headers", "↑↑↑End Of Values↑↑↑↑↑↑"));
+            logger.debug(ChapterAttr.getBuilder("Request").appendLine(BoxedTitleMessage.produceLeft(headers)).toString());
+        }
 
-		Enumeration<String> parameterNames = request.getParameterNames();
-		List<SimpleKeyValue> parameters = new ArrayList<>();
-		while (parameterNames.hasMoreElements()) {
-			String pName = parameterNames.nextElement();
-			parameters.add(new SimpleKeyValue(pName, request.getParameter(pName)));
-		}
-		if (parameters.size() > 0) {
-			parameters.add(0, new SimpleKeyValue("Request Parameters", "↓↓↓Values Below↓↓↓↓↓↓"));
-			parameters.add(new SimpleKeyValue("Request Parameters", "↑↑↑End Of Values↑↑↑↑↑↑"));
-			logger.debug(ChapterAttr.getBuilder("Request Params").appendLine(BoxedTitleMessage.produceLeft(parameters)).toString());
-		}
-	}
+        Enumeration<String> parameterNames = request.getParameterNames();
+        List<SimpleKeyValue> parameters = new ArrayList<>();
+        while (parameterNames.hasMoreElements()) {
+            String pName = parameterNames.nextElement();
+            parameters.add(new SimpleKeyValue(pName, request.getParameter(pName)));
+        }
+        if (parameters.size() > 0) {
+            parameters.add(0, new SimpleKeyValue("Request Parameters", "↓↓↓Values Below↓↓↓↓↓↓"));
+            parameters.add(new SimpleKeyValue("Request Parameters", "↑↑↑End Of Values↑↑↑↑↑↑"));
+            logger.debug(ChapterAttr.getBuilder("Request Params").appendLine(BoxedTitleMessage.produceLeft(parameters)).toString());
+        }
+    }
 
-	@Override
-	protected void out(HttpServletRequest request, HttpServletResponse response) {
+    @Override
+    protected void out(HttpServletRequest request, HttpServletResponse response) {
         List<SimpleKeyValue> headers = new ArrayList<>();
         List<SimpleKeyValue> values = response.getHeaderNames().stream()
                 .map(name -> new SimpleKeyValue(name, response.getHeader(name)))

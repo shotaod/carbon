@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 /**
- * @author ubuntu 2016/12/01.
+ * @author Shota Oda 2016/12/01.
  */
 class NameBasedObjectMapperSpec extends Specification {
     class Form {

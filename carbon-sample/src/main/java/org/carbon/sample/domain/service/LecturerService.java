@@ -15,21 +15,21 @@ import java.util.List;
  */
 @Component
 public class LecturerService {
-	@Inject
-	private DSLContext jooq;
-	@Inject
-	private LecturerDao lecturerDao;
+    @Inject
+    private DSLContext jooq;
+    @Inject
+    private LecturerDao lecturerDao;
 
-	@Transactional
-	public LecturerRecord createLecturer(LecturerRecord record) {
-		return record;
-	}
+    @Transactional
+    public LecturerRecord createLecturer(LecturerRecord record) {
+        return record;
+    }
 
-	public Lecturer findByAddress(String address) {
-		return lecturerDao.fetchOneByEmail(address);
-	}
+    public Lecturer findByAddress(String address) {
+        return lecturerDao.fetchOneByEmail(address);
+    }
 
-	public List<Lecturer> findLecturers() {
-		return null;
-	}
+    public List<Lecturer> findLecturers() {
+        return null;
+    }
 }

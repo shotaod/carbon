@@ -12,15 +12,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class BasicAuthEvent implements AuthEventListener {
-	private static final String Header_Auth = "WWW-Authenticate";
-	@Override
-	public void onAuth(String username, SessionContainer session) {
+    private static final String Header_Auth = "WWW-Authenticate";
+    @Override
+    public void onAuth(String username, SessionContainer session) {
 
-	}
+    }
 
-	@Override
-	public void onFail(HttpServletRequest request, HttpServletResponse response) {
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		response.setHeader(Header_Auth, "Basic realm=Basic");
-	}
+    @Override
+    public void onFail(HttpServletRequest request, HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setHeader(Header_Auth, "Basic realm=Basic");
+    }
 }

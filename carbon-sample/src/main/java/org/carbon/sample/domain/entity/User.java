@@ -21,20 +21,20 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 public class User {
-	@Id
-	@GeneratedValue
-	@Column(name = "user_id")
-	private Long id;
+    @Id
+    @GeneratedValue
+    @Column(name = "user_id")
+    private Long id;
 
-	@Column(name = "user_name", unique = true)
-	private String username;
+    @Column(name = "user_name", unique = true)
+    private String username;
 
-	@Column(name = "user_address")
-	private String address;
+    @Column(name = "user_address")
+    private String address;
 
-	@Column(name = "user_password")
-	private String password;
+    @Column(name = "user_password")
+    private String password;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
-	private Set<Role> roles;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<Role> roles;
 }

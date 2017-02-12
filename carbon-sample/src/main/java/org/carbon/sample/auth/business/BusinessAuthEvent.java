@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class BusinessAuthEvent extends FormAuthEvent {
-	@Override
-	public void onFail(HttpServletRequest request, HttpServletResponse response) {
-		ResponseUtil.redirect(response, "/business/login");
-	}
+    @Override
+    public void onFail(HttpServletRequest request, HttpServletResponse response) {
+        ResponseUtil.redirect(response, "/business/login");
+    }
 }

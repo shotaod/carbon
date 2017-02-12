@@ -3,7 +3,7 @@ package org.carbon.web.ws;
 import com.google.common.base.Objects;
 
 /**
- * @author ubuntu 2017/01/02.
+ * @author Shota Oda 2017/01/02.
  */
 public class Channel {
     private String id;

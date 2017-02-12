@@ -12,23 +12,23 @@ import org.carbon.web.core.response.processor.JsonProcessor;
  */
 @Component
 public class ResponseProcessorFactory {
-	@Inject
-	private JsonProcessor jsonProcessor;
-	@Inject
-	private HtmlProcessor htmlProcessor;
-	@Inject
-	private HttpOperationProcessor httpOperationProcessor;
+    @Inject
+    private JsonProcessor jsonProcessor;
+    @Inject
+    private HtmlProcessor htmlProcessor;
+    @Inject
+    private HttpOperationProcessor httpOperationProcessor;
 
-	public ResponseProcessor from(ActionResult actionResult) {
-		Object result = actionResult.getResult();
-		if (result instanceof HtmlResponse) {
-			HtmlResponse response = (HtmlResponse) result;
-			return htmlProcessor.with(response);
-		} else if (result instanceof HttpOperation) {
-			HttpOperation response = (HttpOperation) result;
-			return httpOperationProcessor.with(response);
-		}
+    public ResponseProcessor from(ActionResult actionResult) {
+        Object result = actionResult.getResult();
+        if (result instanceof HtmlResponse) {
+            HtmlResponse response = (HtmlResponse) result;
+            return htmlProcessor.with(response);
+        } else if (result instanceof HttpOperation) {
+            HttpOperation response = (HttpOperation) result;
+            return httpOperationProcessor.with(response);
+        }
 
-		return jsonProcessor.with(result);
-	}
+        return jsonProcessor.with(result);
+    }
 }

@@ -16,46 +16,46 @@ import org.carbon.web.def.HttpMethod;
  */
 @Controller
 public class AuthController {
-	// -----------------------------------------------------
-	//                                               Basic Auth
-	//                                               -------
-	@Action(url = "/basic", method = HttpMethod.GET)
-	public HtmlResponse getBasicIndex() {
-		return new HtmlResponse("/basic/index");
-	}
-	@Action(url = "/basic/secret/{number}", method = HttpMethod.GET)
-	public HtmlResponse requestBasicSecret(@PathVariable(value = "number") String number, @Session SampleBasicAuthIdentity userSession) {
-		HtmlResponse response = new HtmlResponse("basic/secret");
+    // -----------------------------------------------------
+    //                                               Basic Auth
+    //                                               -------
+    @Action(url = "/basic", method = HttpMethod.GET)
+    public HtmlResponse getBasicIndex() {
+        return new HtmlResponse("/basic/index");
+    }
+    @Action(url = "/basic/secret/{number}", method = HttpMethod.GET)
+    public HtmlResponse requestBasicSecret(@PathVariable(value = "number") String number, @Session SampleBasicAuthIdentity userSession) {
+        HtmlResponse response = new HtmlResponse("basic/secret");
 
-		UserInfoModel model = new UserInfoModel();
-		model.setUsername(userSession.username());
-		model.setPassword(userSession.cryptPassword());
+        UserInfoModel model = new UserInfoModel();
+        model.setUsername(userSession.username());
+        model.setPassword(userSession.cryptPassword());
 
-		response.putData("model", model);
-		response.putData("secretNumber", number);
-		return response;
-	}
+        response.putData("model", model);
+        response.putData("secretNumber", number);
+        return response;
+    }
 
-	@Action(url = "/form", method = HttpMethod.GET)
-	public HtmlResponse getLogin() {
-		return new HtmlResponse("form/login");
-	}
+    @Action(url = "/form", method = HttpMethod.GET)
+    public HtmlResponse getLogin() {
+        return new HtmlResponse("form/login");
+    }
 
-	@Action(url = "/form/auth", method = HttpMethod.POST)
-	public HtmlResponse postFormAuth() {
-		return new HtmlResponse("/form/index");
-	}
+    @Action(url = "/form/auth", method = HttpMethod.POST)
+    public HtmlResponse postFormAuth() {
+        return new HtmlResponse("/form/index");
+    }
 
-	@Action(url = "/form/secret", method = HttpMethod.GET)
-	public HtmlResponse getFormSecret(
-			@Session FormAuthIdentity userSession,
-			@Session SessionInfo sessionInfo) {
-		HtmlResponse response = new HtmlResponse("/form/secret");
-		UserInfoModel model = new UserInfoModel();
-		model.setUsername(userSession.username());
-		model.setPassword(userSession.cryptPassword());
-		response.putData("model", model);
-		response.putData("loginInfo", sessionInfo);
-		return response;
-	}
+    @Action(url = "/form/secret", method = HttpMethod.GET)
+    public HtmlResponse getFormSecret(
+            @Session FormAuthIdentity userSession,
+            @Session SessionInfo sessionInfo) {
+        HtmlResponse response = new HtmlResponse("/form/secret");
+        UserInfoModel model = new UserInfoModel();
+        model.setUsername(userSession.username());
+        model.setPassword(userSession.cryptPassword());
+        response.putData("model", model);
+        response.putData("loginInfo", sessionInfo);
+        return response;
+    }
 }

@@ -14,17 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class RequestScopeChain extends HttpScopeChain {
 
-	@Inject
-	private RequestContainer requestPool;
+    @Inject
+    private RequestContainer requestPool;
 
-	@Override
-	protected void in(HttpServletRequest request, HttpServletResponse response) {
-		requestPool.setObject(response, HttpServletResponse.class);
-		requestPool.setObject(request, HttpServletRequest.class);
-	}
+    @Override
+    protected void in(HttpServletRequest request, HttpServletResponse response) {
+        requestPool.setObject(response, HttpServletResponse.class);
+        requestPool.setObject(request, HttpServletRequest.class);
+    }
 
-	@Override
-	protected void out(HttpServletRequest request, HttpServletResponse response) {
-		requestPool.clear();
-	}
+    @Override
+    protected void out(HttpServletRequest request, HttpServletResponse response) {
+        requestPool.clear();
+    }
 }

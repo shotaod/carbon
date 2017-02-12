@@ -7,7 +7,7 @@ import redis.clients.jedis.Jedis;
 import java.io.IOException;
 
 /**
- * @author ubuntu 2016/12/17.
+ * @author Shota Oda 2016/12/17.
  */
 public class RedisSessionStore implements SessionStore{
     InMemorySessionStore cache;

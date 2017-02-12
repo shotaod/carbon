@@ -12,13 +12,13 @@ import java.util.Optional;
 @Component
 public class FormAuthRequestMapper implements AuthRequestMapper{
 
-	@Override
-	public Optional<AuthInfo> map(HttpServletRequest request) {
-		Object usernameObj = request.getParameter("username");
-		Object passwordObj = request.getParameter("password");
-		String username = Optional.ofNullable(usernameObj).map(Object::toString).orElse("");
-		String password = Optional.ofNullable(passwordObj).map(Object::toString).orElse("");
+    @Override
+    public Optional<AuthInfo> map(HttpServletRequest request) {
+        Object usernameObj = request.getParameter("username");
+        Object passwordObj = request.getParameter("password");
+        String username = Optional.ofNullable(usernameObj).map(Object::toString).orElse("");
+        String password = Optional.ofNullable(passwordObj).map(Object::toString).orElse("");
 
-		return Optional.of(new AuthInfo(username, password));
-	}
+        return Optional.of(new AuthInfo(username, password));
+    }
 }

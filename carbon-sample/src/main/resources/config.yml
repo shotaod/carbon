@@ -6,16 +6,14 @@ web:
   maxContentSize: 2097152 #2MB
 persistent:
   implementation: jooq # jooq or hibernate
-  dataSources:
-    source:
-      url: 127.0.0.1
-      db: carbondb
-      user: root
-      password: password
-      port: 23306
+  dataSource:
+    diarect: mysql # mysql or postgresql
+    host: 127.0.0.1
+    db: carbondb
+    user: root
+    password: password
+    port: 23306
   autoddl: create # none, create-only, drop, create, create-drop, validate, and update
-Logger:
-  name: slf4j
 
 sample:
   redis:

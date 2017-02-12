@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2017/01/02.
+ * @author Shota Oda 2017/01/02.
  */
 public class Message {
     private Identity from;

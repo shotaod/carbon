@@ -20,33 +20,33 @@ import java.util.List;
  */
 @Controller
 public class StudentController {
-	@Inject
-	private StudentAppService appService;
+    @Inject
+    private StudentAppService appService;
 
-	@Action(url = "/consumer", method = HttpMethod.GET)
-	public HtmlResponse indexGet() {
-		return new HtmlResponse("/consumer/login");
-	}
+    @Action(url = "/consumer", method = HttpMethod.GET)
+    public HtmlResponse indexGet() {
+        return new HtmlResponse("/consumer/login");
+    }
 
-	@Action(url = "/consumer/login", method = HttpMethod.GET)
-	public HtmlResponse loginGet() {
-		return new HtmlResponse("/consumer/login");
-	}
+    @Action(url = "/consumer/login", method = HttpMethod.GET)
+    public HtmlResponse loginGet() {
+        return new HtmlResponse("/consumer/login");
+    }
 
-	@Action(url = "/consumer/auth", method = HttpMethod.POST)
-	public HttpOperation authSuccessPost() {
-		return RedirectOperation.to("/consumer/lecturers");
-	}
+    @Action(url = "/consumer/auth", method = HttpMethod.POST)
+    public HttpOperation authSuccessPost() {
+        return RedirectOperation.to("/consumer/lecturers");
+    }
 
-	@Action(url = "/consumer/lecturers", method = HttpMethod.GET)
-	public HtmlResponse homeGet() {
-		HtmlResponse response = new HtmlResponse("/consumer/lecturer_list");
+    @Action(url = "/consumer/lecturers", method = HttpMethod.GET)
+    public HtmlResponse homeGet() {
+        HtmlResponse response = new HtmlResponse("/consumer/lecturer_list");
         List<LecturerIndex> lecturers = appService.selectLecturers();
         response.putData("models", lecturers);
-		return response;
-	}
+        return response;
+    }
 
-	@Action(url = "/consumer/lecturer/{lecturerId}/room", method = HttpMethod.GET)
+    @Action(url = "/consumer/lecturer/{lecturerId}/room", method = HttpMethod.GET)
     public HtmlResponse lecturerRoomGet(@PathVariable("lecturerId") String lecturerId) {
         HtmlResponse response = new HtmlResponse("/consumer/lecturer_room");
         LectureRoomDto model = appService.selectLecturerRoom(Long.parseLong(lecturerId));
@@ -54,9 +54,9 @@ public class StudentController {
         return response;
     }
 
-	@Action(url = "/consumer/apply", method = HttpMethod.POST)
-	public void applyPost(@Session ConsumerAuthIdentity identity) {
-		Long id = identity.getStudent().getId();
-		appService.apply(null, null, id);
-	}
+    @Action(url = "/consumer/apply", method = HttpMethod.POST)
+    public void applyPost(@Session ConsumerAuthIdentity identity) {
+        Long id = identity.getStudent().getId();
+        appService.apply(null, null, id);
+    }
 }

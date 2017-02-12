@@ -21,21 +21,21 @@ public class MappedRequestBody {
 
 
 
-	private Map<String, Object> requests;
+    private Map<String, Object> requests;
 
-	public MappedRequestBody(Map<String, Object> requests) {
-		this.requests = requests;
-	}
+    public MappedRequestBody(Map<String, Object> requests) {
+        this.requests = requests;
+    }
 
-	public Map<String, Object> getRequests() {
-		return requests;
-	}
+    public Map<String, Object> getRequests() {
+        return requests;
+    }
 
-	public Object getValue(String key) {
-		return requests.get(key);
-	}
+    public Object getValue(String key) {
+        return requests.get(key);
+    }
 
-	public List<String> getKeys() {
-		return requests.keySet().stream().collect(Collectors.toList());
-	}
+    public List<String> getKeys() {
+        return requests.keySet().stream().collect(Collectors.toList());
+    }
 }

@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class CoreDispatchChain extends HttpHandlerChain {
-	@Inject
-	private CarbonCore core;
+    @Inject
+    private CarbonCore core;
 
-	@Override
-	protected void chain(HttpServletRequest request, HttpServletResponse response) {
-		core.execute(request, response);
-		super.chain(request, response);
-	}
+    @Override
+    protected void chain(HttpServletRequest request, HttpServletResponse response) {
+        core.execute(request, response);
+        super.chain(request, response);
+    }
 }

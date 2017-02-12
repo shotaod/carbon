@@ -1,4 +1,4 @@
-package org.carbon.component.generator.aop.annotation;
+package org.carbon.component.generator.proxy.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

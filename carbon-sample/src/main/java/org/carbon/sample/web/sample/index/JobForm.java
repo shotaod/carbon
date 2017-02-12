@@ -9,12 +9,12 @@ import java.util.List;
  */
 @Data
 class JobForm {
-	class Department {
-		private String name;
-		private String position;
-	}
-	private String name;
-	private Integer workYears;
+    class Department {
+        private String name;
+        private String position;
+    }
+    private String name;
+    private Integer workYears;
 
-	private List<Department> departments;
+    private List<Department> departments;
 }

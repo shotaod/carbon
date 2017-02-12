@@ -9,6 +9,6 @@ import javax.servlet.http.HttpServletResponse;
  * @author Shota Oda 2016/11/03.
  */
 public interface AuthEventListener {
-	void onAuth(String username, SessionContainer sessionContainer);
-	void onFail(HttpServletRequest request, HttpServletResponse response);
+    void onAuth(String username, SessionContainer sessionContainer);
+    void onFail(HttpServletRequest request, HttpServletResponse response);
 }

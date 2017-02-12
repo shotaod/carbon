@@ -15,20 +15,20 @@ import java.util.Optional;
 @Component
 public class StudentService {
 
-	@Inject
-	private DSLContext jooq;
-	@Inject
-	private StudentDao studentDao;
+    @Inject
+    private DSLContext jooq;
+    @Inject
+    private StudentDao studentDao;
 
-	public Student createStudent(Student student) {
-		return null;
-	}
+    public Student createStudent(Student student) {
+        return null;
+    }
 
-	public Optional<Student> selectOneByAddress(String address) {
-		return Optional.ofNullable(studentDao.fetchOneByEmail(address));
-	}
+    public Optional<Student> selectOneByAddress(String address) {
+        return Optional.ofNullable(studentDao.fetchOneByEmail(address));
+    }
 
-	public List<Student> findStudents() {
-		return null;
-	}
+    public List<Student> findStudents() {
+        return null;
+    }
 }

@@ -8,24 +8,24 @@ import org.carbon.web.auth.AuthIdentity;
  */
 public class SampleBasicAuthIdentity implements AuthIdentity {
 
-	private User user;
+    private User user;
 
-	public SampleBasicAuthIdentity(User user) {
-		this.user = user;
-	}
+    public SampleBasicAuthIdentity(User user) {
+        this.user = user;
+    }
 
-	@Override
-	public String username() {
-		return user.getUsername();
-	}
+    @Override
+    public String username() {
+        return user.getUsername();
+    }
 
-	@Override
-	public String cryptPassword() {
-		return user.getPassword();
-	}
+    @Override
+    public String cryptPassword() {
+        return user.getPassword();
+    }
 
-	@Override
-	public boolean confirm(String plainPassword) {
-		return cryptPassword().equals(plainPassword);
-	}
+    @Override
+    public boolean confirm(String plainPassword) {
+        return cryptPassword().equals(plainPassword);
+    }
 }

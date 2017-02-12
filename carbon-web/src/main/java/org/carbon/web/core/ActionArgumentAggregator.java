@@ -38,10 +38,10 @@ import java.util.stream.Collectors;
 @Component
 public class ActionArgumentAggregator {
 
-	@Inject
-	private RequestMapper requestMapper;
-	@Inject
-	private NameBasedObjectMapper objectMapper;
+    @Inject
+    private RequestMapper requestMapper;
+    @Inject
+    private NameBasedObjectMapper objectMapper;
     @Inject
     private Validator validator;
     @Inject
@@ -71,7 +71,7 @@ public class ActionArgumentAggregator {
         }
     }
 
-	public ExecutableAction resolve(Method method, Object instance) {
+    public ExecutableAction resolve(Method method, Object instance) {
         HttpServletRequest request = requestPool.getByType(HttpServletRequest.class);
 
         List<Parameter> parameters = Arrays.asList(method.getParameters());
@@ -89,11 +89,11 @@ public class ActionArgumentAggregator {
                 resolved = mapPathVariable(pathVariableValues, varName);
             } else if (parameter.isAnnotationPresent(RequestCookie.class)) {
                 resolved = mapCookie(request, paramType);
-			} else if (parameter.isAnnotationPresent(RequestBody.class)) {
-				resolved = mapRequestBody(request, paramType);
-			} else if (parameter.isAnnotationPresent(Session.class)) {
+            } else if (parameter.isAnnotationPresent(RequestBody.class)) {
+                resolved = mapRequestBody(request, paramType);
+            } else if (parameter.isAnnotationPresent(Session.class)) {
                 resolved = sessionPool.getByType(paramType).orElse(null);
-			} else if (ValidationResult.class.isAssignableFrom(paramType)) {
+            } else if (ValidationResult.class.isAssignableFrom(paramType)) {
                 ValidationResult vr;
                 if (paramType.equals(SimpleValidationResult.class)) {
                     vr = new SimpleValidationResult(constraintViolations);
@@ -108,27 +108,27 @@ public class ActionArgumentAggregator {
             resolvedArguments.put(paramName, new ArgumentMeta(parameter, resolved));
 
             // validation
-			if (resolved != null && parameter.isAnnotationPresent(Validate.class)) {
+            if (resolved != null && parameter.isAnnotationPresent(Validate.class)) {
                 Set<ConstraintViolation<Object>> validateResult = validator.validate(resolved);
                 constraintViolations.addAll(validateResult);
             }
-		});
+        });
 
 
-		return new ExecutableAction<>(method.getReturnType(), instance, method, resolvedArguments);
-	}
+        return new ExecutableAction<>(method.getReturnType(), instance, method, resolvedArguments);
+    }
 
-	private String mapPathVariable(PathVariableValues pathVariableValues, String varName) {
+    private String mapPathVariable(PathVariableValues pathVariableValues, String varName) {
         return pathVariableValues.getValue(varName);
     }
 
-	private <T> T mapCookie(HttpServletRequest request, Class<T> mapTo) {
-		Map<String, Object> cookies = Arrays.stream(request.getCookies())
+    private <T> T mapCookie(HttpServletRequest request, Class<T> mapTo) {
+        Map<String, Object> cookies = Arrays.stream(request.getCookies())
                 .collect(Collectors.toMap(Cookie::getName, Cookie::getValue));
-		return objectMapper.map(cookies, mapTo);
-	}
+        return objectMapper.map(cookies, mapTo);
+    }
 
-	private <T> T mapRequestBody(HttpServletRequest request, Class<T> mapTo) {
-		return requestMapper.map(request, mapTo);
-	}
+    private <T> T mapRequestBody(HttpServletRequest request, Class<T> mapTo) {
+        return requestMapper.map(request, mapTo);
+    }
 }

@@ -17,25 +17,25 @@ import java.util.Set;
  */
 @Component
 public class UserRoleService {
-	@Inject
-	private DSLContext jooq;
-	@Inject
-	private UserDao userDao;
-	@Inject
-	private RoleDao roleDao;
+    @Inject
+    private DSLContext jooq;
+    @Inject
+    private UserDao userDao;
+    @Inject
+    private RoleDao roleDao;
 
-	@Transactional
-	public User createUser(User user, Set<Role> roles) {
-		roleDao.insert(roles);
-		userDao.insert(user);
-		return user;
-	}
+    @Transactional
+    public User createUser(User user, Set<Role> roles) {
+        roleDao.insert(roles);
+        userDao.insert(user);
+        return user;
+    }
 
-	public User findByUsername(String username) {
-		return userDao.fetchOneByUsername(username);
-	}
+    public User findByUsername(String username) {
+        return userDao.fetchOneByUsername(username);
+    }
 
-	public List<User> findUsers() {
-		return userDao.findAll();
-	}
+    public List<User> findUsers() {
+        return userDao.findAll();
+    }
 }

@@ -14,18 +14,18 @@ import java.util.Optional;
 @Component
 public class BusinessAuthIdentifier implements AuthIdentifier<BusinessAuthIdentity>{
 
-	@Inject
-	private LecturerService service;
+    @Inject
+    private LecturerService service;
 
-	@Override
-	public Class<BusinessAuthIdentity> getType() {
-		return BusinessAuthIdentity.class;
-	}
+    @Override
+    public Class<BusinessAuthIdentity> getType() {
+        return BusinessAuthIdentity.class;
+    }
 
-	@Override
-	public BusinessAuthIdentity find(String address) throws UserIdentityNotFoundException {
-		return Optional.ofNullable(service.findByAddress(address))
-				.map(BusinessAuthIdentity::new)
-				.orElseThrow(() -> new UserIdentityNotFoundException(address));
-	}
+    @Override
+    public BusinessAuthIdentity find(String address) throws UserIdentityNotFoundException {
+        return Optional.ofNullable(service.findByAddress(address))
+                .map(BusinessAuthIdentity::new)
+                .orElseThrow(() -> new UserIdentityNotFoundException(address));
+    }
 }

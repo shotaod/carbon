@@ -5,19 +5,19 @@ package org.carbon.web.auth;
  */
 public class Authentication {
 
-	private String authKey;
+    private String authKey;
 
-	public Authentication(String authKey) {
-		this.authKey = authKey;
-	}
+    public Authentication(String authKey) {
+        this.authKey = authKey;
+    }
 
-	public static Authentication NotRequired = new Authentication(null);
+    public static Authentication NotRequired = new Authentication(null);
 
-	public String getAuthKey() {
-		return authKey;
-	}
+    public String getAuthKey() {
+        return authKey;
+    }
 
-	public boolean requiredAuth() {
-		return authKey != null;
-	}
+    public boolean requiredAuth() {
+        return authKey != null;
+    }
 }

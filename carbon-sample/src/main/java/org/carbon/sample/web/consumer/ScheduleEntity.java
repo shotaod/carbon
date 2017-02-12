@@ -11,6 +11,6 @@ import org.carbon.sample.tables.pojos.LecturerSchedule;
 @Data
 @AllArgsConstructor
 public class ScheduleEntity {
-	private LecturerSchedule schedule;
-	private Lecturer lecturer;
+    private LecturerSchedule schedule;
+    private Lecturer lecturer;
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @author ubuntu 2016/12/17.
+ * @author Shota Oda 2016/12/17.
  */
 public class InMemorySessionStore implements SessionStore {
     private Map<String, InstanceContainer> store;

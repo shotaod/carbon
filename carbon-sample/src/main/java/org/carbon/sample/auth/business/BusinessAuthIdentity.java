@@ -13,20 +13,20 @@ import org.mindrot.jbcrypt.BCrypt;
 @AllArgsConstructor
 public class BusinessAuthIdentity implements AuthIdentity{
 
-	private Lecturer user;
+    private Lecturer user;
 
-	@Override
-	public String username() {
-		return user.getUsername();
-	}
+    @Override
+    public String username() {
+        return user.getUsername();
+    }
 
-	@Override
-	public String cryptPassword() {
-		return user.getPassword();
-	}
+    @Override
+    public String cryptPassword() {
+        return user.getPassword();
+    }
 
-	@Override
-	public boolean confirm(String plainPassword) {
+    @Override
+    public boolean confirm(String plainPassword) {
         return BCrypt.checkpw(plainPassword, cryptPassword());
-	}
+    }
 }

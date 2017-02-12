@@ -14,16 +14,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.carbon.component.annotation.Component;
 import org.carbon.component.exception.PackageScanException;
 import org.carbon.component.exception.UnsupportedProtocolException;
 import org.slf4j.Logger;
@@ -34,10 +30,10 @@ import org.slf4j.LoggerFactory;
  */
 public class TargetBaseScanner {
 
-	private Logger logger = LoggerFactory.getLogger(TargetBaseScanner.class);
+    private Logger logger = LoggerFactory.getLogger(TargetBaseScanner.class);
 
-	private static final String Protocol_File = "file";
-	private static final String Protocol_Jar = "jar";
+    private static final String Protocol_File = "file";
+    private static final String Protocol_Jar = "jar";
     private static final String Class_Suffix = ".class";
     private static final int Class_Suffix_Length = Class_Suffix.length();
 
@@ -47,37 +43,37 @@ public class TargetBaseScanner {
     private ClassLoader classLoader;
 
     public TargetBaseScanner() {
-		this.classLoader = ClassLoader.getSystemClassLoader();
-	}
+        this.classLoader = ClassLoader.getSystemClassLoader();
+    }
 
-	// ===================================================================================
-	//                                                                       Public Method
-	//                                                                       =============
-	public Set<Class<?>> scan(Class scanBase, Set<Class<?>> scanTargets) throws PackageScanException {
+    // ===================================================================================
+    //                                                                       Public Method
+    //                                                                       =============
+    public Set<Class<?>> scan(Class scanBase, Set<Class<? extends Annotation>> scanTargets) throws PackageScanException {
         return walkPackage(scanBase.getPackage()).stream()
             .map(this::getClass)
             .filter(clazz -> isScanTarget(clazz, scanTargets))
             .collect(Collectors.toSet());
     }
 
-	// ===================================================================================
-	//                                                                      Private Method
-	//                                                                      ==============
-	private List<String> walkPackage(Package scanBasePack) throws PackageScanException {
+    // ===================================================================================
+    //                                                                      Private Method
+    //                                                                      ==============
+    private List<String> walkPackage(Package scanBasePack) throws PackageScanException {
         List<String> classNames = new ArrayList<>();
         String packagePath = getPath(scanBasePack);
-		URL url = classLoader.getResource(packagePath);
-		String protocol = url != null ? url.getProtocol() : null;
-		// Scan 対象のパス
-		if (Protocol_File.equals(protocol)) {
-			Path scanBasePath = Paths.get(url.getPath());
+        URL url = classLoader.getResource(packagePath);
+        String protocol = url != null ? url.getProtocol() : null;
+        // Scan 対象のパス
+        if (Protocol_File.equals(protocol)) {
+            Path scanBasePath = Paths.get(url.getPath());
 
-			// Scanマーカーパッケージの部分パス  package.markerBase -> package/markerBase
-			String scanPackPartialPathStr = scanBasePack.getName().replace(".", "/");
+            // Scanマーカーパッケージの部分パス  package.markerBase -> package/markerBase
+            String scanPackPartialPathStr = scanBasePack.getName().replace(".", "/");
 
-			int packageStart = scanBasePath.toString().lastIndexOf(scanPackPartialPathStr);
-			String fileRoot = scanBasePath.toString().substring(0, packageStart);
-			Path fileRootPath = Paths.get(fileRoot);
+            int packageStart = scanBasePath.toString().lastIndexOf(scanPackPartialPathStr);
+            String fileRoot = scanBasePath.toString().substring(0, packageStart);
+            Path fileRootPath = Paths.get(fileRoot);
 
             try {
                 Files.find(scanBasePath, Integer.MAX_VALUE, (path, attr) -> isClassFile(path))
@@ -97,61 +93,61 @@ public class TargetBaseScanner {
                 throw new PackageScanException(protocol, e);
             }
             URL[] urls = { url };
-			classLoader = URLClassLoader.newInstance(urls);
-			while (entries.hasMoreElements()) {
-				JarEntry je = entries.nextElement();
+            classLoader = URLClassLoader.newInstance(urls);
+            while (entries.hasMoreElements()) {
+                JarEntry je = entries.nextElement();
 
                 if(je.isDirectory() || !je.getName().endsWith(Class_Suffix)) continue;
-				String className = je.getName().substring(0,je.getName().length()-Class_Suffix_Length).replace('/', '.');
-				classNames.add(className);
-			}
+                String className = je.getName().substring(0,je.getName().length()-Class_Suffix_Length).replace('/', '.');
+                classNames.add(className);
+            }
         } else {
-			throw new UnsupportedProtocolException("protocol:[" + protocol + "] is not supported.");
-		}
+            throw new UnsupportedProtocolException("protocol:[" + protocol + "] is not supported.");
+        }
 
-		return classNames;
-	}
+        return classNames;
+    }
 
-	private String getPath(Package pack) {
-		return pack.getName().replace(".", "/");
-	}
+    private String getPath(Package pack) {
+        return pack.getName().replace(".", "/");
+    }
 
-	private boolean isClassFile(Path path) {
-		File file = path.toFile();
-		return file.isFile() && file.getName().endsWith(Class_Suffix);
-	}
+    private boolean isClassFile(Path path) {
+        File file = path.toFile();
+        return file.isFile() && file.getName().endsWith(Class_Suffix);
+    }
 
-	private String getClassFqn(Path fileRoot, Path classFilePath) {
+    private String getClassFqn(Path fileRoot, Path classFilePath) {
 
-		// /package/Clazz.class
-		String classFQN = classFilePath.toString().replace(fileRoot.toString(), "");
+        // /package/Clazz.class
+        String classFQN = classFilePath.toString().replace(fileRoot.toString(), "");
 
-		// remove suffix ".class"
-		classFQN = classFQN.substring(0, classFQN.indexOf(".class"));
+        // remove suffix ".class"
+        classFQN = classFQN.substring(0, classFQN.indexOf(".class"));
 
-		// replace "/" to "."
-		classFQN = classFQN.replace('/', '.');
+        // replace "/" to "."
+        classFQN = classFQN.replace('/', '.');
 
-		// remove head "."
-		if (classFQN.startsWith(".")) {
-			classFQN = classFQN.substring(1, classFQN.length());
-		}
+        // remove head "."
+        if (classFQN.startsWith(".")) {
+            classFQN = classFQN.substring(1, classFQN.length());
+        }
 
-		return classFQN;
-	}
+        return classFQN;
+    }
 
-	private Class<?> getClass(String className) {
-		try {
+    private Class<?> getClass(String className) {
+        try {
             Class<?> clazz = classLoader.loadClass(className);
             if (clazz.isAnnotation() || clazz.isInterface()) return null;
             return clazz;
         } catch (ClassNotFoundException impossible) {
-			logger.error("Not found Class:[%s]", className);
+            logger.error("Not found Class:[%s]", className);
             throw new RuntimeException(impossible);
-		}
-	}
+        }
+    }
 
-	private boolean isScanTarget(Class clazz, Set<Class<?>> scanTargets) {
+    private boolean isScanTarget(Class<?> clazz, Set<Class<? extends Annotation>> scanTargets) {
         if (clazz == null) return false;
         Annotation[] declaredAnnotations = clazz.getDeclaredAnnotations();
         if (declaredAnnotations.length == 0) return false;

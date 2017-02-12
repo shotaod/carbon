@@ -6,7 +6,7 @@ import org.eclipse.jetty.websocket.WebSocketFactory;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author ubuntu 2017/01/06.
+ * @author Shota Oda 2017/01/06.
  */
 public class WebSocketAcceptorFactory {
     private static class SimpleAcceptor implements WebSocketFactory.Acceptor {

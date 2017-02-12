@@ -9,8 +9,8 @@ import org.carbon.component.annotation.Inject;
  */
 @Component
 public class SisterProp {
-	@Inject
-	private BrotherProp broProp;
-	@Inject
-	private SuperSubProp1 ssProp1;
+    @Inject
+    private BrotherProp broProp;
+    @Inject
+    private SuperSubProp1 ssProp1;
 }

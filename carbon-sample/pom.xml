@@ -27,6 +27,11 @@
         </dependency>
         <dependency>
             <groupId>carbon</groupId>
+            <artifactId>carbon-persistant</artifactId>
+            <version>0.1.0-BETA</version>
+        </dependency>
+        <dependency>
+            <groupId>carbon</groupId>
             <artifactId>carbon-util</artifactId>
             <version>0.1.0-BETA</version>
         </dependency>
@@ -41,11 +46,10 @@
             <artifactId>jbcrypt</artifactId>
             <version>0.3m</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.influxdb/influxdb-java -->
         <dependency>
-            <groupId>org.influxdb</groupId>
-            <artifactId>influxdb-java</artifactId>
-            <version>2.5</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.7</version>
         </dependency>
     </dependencies>
     <build>
@@ -81,6 +85,16 @@
                             <mainClass>org.carbon.sample.CarbonStarter</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>1.1.3</version>
+                <configuration>
+                    <processTypes>
+                        <web>java -jar target/carbon-sample-1.0.0-RELEASE.jar</web>
+                    </processTypes>
                 </configuration>
             </plugin>
             <plugin>

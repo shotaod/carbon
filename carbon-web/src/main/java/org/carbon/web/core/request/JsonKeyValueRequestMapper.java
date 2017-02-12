@@ -14,14 +14,14 @@ import java.io.IOException;
 @Component
 public class JsonKeyValueRequestMapper implements TypeSafeRequestMapper {
 
-	@Override
-	public <T> T map(HttpServletRequest request, Class<T> mapTo) {
-		ObjectMapper mapper = new ObjectMapper();
+    @Override
+    public <T> T map(HttpServletRequest request, Class<T> mapTo) {
+        ObjectMapper mapper = new ObjectMapper();
 
-		try {
-			return mapper.readValue(request.getReader(), new TypeReference<T>(){});
-		} catch (IOException e) {
-			throw new RequestMappingException("json mapping exception", e);
-		}
-	}
+        try {
+            return mapper.readValue(request.getReader(), new TypeReference<T>(){});
+        } catch (IOException e) {
+            throw new RequestMappingException("json mapping exception", e);
+        }
+    }
 }

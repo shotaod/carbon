@@ -16,18 +16,18 @@ import java.time.LocalDateTime;
  */
 @Component
 public class FormAuthEvent implements AuthEventListener {
-	@Inject
-	private SessionContainer sessionContainer;
-	@Override
-	public void onAuth(String username, SessionContainer sessionContainer) {
-		SessionInfo sessionInfo = new SessionInfo();
-		sessionInfo.setUsername(username);
-		sessionInfo.setDateTime(LocalDateTime.now());
-		sessionContainer.setObject(sessionInfo);
-	}
+    @Inject
+    private SessionContainer sessionContainer;
+    @Override
+    public void onAuth(String username, SessionContainer sessionContainer) {
+        SessionInfo sessionInfo = new SessionInfo();
+        sessionInfo.setUsername(username);
+        sessionInfo.setDateTime(LocalDateTime.now());
+        sessionContainer.setObject(sessionInfo);
+    }
 
-	@Override
-	public void onFail(HttpServletRequest request, HttpServletResponse response) {
-		ResponseUtil.redirect(response, "/form/login");
-	}
+    @Override
+    public void onFail(HttpServletRequest request, HttpServletResponse response) {
+        ResponseUtil.redirect(response, "/form/login");
+    }
 }

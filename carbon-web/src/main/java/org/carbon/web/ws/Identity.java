@@ -1,7 +1,7 @@
 package org.carbon.web.ws;
 
 /**
- * @author ubuntu 2017/01/08.
+ * @author Shota Oda 2017/01/08.
  */
 public class Identity {
     private String key;

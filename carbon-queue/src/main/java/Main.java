@@ -16,7 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * @author ubuntu 2017/01/15.
+ * @author Shota Oda 2017/01/15.
  */
 public class Main {
     public static class Message {

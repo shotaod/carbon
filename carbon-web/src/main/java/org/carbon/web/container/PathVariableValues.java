@@ -10,7 +10,7 @@ public class PathVariableValues {
     //      Map<varName, value>
     private Map<String, String> map;
 
-	public PathVariableValues() {
+    public PathVariableValues() {
         map = new HashMap<>();
     }
 
@@ -18,7 +18,7 @@ public class PathVariableValues {
         map.put(varName, value);
     }
 
-	public String getValue(String varName) {
-		return map.get(varName);
-	}
+    public String getValue(String varName) {
+        return map.get(varName);
+    }
 }

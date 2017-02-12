@@ -11,6 +11,6 @@ import org.carbon.sample.tables.pojos.Student;
 @Data
 @AllArgsConstructor
 public class ScheduleDto {
-	private LecturerSchedule lecturerSchedule;
-	private Student student;
+    private LecturerSchedule lecturerSchedule;
+    private Student student;
 }

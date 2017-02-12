@@ -19,34 +19,34 @@ import java.util.stream.Stream;
 @Component
 public class PathVariableResolver {
 
-	private class CandidateArgument {
-		private Parameter argument;
-		private boolean resolved;
+    private class CandidateArgument {
+        private Parameter argument;
+        private boolean resolved;
 
-		public CandidateArgument(Parameter argument) {
-			this.argument = argument;
-			this.resolved = false;
-		}
+        public CandidateArgument(Parameter argument) {
+            this.argument = argument;
+            this.resolved = false;
+        }
 
-		public void setResolved(boolean resolved) {
-			this.resolved = resolved;
-		}
+        public void setResolved(boolean resolved) {
+            this.resolved = resolved;
+        }
 
-		public Parameter getArgument() {
-			return argument;
-		}
-		public String getPathVarName() {
+        public Parameter getArgument() {
+            return argument;
+        }
+        public String getPathVarName() {
             return argument.getDeclaredAnnotation(PathVariable.class).value();
         }
-		public boolean isResolved() {
-			return resolved;
-		}
-	}
+        public boolean isResolved() {
+            return resolved;
+        }
+    }
 
-	private static final String ComputedVariableMarkPrefix = "$$";
-	private static final String PathVariablePrefix = "{";
-	private static final String PathVariableSuffix = "}";
-	private int variableCounter;
+    private static final String ComputedVariableMarkPrefix = "$$";
+    private static final String PathVariablePrefix = "{";
+    private static final String PathVariableSuffix = "}";
+    private int variableCounter;
 
     public ComputedUrl resolve(String url, Method method) {
 
@@ -61,15 +61,12 @@ public class PathVariableResolver {
         List<CandidateArgument> candidates = params
             .filter(param -> param.isAnnotationPresent(PathVariable.class))
             .map(CandidateArgument::new).collect(Collectors.toList());
-        if (url.startsWith("/message")) {
-            System.out.println("hoge");
-        }
         // compute url
-		List<ComputedUrl.Path> computedPaths = Arrays.stream(url.split("/"))
-				.map(path -> computeUrlPartVariable(path, candidates))
+        List<ComputedUrl.Path> computedPaths = Arrays.stream(url.split("/"))
+                .map(path -> computeUrlPartVariable(path, candidates))
                 .collect(Collectors.toList());
 
-		// confirm if no unresolved candidate exist
+        // confirm if no unresolved candidate exist
         StringLineBuilder sb = new StringLineBuilder();
         candidates.forEach(candidate -> {
             if (!candidate.isResolved()) {
@@ -87,14 +84,14 @@ public class PathVariableResolver {
         return new ComputedUrl(computedPaths);
     }
 
-	private ComputedUrl.Path computeUrlPartVariable(String path, List<CandidateArgument> candidates) {
-		if (isStaticPart(path)) {
-			return ComputedUrl.Path.Static(path);
-		}
+    private ComputedUrl.Path computeUrlPartVariable(String path, List<CandidateArgument> candidates) {
+        if (isStaticPart(path)) {
+            return ComputedUrl.Path.Static(path);
+        }
 
-		// variable name extracted in annotation url
-		String varName = path.replace(PathVariablePrefix, "").replace(PathVariableSuffix, "");
-		String replaceMarker = getVariableMark();
+        // variable name extracted in annotation url
+        String varName = path.replace(PathVariablePrefix, "").replace(PathVariableSuffix, "");
+        String replaceMarker = getVariableMark();
 
         // check resolved
         candidates.stream()
@@ -105,15 +102,15 @@ public class PathVariableResolver {
                     }
                 });
 
-		return ComputedUrl.Path.Variable(replaceMarker, varName);
-	}
+        return ComputedUrl.Path.Variable(replaceMarker, varName);
+    }
 
-	private boolean isStaticPart(String pathPart) {
-		return !(pathPart.startsWith(PathVariablePrefix) && pathPart.endsWith(PathVariableSuffix));
-	}
+    private boolean isStaticPart(String pathPart) {
+        return !(pathPart.startsWith(PathVariablePrefix) && pathPart.endsWith(PathVariableSuffix));
+    }
 
-	private String getVariableMark() {
-		return ComputedVariableMarkPrefix + this.variableCounter++;
-	}
+    private String getVariableMark() {
+        return ComputedVariableMarkPrefix + this.variableCounter++;
+    }
 }
 

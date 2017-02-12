@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class CharacterEncodingChain extends HttpHandlerChain{
 
-	private static final String encode = "utf-8";
+    private static final String encode = "utf-8";
 
-	@Override
-	protected void chain(HttpServletRequest request, HttpServletResponse response) {
-		response.setCharacterEncoding(encode);
-		super.chain(request, response);
-	}
+    @Override
+    protected void chain(HttpServletRequest request, HttpServletResponse response) {
+        response.setCharacterEncoding(encode);
+        super.chain(request, response);
+    }
 }

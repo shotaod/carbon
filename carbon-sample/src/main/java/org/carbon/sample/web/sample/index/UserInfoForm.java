@@ -11,9 +11,9 @@ import java.util.List;
 @Data
 public class UserInfoForm {
 
-	private String name;
-	private Integer age;
-	private LocalDateTime birthDate;
+    private String name;
+    private Integer age;
+    private LocalDateTime birthDate;
 
-	private List<JobForm> jobs;
+    private List<JobForm> jobs;
 }

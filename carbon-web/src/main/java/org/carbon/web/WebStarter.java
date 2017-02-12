@@ -1,27 +1,18 @@
 package org.carbon.web;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.persistence.Entity;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 
-import org.carbon.component.ComponentFaced;
-import org.carbon.component.generator.CallbackConfiguration;
-import org.carbon.persistent.DataSourceConfig;
-import org.carbon.persistent.HibernateConfigurer;
-import org.carbon.persistent.JooqConfigurer;
-import org.carbon.persistent.PersistentImplementation;
-import org.carbon.persistent.annotation.Transactional;
-import org.carbon.persistent.proxy.TransactionInterceptor;
+import org.carbon.component.ComponentManager;
+import org.carbon.modular.ModuleConfigurer;
 import org.carbon.util.format.ChapterAttr;
-import org.carbon.web.conf.ConfigHolder;
+import org.carbon.util.mapper.ConfigHolder;
 import org.carbon.web.conf.WebConfig;
 import org.carbon.web.context.ActionDefinitionContainer;
 import org.carbon.web.context.ApplicationPool;
@@ -32,7 +23,6 @@ import org.carbon.web.core.mapping.ActionMapper;
 import org.carbon.web.def.Logo;
 import org.carbon.web.server.EmbedServer;
 import org.carbon.web.server.jetty.JettyServerBridge;
-import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,103 +31,106 @@ import org.slf4j.LoggerFactory;
  */
 public class WebStarter {
 
-	// ===================================================================================
-	//                                                                          Logger
-	//                                                                          ==========
-	private Logger logger = LoggerFactory.getLogger(WebStarter.class);
+    // ===================================================================================
+    //                                                                          Logger
+    //                                                                          ==========
+    private Logger logger = LoggerFactory.getLogger(WebStarter.class);
 
-	// ===================================================================================
-	//                                                                              Public
-	//                                                                              ======
-	public void start(Class scanBase) {
-		try {
-			prepare(scanBase);
-		} catch (Exception e) {
-			logger.error("Application StartUp Error", e);
-		}
-	}
+    // ===================================================================================
+    //                                                                          Field
+    //                                                                          ==========
+    private String config = "config";
+    private List<Class<? extends ModuleConfigurer>> moduleConfigurers = new ArrayList<>();
+    public void setConfig(String config) {
+        this.config = config;
+    }
+    @SafeVarargs
+    public final void setModuleConfigurers(Class<? extends ModuleConfigurer>... moduleConfigurers) {
+        this.moduleConfigurers = Arrays.asList(moduleConfigurers);
+    }
 
-	private void prepare(Class scanBase) throws Exception{
-		logger.info(new Logo().logo);
-		logger.info(ChapterAttr.get("Carbon Initialize Started"));
+    // ===================================================================================
+    //                                                                          Member
+    //                                                                          ==========
+    private ComponentManager componentManager = new ComponentManager();
+
+    // ===================================================================================
+    //                                                                              Public
+    //                                                                              ======
+    public void start(Class scanBase) {
+        try {
+            prepare(scanBase);
+        } catch (Exception e) {
+            logger.error("Application StartUp Error", e);
+        }
+    }
+
+    private void prepare(Class scanBase) throws Exception{
+        logger.info(new Logo().logo);
+        logger.info(ChapterAttr.get("Carbon Initialize Started"));
 
         Map<Class, Object> dependency = new HashMap<>();
 
-        ConfigHolder configHolder = new ConfigHolder("config.yml");
+        ConfigHolder configHolder = new ConfigHolder(config +".yml");
         dependency.put(ConfigHolder.class, configHolder);
-        dependency.putAll(setupPersistence(scanBase, configHolder));
 
-        WebConfig webConfig = configHolder.findOne("web", WebConfig.class);
+        // resolve external module
+        List<? extends ModuleConfigurer> moduleConfigurers = this.moduleConfigurers.stream()
+                .map(registerClass -> componentManager.constructClass(registerClass))
+                .collect(Collectors.toList());
+        Map<Class, Object> moduleObjects = setupModuleObjects(moduleConfigurers, scanBase, configHolder);
+        Set<Class> moduleClasses = setupModuleClasses(moduleConfigurers, scanBase, configHolder);
+
+        dependency.putAll(moduleObjects);
+
+        WebConfig webConfig = configHolder.findOne("web", WebConfig.class).get();
         dependency.put(WebConfig.class, webConfig);
 
-        resolveDependency(scanBase, dependency);
+        resolveDependency(scanBase, moduleClasses, dependency);
 
         setupWeb();
         setupSecurity();
 
-		// get Server
-		InstanceContainer appInstancePool = ApplicationPool.instance.getAppPool();
-		EmbedServer embedServer = appInstancePool.getByType(JettyServerBridge.class);
-		embedServer.run(scanBase);
+        // get Server
+        InstanceContainer appInstancePool = ApplicationPool.instance.getAppPool();
+        EmbedServer embedServer = appInstancePool.getByType(JettyServerBridge.class);
+        embedServer.run(scanBase);
 
-		logger.info(ChapterAttr.get("Carbon Initialize Finished"));
+        logger.info(ChapterAttr.get("Carbon Initialize Finished"));
 
-		embedServer.await();
-	}
+        embedServer.await();
+    }
 
-	// ===================================================================================
-	//                                                                             Private
-	//                                                                             =======
-	private Map<Class, Object> setupPersistence(Class scanBase, ConfigHolder configHolder) throws Exception{
-		ComponentFaced componentFaced = new ComponentFaced();
+    // ===================================================================================
+    //                                                                             Private
+    //                                                                             =======
+    private Map<Class, Object> setupModuleObjects(List<? extends ModuleConfigurer> moduleConfigurers, Class scanBase, ConfigHolder configHolder) {
+        return moduleConfigurers.stream()
+                .flatMap(moduleConfigurer -> moduleConfigurer.registerObject(scanBase, configHolder).entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
 
-		PersistentImplementation persistentImplementation = configHolder.findPrimitive("persistent.implementation", String.class)
-				.map(PersistentImplementation::nameOf)
-				.orElse(PersistentImplementation.None);
+    private Set<Class> setupModuleClasses(List<? extends ModuleConfigurer> moduleConfigurers, Class scanBase, ConfigHolder configHolder) {
+        return moduleConfigurers.stream()
+                .flatMap(moduleConfigurer -> moduleConfigurer.registerClass(scanBase, configHolder).stream())
+                .collect(Collectors.toSet());
+    }
 
-		Map<Class, Object> dependency = new HashMap<>();
+    private void resolveDependency(Class scanBase, Set<Class> configurations, Map<Class, Object> dependency) throws Exception{
+        // load component -> create component
+        Set<Class<?>> frameworkManaged = componentManager.scanComponent(ConfigurationBase.class);
+        Set<Class<?>> clientManaged = componentManager.scanComponent(scanBase);
 
-		List<DataSource> dataSources = configHolder
-				.find("persistent.dataSources.source", DataSourceConfig.class).stream()
-				.map(DataSourceConfig::toMysqlDataSource)
-				.collect(Collectors.toList());
-		dependency.put(DataSource.class, dataSources.get(0));
-		switch (persistentImplementation) {
-			case Hibernate:
-				Set<Class<?>> entities = componentFaced.scan(scanBase, Collections.singleton(Entity.class));
-				List<String> entityFqns = entities.stream().map(Class::getName).collect(Collectors.toList());
+        Set<Class> allManaged = new HashSet<>();
+        allManaged.addAll(frameworkManaged);
+        allManaged.addAll(clientManaged);
+        allManaged.addAll(configurations);
 
-				String autoddl = configHolder.findPrimitive("persistent.autoddl", String.class).orElse("");
-
-				EntityManagerFactory emf = new HibernateConfigurer("db1", dataSources.get(0), entityFqns)
-						.setAutoddl(autoddl)
-						.createEntityManagerFactory();
-
-				dependency.put(EntityManagerFactory.class, emf);
-				break;
-			case Jooq:
-				DSLContext dslContext = new JooqConfigurer(dataSources.get(0)).createDSLContext();
-				dependency.put(DSLContext.class, dslContext);
-				break;
-			case None:
-		}
-
-		return dependency;
-	}
-
-	private void resolveDependency(Class scanBase, Map<Class, Object> dependency) throws Exception{
-		ComponentFaced componentFaced = new ComponentFaced();
-
-		// load component -> create component
-		Set<Class<?>> frameworkManaged = componentFaced.scanComponent(ConfigurationBase.class);
-		Set<Class<?>> clientManaged = componentFaced.scanComponent(scanBase);
-		Set<Class<?>> allManaged = Stream.concat(frameworkManaged.stream(), clientManaged.stream()).collect(Collectors.toSet());
-
-        Map<Class, Object> instances = componentFaced.generate(allManaged, dependency, setupCallbackConfiguration());
+        Map<Class, Object> instances = componentManager.generate(allManaged, dependency);
         ApplicationPool.instance.setPool(instances);
     }
 
-	private void setupWeb() {
+    private void setupWeb() {
         ApplicationPool app = ApplicationPool.instance;
         InstanceContainer appInstances = app.getAppPool();
         ActionMapper actionMapper = appInstances.getByType(ActionMapper.class);
@@ -152,15 +145,4 @@ public class WebStarter {
 
         ApplicationPool.instance.setPool(securities);
     }
-
-	private CallbackConfiguration setupCallbackConfiguration() {
-		CallbackConfiguration callbackConfiguration = new CallbackConfiguration();
-
-		// transaction
-		callbackConfiguration.setCallbacks(TransactionInterceptor.class, clazz ->
-            Arrays.stream(clazz.getDeclaredMethods()).anyMatch(method ->
-                    method.isAnnotationPresent(Transactional.class)));
-
-		return callbackConfiguration;
-	}
 }

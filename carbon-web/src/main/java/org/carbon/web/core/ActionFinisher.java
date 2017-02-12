@@ -14,13 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class ActionFinisher {
 
-	@Inject
-	private ResponseProcessorFactory processorFactory;
+    @Inject
+    private ResponseProcessorFactory processorFactory;
 
-	public boolean finish(HttpServletResponse response, ActionResult result) {
+    public boolean finish(HttpServletResponse response, ActionResult result) {
         if (result.handled()) return true;
         if (result.hasException()) return false;
 
-		return processorFactory.from(result).process(response);
-	}
+        return processorFactory.from(result).process(response);
+    }
 }

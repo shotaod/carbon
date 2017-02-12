@@ -4,7 +4,7 @@ package org.carbon.web.container;
  * @author Shota Oda 2016/10/05.
  */
 public class ActionResult {
-	private Object result;
+    private Object result;
     private Exception exception;
     private boolean noop;
 
@@ -22,14 +22,14 @@ public class ActionResult {
         return new ActionResult(null, null, true);
     }
 
-	public static ActionResult OnException(Exception e) {
+    public static ActionResult OnException(Exception e) {
         return new ActionResult(null, e, false);
     }
 
-	public Object getResult() {
-		return result;
-	}
-	public boolean hasException() {
+    public Object getResult() {
+        return result;
+    }
+    public boolean hasException() {
      return exception != null;
     }
     public Exception getException() {

@@ -33,8 +33,8 @@ import java.util.Optional;
 @Component
 public class JettyServerBridge implements EmbedServer {
 
-	@Inject
-	private DefaultChainFactory factory;
+    @Inject
+    private DefaultChainFactory factory;
     @Inject
     private WebConfig config;
 
@@ -62,7 +62,7 @@ public class JettyServerBridge implements EmbedServer {
         return contextHandler;
     }
 
-	private ContextHandler resourceHandler(Class base) {
+    private ContextHandler resourceHandler(Class base) {
         ServletHolder resourceServletHolder = new ServletHolder(DefaultServlet.class);
         resourceServletHolder.setInitParameter("acceptRanges", "false");
         resourceServletHolder.setInitParameter("dirAllowed","false");
@@ -78,8 +78,8 @@ public class JettyServerBridge implements EmbedServer {
         return servletContextHandler;
     }
 
-	@Override
-	public void run(Class base) throws Exception {
+    @Override
+    public void run(Class base) throws Exception {
 
         // context(/{STATIC_PATH}) -> resource
         // context(/) -> dispatch
@@ -98,11 +98,11 @@ public class JettyServerBridge implements EmbedServer {
 
         server.setHandler(contexts);
         server.setConnectors(new Connector[]{connector});
-		server.start();
-	}
+        server.start();
+    }
 
-	@Override
-	public void await() throws Exception {
-		server.join();
-	}
+    @Override
+    public void await() throws Exception {
+        server.join();
+    }
 }

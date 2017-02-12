@@ -13,20 +13,20 @@ import org.mindrot.jbcrypt.BCrypt;
 @AllArgsConstructor
 public class ConsumerAuthIdentity implements AuthIdentity{
 
-	private Student student;
+    private Student student;
 
-	@Override
-	public String username() {
-		return student.getUsername();
-	}
+    @Override
+    public String username() {
+        return student.getUsername();
+    }
 
-	@Override
-	public String cryptPassword() {
-		return student.getPassword();
-	}
+    @Override
+    public String cryptPassword() {
+        return student.getPassword();
+    }
 
-	@Override
-	public boolean confirm(String plainPassword) {
-		return BCrypt.checkpw(plainPassword, cryptPassword());
-	}
+    @Override
+    public boolean confirm(String plainPassword) {
+        return BCrypt.checkpw(plainPassword, cryptPassword());
+    }
 }

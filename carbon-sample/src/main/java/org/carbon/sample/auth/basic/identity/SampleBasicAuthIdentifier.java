@@ -14,18 +14,18 @@ import java.util.Optional;
 @Component
 public class SampleBasicAuthIdentifier implements AuthIdentifier<SampleBasicAuthIdentity> {
 
-	@Inject
-	private UserRoleService userRoleService;
+    @Inject
+    private UserRoleService userRoleService;
 
-	@Override
-	public Class<SampleBasicAuthIdentity> getType() {
-		return SampleBasicAuthIdentity.class;
-	}
+    @Override
+    public Class<SampleBasicAuthIdentity> getType() {
+        return SampleBasicAuthIdentity.class;
+    }
 
-	@Override
-	public SampleBasicAuthIdentity find(String username) throws UserIdentityNotFoundException{
-		return Optional.ofNullable(userRoleService.findByUsername(username))
-				.map(SampleBasicAuthIdentity::new)
-				.orElseThrow(() -> new UserIdentityNotFoundException(username));
-	}
+    @Override
+    public SampleBasicAuthIdentity find(String username) throws UserIdentityNotFoundException{
+        return Optional.ofNullable(userRoleService.findByUsername(username))
+                .map(SampleBasicAuthIdentity::new)
+                .orElseThrow(() -> new UserIdentityNotFoundException(username));
+    }
 }

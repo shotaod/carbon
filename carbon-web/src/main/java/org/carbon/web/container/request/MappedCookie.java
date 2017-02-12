@@ -8,28 +8,28 @@ import java.util.stream.Collectors;
  * @author Shota Oda 2016/10/12.
  */
 public class MappedCookie {
-	private Map<String , String> cookies;
+    private Map<String , String> cookies;
 
-	public static MappedCookie empty() {
-		return new MappedCookie(null);
-	}
+    public static MappedCookie empty() {
+        return new MappedCookie(null);
+    }
 
-	public MappedCookie(Map<String, String> cookies) {
-		this.cookies = cookies;
-	}
+    public MappedCookie(Map<String, String> cookies) {
+        this.cookies = cookies;
+    }
 
-	public Map<String, String> getCookies() {
-		return cookies;
-	}
-	public String getValue(String key) {
-		return cookies.get(key);
-	}
+    public Map<String, String> getCookies() {
+        return cookies;
+    }
+    public String getValue(String key) {
+        return cookies.get(key);
+    }
 
-	public List<String> getKeys() {
-		return cookies.keySet().stream().collect(Collectors.toList());
-	}
+    public List<String> getKeys() {
+        return cookies.keySet().stream().collect(Collectors.toList());
+    }
 
-	public boolean isExist() {
-		return this.cookies != null && this.cookies.size() > 0;
-	}
+    public boolean isExist() {
+        return this.cookies != null && this.cookies.size() > 0;
+    }
 }

@@ -25,122 +25,117 @@ import java.util.Optional;
 @Component
 public class Authenticator {
 
-	private Logger logger = LoggerFactory.getLogger(Authenticator.class);
+    private Logger logger = LoggerFactory.getLogger(Authenticator.class);
 
-	@Inject
-	private SessionContainer session;
-	/**
-	 *
-	 * @param securityContainer
-	 * @param request
-	 * @param response
-	 * @return true if authorized, false if should be authorized,
-	 */
-	public boolean authenticate(SecurityContainer securityContainer,
-								HttpServletRequest request,
-								HttpServletResponse response) {
-		logger.debug("[Authenticator] start -> request: {}", request.getPathInfo());
+    @Inject
+    private SessionContainer session;
 
-		// -----------------------------------------------------
-		//                                               Check where Security need or not
-		//                                               -------
-		if (!securityContainer.existSecurity()) {
-			logger.debug("[Authenticator] end -> No Security in web app");
-			return true;
-		}
+    /**
+     * @return true if authorized, false if should be authorized,
+     */
+    public boolean authenticate(SecurityContainer securityContainer,
+                                HttpServletRequest request,
+                                HttpServletResponse response) {
+        logger.debug("[Authenticator] start -> request: {}", request.getPathInfo());
 
-		// -----------------------------------------------------
-		//                                               Find Security Strategy
-		//                                               -------
-		String requestPath = Optional.ofNullable(request.getPathInfo()).orElse("");
-		Optional<AuthStrategy<AuthIdentity>> strategyOp = securityContainer.getStrategies().stream()
-				.filter(strategy -> requestPath.startsWith(strategy.getBaseUrl()))
-				.findFirst();
+        // -----------------------------------------------------
+        //                                               Check where Security need or not
+        //                                               -------
+        if (!securityContainer.existSecurity()) {
+            logger.debug("[Authenticator] end -> No Security in web app");
+            return true;
+        }
 
-		if (!strategyOp.isPresent()) {
-			logger.debug("[Authenticator] end -> No Security Strategy found");
-			return true;
-		}
+        // -----------------------------------------------------
+        //                                               Find Security Strategy
+        //                                               -------
+        String requestPath = Optional.ofNullable(request.getPathInfo()).orElse("");
+        Optional<AuthStrategy<? extends AuthIdentity>> strategyOp = securityContainer.getStrategies().stream()
+                .filter(strategy -> requestPath.startsWith(strategy.getBaseUrl()))
+                .findFirst();
 
-		AuthStrategy<? extends AuthIdentity> strategy = strategyOp.get();
-		logger.debug("[Authenticator] process -> Found Strategy: {}", strategy.getClass());
+        if (!strategyOp.isPresent()) {
+            logger.debug("[Authenticator] end -> No Security Strategy found");
+            return true;
+        }
+
+        AuthStrategy<? extends AuthIdentity> strategy = strategyOp.get();
+        logger.debug("[Authenticator] process -> Found Strategy: {}", strategy.getClass());
 
 
-		AuthSessionManager<? extends AuthIdentity> sessionManager = strategy.getSessionManager();
-		// -----------------------------------------------------
-		//                                               Logout check
-		//                                               -------
-		if (strategy.getLogoutUrl().equals(requestPath)) {
-			sessionManager.remove(session);
-			logger.debug("[Authenticator] end -> Logout Success");
-			ResponseUtil.redirect(response, strategy.getRedirectUrl());
-			return false;
-		}
+        AuthSessionManager<? extends AuthIdentity> sessionManager = strategy.getSessionManager();
+        // -----------------------------------------------------
+        //                                               Logout check
+        //                                               -------
+        if (strategy.getLogoutUrl().equals(requestPath)) {
+            sessionManager.remove(session);
+            logger.debug("[Authenticator] end -> Logout Success");
+            ResponseUtil.redirect(response, strategy.getRedirectUrl());
+            return false;
+        }
 
-		// -----------------------------------------------------
-		//                                               Check session
-		//                                               -------
-		Optional<? extends AuthIdentity> sessionIdentity = sessionManager.get(session);
-		sessionIdentity.map(identity -> {
-			return identity.getClass().equals(strategy.getIdentityType());
-		});
+        // -----------------------------------------------------
+        //                                               Check session
+        //                                               -------
+        Optional<? extends AuthIdentity> sessionIdentity = sessionManager.get(session);
+        sessionIdentity.map(identity -> identity.getClass().equals(strategy.getIdentityType()));
 
-		if (sessionIdentity.map(identity -> identity.getClass().equals(strategy.getIdentityType())).orElse(false)) {
-			logger.debug("[Authenticator] end -> Login Success; Found Session Identity: {}", sessionIdentity.get().getClass());
-			return true;
-		}
+        if (sessionIdentity.map(identity -> identity.getClass().equals(strategy.getIdentityType())).orElse(false)) {
+            logger.debug("[Authenticator] end -> Login Success; Found Session Identity: {}", sessionIdentity.get().getClass());
+            return true;
+        }
 
-		// -----------------------------------------------------
-		//                                               Check should try login or redirect
-		//                                               -------
-		boolean shouldTry = strategy.shouldTryLogin(HttpMethod.codeOf(request.getMethod()), requestPath);
-		if (!shouldTry) {
-			String redirectTo = strategy.getRedirectUrl();
-			logger.debug("[Authenticator] end -> Request path is not login url, Redirect to {}", redirectTo);
-			ResponseUtil.redirect(response, redirectTo);
-			return false;
-		}
+        // -----------------------------------------------------
+        //                                               Check should try login or redirect
+        //                                               -------
+        boolean shouldTry = strategy.shouldTryLogin(HttpMethod.codeOf(request.getMethod()), requestPath);
+        if (!shouldTry) {
+            String redirectTo = strategy.getRedirectUrl();
+            logger.debug("[Authenticator] end -> Request path is not login url, Redirect to {}", redirectTo);
+            ResponseUtil.redirect(response, redirectTo);
+            return false;
+        }
 
-		// -----------------------------------------------------
-		//                                               Try login
-		//                                               -------
-		logger.debug("[Authenticator] process -> start try login");
-		Optional<AuthRequestMapper.AuthInfo> authInfOp = strategy.getRequestMapper().map(request);
-		if (!authInfOp.isPresent()) {
-			logger.debug("[Authenticator] end -> Failed to Login, Not Found request info");
-			strategy.getFinisher().onFail(request, response);
-			return false;
-		}
+        // -----------------------------------------------------
+        //                                               Try login
+        //                                               -------
+        logger.debug("[Authenticator] process -> start try login");
+        Optional<AuthRequestMapper.AuthInfo> authInfOp = strategy.getRequestMapper().map(request);
+        if (!authInfOp.isPresent()) {
+            logger.debug("[Authenticator] end -> Failed to Login, Not Found request info");
+            strategy.getFinisher().onFail(request, response);
+            return false;
+        }
 
-		// request-base Auth info
-		AuthRequestMapper.AuthInfo authInfo = authInfOp.get();
-		String requestUsername = authInfo.getUsername();
+        // request-base Auth info
+        AuthRequestMapper.AuthInfo authInfo = authInfOp.get();
+        String requestUsername = authInfo.getUsername();
 
-		// server-side Auth info
-		AuthEventListener finisher = strategy.getFinisher();
-		AuthIdentity authIdentity;
-		try {
-			authIdentity = strategy.getIdentifier().find(requestUsername);
-		} catch (UserIdentityNotFoundException e) {
-			logger.debug("[Authenticator] end -> Failed to Login, Not Found User named: '{}'", requestUsername);
-			finisher.onFail(request, response);
-			return false;
-		}
+        // server-side Auth info
+        AuthEventListener finisher = strategy.getFinisher();
+        AuthIdentity authIdentity;
+        try {
+            authIdentity = strategy.getIdentifier().find(requestUsername);
+        } catch (UserIdentityNotFoundException e) {
+            logger.debug("[Authenticator] end -> Failed to Login, Not Found User named: '{}'", requestUsername);
+            finisher.onFail(request, response);
+            return false;
+        }
 
-		// check match
-		boolean isMatch = authIdentity.confirm(authInfo.getPassword());
+        // check match
+        boolean isMatch = authIdentity.confirm(authInfo.getPassword());
 
-		if (isMatch) {
-			sessionManager.set(authIdentity, session);
-			finisher.onAuth(requestUsername, session);
-			logger.debug("[Authenticator] end -> Success Login; User Identity: {}", authIdentity.getClass());
-		}
-		else {
-			sessionManager.remove(session);
-			finisher.onFail(request, response);
-			logger.debug("[Authenticator] end -> Failed to Login, Password does not match user named: '{}'", requestUsername);
-		}
+        if (isMatch) {
+            sessionManager.set(authIdentity, session);
+            finisher.onAuth(requestUsername, session);
+            logger.debug("[Authenticator] end -> Success Login; User Identity: {}", authIdentity.getClass());
+        }
+        else {
+            sessionManager.remove(session);
+            finisher.onFail(request, response);
+            logger.debug("[Authenticator] end -> Failed to Login, Password does not match user named: '{}'", requestUsername);
+        }
 
-		return isMatch;
-	}
+        return isMatch;
+    }
 }

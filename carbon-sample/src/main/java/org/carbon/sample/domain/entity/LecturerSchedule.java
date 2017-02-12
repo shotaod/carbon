@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 public class LecturerSchedule {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-	@Column(name = "begin_datetime")
-	private LocalDateTime beginDatetime;
-	@Column(name = "end_datetime")
-	private LocalDateTime endDatetime;
+    @Column(name = "begin_datetime")
+    private LocalDateTime beginDatetime;
+    @Column(name = "end_datetime")
+    private LocalDateTime endDatetime;
 }

@@ -7,7 +7,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 
 /**
- * @author ubuntu 2017/01/15.
+ * @author Shota Oda 2017/01/15.
  */
 public class PollingTask implements Runnable {
     private String queue;

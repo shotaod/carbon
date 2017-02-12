@@ -6,9 +6,9 @@ import java.lang.reflect.Parameter;
  * @author Shota Oda 2016/10/08.
  */
 public class ArgumentMeta {
-	private Parameter parameter;
-	// extracted value from request or context
-	private Object value;
+    private Parameter parameter;
+    // extracted value from request or context
+    private Object value;
 
     public ArgumentMeta(Parameter parameter, Object value) {
         this.parameter = parameter;

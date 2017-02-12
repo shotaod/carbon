@@ -1,7 +1,7 @@
 package org.carbon.web.ws;
 
 /**
- * @author ubuntu 2017/01/02.
+ * @author Shota Oda 2017/01/02.
  */
 public class ChannelConfiguration {
     private Channel channel;

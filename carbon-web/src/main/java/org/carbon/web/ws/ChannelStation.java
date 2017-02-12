@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * @author ubuntu 2017/01/02.
+ * @author Shota Oda 2017/01/02.
  */
 public class ChannelStation {
     public static ChannelStation instance = new ChannelStation();

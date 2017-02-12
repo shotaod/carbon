@@ -14,31 +14,35 @@
     </properties>
 
     <dependencies>
+        <!-- Carbons -->
         <dependency>
             <groupId>carbon</groupId>
             <artifactId>carbon-component</artifactId>
             <version>0.1.0-BETA</version>
         </dependency>
-
         <dependency>
             <groupId>carbon</groupId>
             <artifactId>carbon-util</artifactId>
             <version>0.1.0-BETA</version>
         </dependency>
-
         <dependency>
             <groupId>carbon</groupId>
-            <artifactId>carbon-persistant</artifactId>
+            <artifactId>carbon-modular</artifactId>
             <version>0.1.0-BETA</version>
         </dependency>
 
 
-        <!-- Logger インターフェース -->
+        <!-- Logger interface -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <scope>runtime</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.22</version>
+        </dependency>
+        <!-- bridge from log4j to slf4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.7.22</version>
         </dependency>
 
         <!-- Logger 実装 -->
@@ -105,14 +109,14 @@
             <artifactId>thymeleaf</artifactId>
             <version>3.0.2.RELEASE</version>
         </dependency>
-        <!-- Thymeleaf レイアウト拡張 -->
+        <!-- Thymeleaf layout plugin -->
         <!-- https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect -->
         <dependency>
             <groupId>nz.net.ultraq.thymeleaf</groupId>
             <artifactId>thymeleaf-layout-dialect</artifactId>
             <version>2.1.2</version>
         </dependency>
-        <!-- Thymeleaf java8 LocalDateTime 対応-->
+        <!-- Thymeleaf java8 LocalDateTime -->
         <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-java8time -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
@@ -124,14 +128,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
-        </dependency>
-
-        <!-- yaml パーサー -->
-        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.17</version>
         </dependency>
 
         <!-- for Redis -->

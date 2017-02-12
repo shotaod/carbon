@@ -20,17 +20,17 @@ import java.io.IOException;
 @Component
 public class TemplateEngineWrapper {
 
-	@Inject
-	private TemplateEngine templateEngine;
-	@Inject
-	private RequestContainer requestPool;
+    @Inject
+    private TemplateEngine templateEngine;
+    @Inject
+    private RequestContainer requestPool;
 
-	public void run(HtmlResponse source, HttpServletResponse response) throws IOException{
-		ContextHandler.Context context = WebAppContext.getCurrentContext();
-		HttpServletRequest request = requestPool.getByType(HttpServletRequest.class);
+    public void run(HtmlResponse source, HttpServletResponse response) throws IOException{
+        ContextHandler.Context context = WebAppContext.getCurrentContext();
+        HttpServletRequest request = requestPool.getByType(HttpServletRequest.class);
 
-		WebContext webContext = new WebContext(request, response, context.getContext("/"));
-		webContext.setVariables(source.getData());
-		templateEngine.process(source.getHtmlPath(), webContext, response.getWriter());
-	}
+        WebContext webContext = new WebContext(request, response, context.getContext("/"));
+        webContext.setVariables(source.getData());
+        templateEngine.process(source.getHtmlPath(), webContext, response.getWriter());
+    }
 }

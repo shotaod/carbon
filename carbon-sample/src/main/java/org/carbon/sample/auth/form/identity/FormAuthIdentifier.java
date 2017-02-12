@@ -14,18 +14,18 @@ import java.util.Optional;
 @Component
 public class FormAuthIdentifier implements AuthIdentifier<FormAuthIdentity> {
 
-	@Inject
-	private UserRoleService userRoleService;
+    @Inject
+    private UserRoleService userRoleService;
 
-	@Override
-	public Class<FormAuthIdentity> getType() {
-		return FormAuthIdentity.class;
-	}
+    @Override
+    public Class<FormAuthIdentity> getType() {
+        return FormAuthIdentity.class;
+    }
 
-	@Override
-	public FormAuthIdentity find(String username) throws UserIdentityNotFoundException{
-		return Optional.ofNullable(userRoleService.findByUsername(username))
-				.map(FormAuthIdentity::new)
-				.orElseThrow(() -> new UserIdentityNotFoundException(username));
-	}
+    @Override
+    public FormAuthIdentity find(String username) throws UserIdentityNotFoundException{
+        return Optional.ofNullable(userRoleService.findByUsername(username))
+                .map(FormAuthIdentity::new)
+                .orElseThrow(() -> new UserIdentityNotFoundException(username));
+    }
 }

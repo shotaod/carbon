@@ -31,7 +31,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * @author ubuntu 2017/01/04.
+ * @author Shota Oda 2017/01/04.
  */
 @Component
 public class WebSocketActionFactory {
@@ -67,6 +67,7 @@ public class WebSocketActionFactory {
     @Inject
     private PathVariableResolver pathResolver;
 
+    @SuppressWarnings("unchecked")
     public ActionDefinition factorize(Object instance) {
         Class<?> socketClass = instance.getClass();
         Socket annotation = socketClass.getDeclaredAnnotation(Socket.class);

@@ -11,17 +11,17 @@ import org.carbon.web.exception.UserIdentityNotFoundException;
  */
 @Component
 public class ConsumerAuthIdentifier implements AuthIdentifier<ConsumerAuthIdentity>{
-	@Inject
-	private StudentService service;
-	@Override
-	public Class<ConsumerAuthIdentity> getType() {
-		return ConsumerAuthIdentity.class;
-	}
+    @Inject
+    private StudentService service;
+    @Override
+    public Class<ConsumerAuthIdentity> getType() {
+        return ConsumerAuthIdentity.class;
+    }
 
-	@Override
-	public ConsumerAuthIdentity find(String address) throws UserIdentityNotFoundException {
-		return service.selectOneByAddress(address)
-				.map(ConsumerAuthIdentity::new)
-				.orElseThrow(() -> new UserIdentityNotFoundException(address));
-	}
+    @Override
+    public ConsumerAuthIdentity find(String address) throws UserIdentityNotFoundException {
+        return service.selectOneByAddress(address)
+                .map(ConsumerAuthIdentity::new)
+                .orElseThrow(() -> new UserIdentityNotFoundException(address));
+    }
 }

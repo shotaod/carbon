@@ -18,17 +18,17 @@ import javax.persistence.Id;
 @Entity
 @NoArgsConstructor
 public class Student {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-	@Column(name = "user_name", unique = true)
-	private String username;
+    @Column(name = "user_name", unique = true)
+    private String username;
 
-	@Column(name = "address")
-	private String address;
+    @Column(name = "address")
+    private String address;
 
-	@Column(name = "password")
-	private String password;
+    @Column(name = "password")
+    private String password;
 }

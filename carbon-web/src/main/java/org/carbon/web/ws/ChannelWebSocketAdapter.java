@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * @author ubuntu 2017/01/07.
+ * @author Shota Oda 2017/01/07.
  */
 public class ChannelWebSocketAdapter implements ChanneledSocket {
     private Logger logger = LoggerFactory.getLogger(ChannelWebSocketAdapter.class);

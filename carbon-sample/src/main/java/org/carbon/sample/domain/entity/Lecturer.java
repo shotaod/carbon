@@ -22,23 +22,23 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 public class Lecturer {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-	@Column(name = "user_name", unique = true)
-	private String username;
+    @Column(name = "user_name", unique = true)
+    private String username;
 
-	@Column(name = "address")
-	private String address;
+    @Column(name = "address")
+    private String address;
 
-	@Column(name = "password")
-	private String password;
+    @Column(name = "password")
+    private String password;
 
-	// -----------------------------------------------------
-	//                                               Foreign Table
-	//                                               -------
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "lecturer")
-	private List<LectureApplyHistory> lectureApplyHistory;
+    // -----------------------------------------------------
+    //                                               Foreign Table
+    //                                               -------
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "lecturer")
+    private List<LectureApplyHistory> lectureApplyHistory;
 }

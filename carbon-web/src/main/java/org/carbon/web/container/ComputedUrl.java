@@ -35,15 +35,15 @@ public class ComputedUrl {
             return varName != null;
         }
     }
-	private List<Path> computedPaths;
+    private List<Path> computedPaths;
 
     public ComputedUrl(List<Path> computedPaths) {
-		this.computedPaths = computedPaths;
-	}
+        this.computedPaths = computedPaths;
+    }
 
-	public List<Path> getComputedPaths() {
-		return computedPaths;
-	}
+    public List<Path> getComputedPaths() {
+        return computedPaths;
+    }
 
     @Override
     public String toString() {

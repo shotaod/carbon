@@ -4,18 +4,18 @@ package org.carbon.web.core.response;
  * @author Shota Oda 2016/11/28.
  */
 public interface HttpOperation {
-	enum Strategy {
-		Forward("forward"),
-		Redirect("redirect"),
+    enum Strategy {
+        Forward("forward"),
+        Redirect("redirect"),
         Noop("noop")
-		;
-		private String code;
+        ;
+        private String code;
 
-		Strategy(String code) {
-			this.code = code;
-		}
-	}
+        Strategy(String code) {
+            this.code = code;
+        }
+    }
 
-	Strategy getStrategy();
-	String getPathTo();
+    Strategy getStrategy();
+    String getPathTo();
 }

@@ -10,20 +10,20 @@ import java.util.List;
  */
 public class SecurityContainer {
 
-	private List<AuthStrategy<AuthIdentity>> strategies;
+    private List<AuthStrategy<? extends AuthIdentity>> strategies;
 
-	public SecurityContainer() {
-	}
+    public SecurityContainer() {
+    }
 
-	public SecurityContainer(List<AuthStrategy<AuthIdentity>> strategies) {
-		this.strategies = strategies;
-	}
+    public SecurityContainer(List<AuthStrategy<? extends AuthIdentity>> strategies) {
+        this.strategies = strategies;
+    }
 
-	public boolean existSecurity() {
-		return strategies != null && !strategies.isEmpty();
-	}
+    public boolean existSecurity() {
+        return strategies != null && !strategies.isEmpty();
+    }
 
-	public List<AuthStrategy<AuthIdentity>> getStrategies() {
-		return strategies;
-	}
+    public List<AuthStrategy<? extends AuthIdentity>> getStrategies() {
+        return strategies;
+    }
 }
