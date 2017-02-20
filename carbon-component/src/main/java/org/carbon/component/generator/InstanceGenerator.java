@@ -115,7 +115,7 @@ public class InstanceGenerator {
                         Object result = method.invoke(object);
                         return new ClassAndObject(method.getReturnType(), result);
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new ConstructInstanceException("Failed to perform Construct Instance by @Configuration", e);
+                        throw new ConstructInstanceException(String.format("Failed to perform Construct Instance by @Configuration [%s]", type.getName()), e);
                     }
                 });
         }

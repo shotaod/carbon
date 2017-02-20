@@ -60,7 +60,7 @@ public class WebSocketActionFactory {
         @Override
         public String mappingResult() {
             String controllerName = controller.getName();
-            return "ws://" + controllerName;
+            return "(ws://  )" + controllerName;
         }
     }
 

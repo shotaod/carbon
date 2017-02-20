@@ -1,18 +1,17 @@
 package org.carbon.web.core.response.template;
 
-import org.carbon.web.context.ApplicationPool;
-import org.carbon.web.core.response.HtmlResponse;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.context.RequestContainer;
+import org.carbon.web.core.response.HtmlResponse;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * @author Shota Oda 2016/10/14.

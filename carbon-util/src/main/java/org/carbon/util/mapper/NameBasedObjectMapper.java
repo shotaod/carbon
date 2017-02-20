@@ -142,23 +142,6 @@ public class NameBasedObjectMapper {
         }
     }
 
-//    private Object findMap(String key, Map<String, Object> sources) {
-//        LinkedList<String> keys = new LinkedList<>();
-//        keys.addAll(Arrays.asList(key.split("\\.")));
-//        return findMap(keys, sources);
-//    }
-//
-//    @SuppressWarnings("unchecked")
-//    private Object findMap(LinkedList<String> keys, Map<String, Object> sources) {
-//        if (keys.size() == 0) {
-//            String key = keys.poll();
-//            return sources.get(key);
-//        }
-//        String key = keys.poll();
-//        Map map = Optional.ofNullable(sources.get(keys.poll())).map(obj -> (Map) obj).orElse(null);
-//        return findMap(keys, map);
-//    }
-
     private <T> T newInstance(Class<T> type, Object parentIfAny) {
         boolean isInnerClass = type.isMemberClass();
         if (isInnerClass) {
@@ -168,8 +151,9 @@ public class NameBasedObjectMapper {
                 }
                 Constructor<T> constructor = type.getDeclaredConstructor(parentIfAny.getClass());
                 return constructor.newInstance(parentIfAny);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+            } catch (NoSuchMethodException ignore) {
+                // it is possible that Type is static inner class
+                // try type.newInstance()
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InstantiationException e) {

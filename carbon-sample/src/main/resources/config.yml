@@ -13,7 +13,6 @@ persistent:
     user: root
     password: password
     port: 23306
-  autoddl: create # none, create-only, drop, create, create-drop, validate, and update
 
 sample:
   redis:

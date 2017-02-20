@@ -1,7 +1,7 @@
 package org.carbon.sample.web.sample.index;
 
-import org.carbon.sample.tables.pojos.Product;
-import org.carbon.sample.tables.pojos.User;
+import org.carbon.sample.ext.jooq.tables.pojos.Product;
+import org.carbon.sample.ext.jooq.tables.pojos.User;
 import org.carbon.component.annotation.Inject;
 import org.carbon.component.generator.proxy.annotation.InOutLogging;
 import org.carbon.sample.domain.service.ProductService;

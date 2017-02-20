@@ -41,8 +41,6 @@ public class ActionArgumentAggregator {
     @Inject
     private RequestMapper requestMapper;
     @Inject
-    private NameBasedObjectMapper objectMapper;
-    @Inject
     private Validator validator;
     @Inject
     private RequestContainer requestPool;
@@ -50,8 +48,8 @@ public class ActionArgumentAggregator {
     private SessionContainer sessionPool;
 
     private PathVariableValues pathVariableValues;
+    private NameBasedObjectMapper objectMapper = new NameBasedObjectMapper();
     private ApplicationPool pool = ApplicationPool.instance;
-
 
     public ActionArgumentAggregator with(PathVariableValues pathVariableValues) {
         this.pathVariableValues = pathVariableValues;

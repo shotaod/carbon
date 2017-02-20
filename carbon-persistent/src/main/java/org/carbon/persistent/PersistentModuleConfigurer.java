@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Entity;
@@ -12,19 +13,23 @@ import javax.sql.DataSource;
 import org.carbon.component.ComponentManager;
 import org.carbon.component.exception.PackageScanException;
 import org.carbon.modular.ModuleConfigurer;
-import org.carbon.persistent.config.DataSourceConfig;
-import org.carbon.persistent.config.PersistentImplementation;
+import org.carbon.persistent.prop.DataSourceProperty;
+import org.carbon.persistent.prop.PersistentImplementation;
 import org.carbon.persistent.exception.PersistentSetupException;
 import org.carbon.persistent.hibernate.AutoDDL;
 import org.carbon.persistent.hibernate.EntitiesInfo;
 import org.carbon.persistent.hibernate.HibernateConfigurer;
 import org.carbon.persistent.jooq.JooqConfigurer;
 import org.carbon.util.mapper.ConfigHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Shota Oda 2017/02/09.
  */
 public class PersistentModuleConfigurer implements ModuleConfigurer {
+    private Logger logger = LoggerFactory.getLogger(PersistentModuleConfigurer.class);
+
     private final String ImplKey = "persistent.implementation";
     private final String DataSourceKey = "persistent.dataSource";
     private final String AutoDDLKey = "persistent.option.autoddl";
@@ -47,10 +52,13 @@ public class PersistentModuleConfigurer implements ModuleConfigurer {
             dependency.put(AutoDDL.class, autoDDL);
         }
 
-        configHolder.findOne(DataSourceKey, DataSourceConfig.class).ifPresent(dataSourceConfig -> {
-            dependency.put(DataSource.class, dataSourceConfig.toDataSource());
-        });
-
+        Optional<DataSourceProperty> optionalProperty = configHolder.findOne(DataSourceKey, DataSourceProperty.class);
+        if (optionalProperty.isPresent()) {
+            logger.info("Detect Datasource property. Create and Inject Datasource");
+            dependency.put(DataSource.class, optionalProperty.get().toDataSource());
+        } else {
+            logger.info("Cannot Detect Datasource property. Expect to be loaded custom Datasource.");
+        }
         return dependency;
     }
 

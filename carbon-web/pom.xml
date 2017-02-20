@@ -31,7 +31,6 @@
             <version>0.1.0-BETA</version>
         </dependency>
 
-
         <!-- Logger interface -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -59,13 +58,6 @@
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all-server</artifactId>
             <version>8.2.0.v20160908</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>9.0.0.M10</version>
         </dependency>
 
         <!-- Validator -->
@@ -122,12 +114,6 @@
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-java8time</artifactId>
             <version>3.0.0.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.10</version>
         </dependency>
 
         <!-- for Redis -->

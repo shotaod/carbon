@@ -2,7 +2,7 @@ package org.carbon.sample.web.business;
 
 import org.carbon.sample.auth.business.BusinessAuthIdentity;
 import org.carbon.sample.web.business.dto.ScheduleDto;
-import org.carbon.sample.tables.pojos.Lecturer;
+import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
 import org.carbon.component.annotation.Inject;
 import org.carbon.sample.web.business.dto.LecturerRoomDto;
 import org.carbon.web.annotation.Action;

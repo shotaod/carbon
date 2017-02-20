@@ -2,11 +2,11 @@ package org.carbon.sample.web.consumer;
 
 import lombok.NonNull;
 import org.carbon.persistent.annotation.Transactional;
-import org.carbon.sample.Tables;
-import org.carbon.sample.tables.daos.LecturerApplyHistoryDao;
-import org.carbon.sample.tables.daos.LecturerDao;
-import org.carbon.sample.tables.daos.LecturerScheduleDao;
-import org.carbon.sample.tables.pojos.*;
+import org.carbon.sample.ext.jooq.Tables;
+import org.carbon.sample.ext.jooq.tables.daos.LecturerApplyHistoryDao;
+import org.carbon.sample.ext.jooq.tables.daos.LecturerDao;
+import org.carbon.sample.ext.jooq.tables.daos.LecturerScheduleDao;
+import org.carbon.sample.ext.jooq.tables.pojos.*;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.sample.web.consumer.dto.LectureRoomDto;

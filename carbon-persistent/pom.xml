@@ -71,17 +71,17 @@
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq</artifactId>
-            <version>3.8.6</version>
+            <version>3.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-meta</artifactId>
-            <version>3.8.6</version>
+            <version>3.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
-            <version>3.8.6</version>
+            <version>3.9.1</version>
         </dependency>
     </dependencies>
 </project>

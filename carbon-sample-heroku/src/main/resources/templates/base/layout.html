@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xml:lang="ja" lang="ja">
+<head>
+	<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">[Carbon]</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" th:href="@{/static/css/base.css}" media="screen,projection" />
+	<link type="text/css" rel="stylesheet" th:href="@{/static/css/main.css}" />
+</head>
+<body>
+<!-- Header Header Header Header Header Header Header Header Header Header Header Header Header Header Header -->
+<nav layout:replace="~{base/navigation :: navigation}"></nav>
+
+<!-- Main Main Main  Main Main Main  Main Main Main  Main Main Main  Main Main Main  Main Main Main  Main Main -->
+<main class="mdl-layout__content">
+	<div class="container" layout:fragment="content" ></div>
+</main>
+<!-- Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer -->
+<footer layout:replace="~{base/footer :: footer}"></footer>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" th:src="@{/static/vendor/js/materialize.min.js}"></script>
+</body>
+</html>

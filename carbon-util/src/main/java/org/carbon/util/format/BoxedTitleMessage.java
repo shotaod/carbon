@@ -50,6 +50,8 @@ public class BoxedTitleMessage {
     }
 
     private static String create(List<SimpleKeyValue> keyValues, JoinType type) {
+        if (keyValues.isEmpty()) return "";
+
         Integer maxLen = keyValues.stream().map(kv -> kv.getKey().length()).max(Integer::compare).get();
 
         return keyValues.stream()

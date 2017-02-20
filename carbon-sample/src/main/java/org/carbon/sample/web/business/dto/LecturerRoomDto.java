@@ -1,8 +1,8 @@
 package org.carbon.sample.web.business.dto;
 
 import lombok.Value;
-import org.carbon.sample.tables.pojos.Lecturer;
-import org.carbon.sample.tables.pojos.LecturerRoom;
+import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
+import org.carbon.sample.ext.jooq.tables.pojos.LecturerRoom;
 
 import java.util.List;
 

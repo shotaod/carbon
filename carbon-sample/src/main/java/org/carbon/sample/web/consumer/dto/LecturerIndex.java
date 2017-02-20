@@ -1,8 +1,8 @@
 package org.carbon.sample.web.consumer.dto;
 
 import lombok.Value;
-import org.carbon.sample.tables.pojos.Asset;
-import org.carbon.sample.tables.pojos.Lecturer;
+import org.carbon.sample.ext.jooq.tables.pojos.Asset;
+import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
 
 /**
  * @author Shota Oda 2016/12/10.

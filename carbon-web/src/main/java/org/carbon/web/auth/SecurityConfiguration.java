@@ -1,30 +1,37 @@
 package org.carbon.web.auth;
 
+import org.carbon.util.format.StringLineBuilder;
 import org.carbon.web.context.session.SessionContainer;
 import org.carbon.web.def.HttpMethod;
+import org.carbon.web.exception.InsufficientSecurityConfigException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Shota Oda 2016/11/03.
  */
 public class SecurityConfiguration {
     public class Rule<IDENTITY extends AuthIdentity> {
+
         private Class<IDENTITY> _identity;
         private SecurityConfiguration baseConfiguration;
         private String _url;
-        private String _loginUrl;
+        private SimpleRequest _loginRequest;
+        private Set<SimpleRequest> _permitRequests;
         private String _logoutUrl;
-        private HttpMethod _method;
         private String _redirect;
         private AuthRequestMapper _requestMapper;
         private AuthIdentifier<IDENTITY> _identifier;
         private AuthEventListener _finisher;
         private Rule(SecurityConfiguration baseConfiguration) {
             this.baseConfiguration = baseConfiguration;
+            this._permitRequests = new HashSet<>();
         }
         public Rule base(String url) {
             this._url = url;
@@ -38,8 +45,19 @@ public class SecurityConfiguration {
          * @return
          */
         public Rule endPoint(HttpMethod method, String loginUrl) {
-            this._method = method;
-            this._loginUrl = loginUrl;
+            this._loginRequest = new SimpleRequest(method, loginUrl);
+            return this;
+        }
+        public Rule permit(HttpMethod method, String path) {
+            _permitRequests.add(new SimpleRequest(method, path));
+            return this;
+        }
+        public Rule permitGetAll(String... path) {
+            this._permitRequests.addAll(
+                Stream.of(path)
+                    .map(url -> new SimpleRequest(HttpMethod.GET, url))
+                    .collect(Collectors.toSet())
+            );
             return this;
         }
         public Rule logout(String logoutUrl) {
@@ -65,22 +83,31 @@ public class SecurityConfiguration {
             return this;
         }
         public SecurityConfiguration end() {
+            StringLineBuilder sb = new StringLineBuilder();
+            if (_url == null) sb.appendLine("- url");
+            if (_loginRequest == null) sb.appendLine("- endPoint ");
+            if (_logoutUrl == null) sb.appendLine("- logoutUrl");
+            if (_redirect == null) sb.appendLine("- redirect");
+            if (_requestMapper == null) sb.appendLine("- requestMapper");
+            if (_identifier == null) sb.appendLine("- identifier");
+            if (_finisher == null) sb.appendLine("- finisher");
+            if (!sb.toString().isEmpty()) throw new InsufficientSecurityConfigException("below config is not defind\n"+sb.toString());
+
             baseConfiguration.rules.add(this);
             return baseConfiguration;
         }
 
         private AuthStrategy<IDENTITY> convert() {
             AuthStrategy<IDENTITY> strategy = new AuthStrategy<IDENTITY>() {
+
                 @Override
                 public boolean shouldTryLogin(HttpMethod method, String requestUrl) {
-                    final String wildCard = "/**";
-                    boolean urlMatch;
-                    if (_loginUrl.endsWith(wildCard)) {
-                        urlMatch = requestUrl.startsWith(_loginUrl.replace(wildCard, ""));
-                    } else {
-                        urlMatch = _loginUrl.equals(requestUrl);
-                    }
-                    return urlMatch && _method.equals(method);
+                    return _loginRequest.isMatch(method, requestUrl);
+                }
+
+                @Override
+                public boolean shouldPermit(HttpMethod method, String requestUrl) {
+                    return _permitRequests.stream().anyMatch(request -> request.isMatch(method, requestUrl));
                 }
             };
             AuthSessionManager<IDENTITY> sessionManger = new AuthSessionManager<IDENTITY>() {

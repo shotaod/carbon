@@ -13,7 +13,7 @@ import org.carbon.component.ComponentManager;
 import org.carbon.modular.ModuleConfigurer;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.util.mapper.ConfigHolder;
-import org.carbon.web.conf.WebConfig;
+import org.carbon.web.conf.WebProperty;
 import org.carbon.web.context.ActionDefinitionContainer;
 import org.carbon.web.context.ApplicationPool;
 import org.carbon.web.context.InstanceContainer;
@@ -83,8 +83,8 @@ public class WebStarter {
 
         dependency.putAll(moduleObjects);
 
-        WebConfig webConfig = configHolder.findOne("web", WebConfig.class).get();
-        dependency.put(WebConfig.class, webConfig);
+        WebProperty webProperty = configHolder.findOne("web", WebProperty.class).get();
+        dependency.put(WebProperty.class, webProperty);
 
         resolveDependency(scanBase, moduleClasses, dependency);
 

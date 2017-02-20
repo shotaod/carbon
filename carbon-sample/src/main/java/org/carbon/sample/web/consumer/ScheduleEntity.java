@@ -2,8 +2,8 @@ package org.carbon.sample.web.consumer;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.carbon.sample.tables.pojos.Lecturer;
-import org.carbon.sample.tables.pojos.LecturerSchedule;
+import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
+import org.carbon.sample.ext.jooq.tables.pojos.LecturerSchedule;
 
 /**
  * @author Shota Oda 2016/11/28.

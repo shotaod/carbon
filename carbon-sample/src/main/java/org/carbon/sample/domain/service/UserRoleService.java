@@ -1,10 +1,10 @@
 package org.carbon.sample.domain.service;
 
 import org.carbon.persistent.annotation.Transactional;
-import org.carbon.sample.tables.daos.RoleDao;
-import org.carbon.sample.tables.daos.UserDao;
-import org.carbon.sample.tables.pojos.Role;
-import org.carbon.sample.tables.pojos.User;
+import org.carbon.sample.ext.jooq.tables.daos.RoleDao;
+import org.carbon.sample.ext.jooq.tables.daos.UserDao;
+import org.carbon.sample.ext.jooq.tables.pojos.Role;
+import org.carbon.sample.ext.jooq.tables.pojos.User;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.jooq.DSLContext;

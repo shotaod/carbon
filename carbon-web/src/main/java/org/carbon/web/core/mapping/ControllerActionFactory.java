@@ -38,7 +38,7 @@ public class ControllerActionFactory {
         public String mappingResult() {
             String controller = this.controller.getClass().getName();
             String method = this.action.getName();
-            return controller + "#" + method;
+            return "(http://)" + controller + "#" + method;
         }
     }
 

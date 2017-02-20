@@ -10,14 +10,13 @@ import java.util.Optional;
  */
 @Component
 public class SessionContainer {
-    private SessionContainer() {}
     private static ThreadLocal<String> sessionKey = new ThreadLocal<String>() {
         @Override
         protected String initialValue() {
             return "";
         }
     };
-    @Inject
+    @Inject(optional = true)
     private SessionStore sessionStore = new InMemorySessionStore();
 
     public void setSessionKey(String sessionKey) {

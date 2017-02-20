@@ -1,0 +1,10 @@
+version: '2'
+services:
+  db:
+    image: postgres:9.6.2
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: d6vh9houtm9ttn
+    ports:
+      - "25432:5432"

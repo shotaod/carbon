@@ -18,15 +18,6 @@ import org.carbon.web.context.SecurityContainer;
 @Component
 public class SecurityConfigurator {
 
-    private class AuthAndUrl {
-        private AuthStrategy strategy;
-        private String url;
-        public AuthAndUrl(AuthStrategy strategy, String url) {
-            this.strategy = strategy;
-            this.url = url;
-        }
-    }
-
     public SecurityContainer map(Map<Class, Object> context) {
         return findAdapter(context).map(adapter -> {
             SecurityConfiguration config = new SecurityConfiguration();

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Shota Oda 2016/10/22.
  */
 @Component
-public class CharacterEncodingChain extends HttpHandlerChain{
+public class CharacterEncodingChain extends HttpHandlerChain {
 
     private static final String encode = "utf-8";
 

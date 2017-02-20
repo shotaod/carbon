@@ -1,7 +1,7 @@
 package org.carbon.sample.web.business;
 
 import lombok.Data;
-import org.carbon.sample.tables.pojos.Lecturer;
+import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;

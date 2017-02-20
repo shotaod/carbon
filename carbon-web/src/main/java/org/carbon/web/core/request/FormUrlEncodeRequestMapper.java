@@ -36,8 +36,7 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
         }
     }
 
-    @Inject
-    private NameBasedObjectMapper objectMapper;
+    private NameBasedObjectMapper objectMapper = new NameBasedObjectMapper();
 
     @Override
     public <T> T map(HttpServletRequest request, Class<T> mapTo) {

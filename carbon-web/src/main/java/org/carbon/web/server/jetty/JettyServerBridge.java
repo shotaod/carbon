@@ -2,9 +2,10 @@ package org.carbon.web.server.jetty;
 
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-import org.carbon.web.conf.WebConfig;
+import org.carbon.web.conf.WebProperty;
 import org.carbon.web.exception.ServerStartupException;
 import org.carbon.web.handler.DefaultChainFactory;
+import org.carbon.web.handler.HttpHandlerChain;
 import org.carbon.web.server.EmbedServer;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Request;
@@ -16,15 +17,16 @@ import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocketServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,11 +34,11 @@ import java.util.Optional;
  */
 @Component
 public class JettyServerBridge implements EmbedServer {
-
+    private Logger logger = LoggerFactory.getLogger(EmbedServer.class);
     @Inject
     private DefaultChainFactory factory;
     @Inject
-    private WebConfig config;
+    private WebProperty config;
 
     private Server server;
 
@@ -44,16 +46,13 @@ public class JettyServerBridge implements EmbedServer {
         server = new Server();
     }
 
-    private void commonSetting(ContextHandler handler) {
-        handler.setMaxFormContentSize(config.getMaxContentSize());
-    }
-
     private ContextHandler dispatchHandler() {
         ContextHandler contextHandler = new ContextHandler("/");
+        HttpHandlerChain handlerChain = factory.factorize();
         HandlerWrapper dispatchHandler = new HandlerWrapper() {
             @Override
             public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-                factory.superChain().startAsync(request, response);
+                handlerChain.startAsync(request, response);
                 // Carbon handle Any Case, so we don't delegate jetty
                 baseRequest.setHandled(true);
             }
@@ -67,13 +66,15 @@ public class JettyServerBridge implements EmbedServer {
         resourceServletHolder.setInitParameter("acceptRanges", "false");
         resourceServletHolder.setInitParameter("dirAllowed","false");
         resourceServletHolder.setInitParameter("redirectWelcome","false");
-        String resourceBase = Optional.ofNullable(base.getClassLoader().getResource(config.getResourceDirectory()))
-                .map(URL::toString)
-                .orElseThrow(ServerStartupException::new);
+        WebProperty.Resource resource = config.getResource();
+        String resourceDirectory = resource.getDirectory();
+        String resourceBase = Optional.ofNullable(base.getClassLoader().getResource(resourceDirectory))
+            .map(URL::toString)
+            .orElseThrow(() -> new ServerStartupException(resourceSetupFailMessage(resourceDirectory)));
         resourceServletHolder.setInitParameter("resourceBase", resourceBase);
 
         ServletContextHandler servletContextHandler = new ServletContextHandler();
-        servletContextHandler.setContextPath("/" + config.getResourceOutPath());
+        servletContextHandler.setContextPath("/" + resource.getOutPath());
         servletContextHandler.addServlet(resourceServletHolder, "/");
         return servletContextHandler;
     }
@@ -83,14 +84,20 @@ public class JettyServerBridge implements EmbedServer {
 
         // context(/{STATIC_PATH}) -> resource
         // context(/) -> dispatch
-        ContextHandler resourceContext = resourceHandler(base);
-        ContextHandler dispatchHandler = dispatchHandler();
+        List<ContextHandler> handlers = new ArrayList<>();
+        handlers.add(dispatchHandler());
+        WebProperty.Resource resource = config.getResource();
+        if (resource == null || resource.getDirectory() == null || resource.getOutPath() == null) {
+            logger.info("Not found resource setting, so skip Resource handler mapping");
+        } else {
+            handlers.add(resourceHandler(base));
+        }
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
-        ContextHandler[] handlers = Arrays.stream(new ContextHandler[]{ resourceContext, dispatchHandler})
+        ContextHandler[] readyHandlers = handlers.stream()
                 .peek(handler -> handler.setMaxFormContentSize(config.getMaxContentSize()))
                 .toArray(ContextHandler[]::new);
-        contexts.setHandlers(handlers);
+        contexts.setHandlers(readyHandlers);
 
         SelectChannelConnector connector = new SelectChannelConnector();
         connector.setPort(config.getPort());
@@ -104,5 +111,9 @@ public class JettyServerBridge implements EmbedServer {
     @Override
     public void await() throws Exception {
         server.join();
+    }
+
+    private String resourceSetupFailMessage(String resourceDirectory) {
+        return String.format("Fail to load Resource directory: %s\n--------------------------------------------------------------------------------\nTry either\n・ Delete resource setting property\nor\n・ Create dir: resource/%s and stuff some resource file\n--------------------------------------------------------------------------------", resourceDirectory, resourceDirectory);
     }
 }

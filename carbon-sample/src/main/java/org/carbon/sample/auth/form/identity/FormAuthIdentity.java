@@ -1,6 +1,6 @@
 package org.carbon.sample.auth.form.identity;
 
-import org.carbon.sample.tables.pojos.User;
+import org.carbon.sample.ext.jooq.tables.pojos.User;
 import org.carbon.web.auth.AuthIdentity;
 
 /**

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
  * @author Shota Oda 2016/12/11.
  */
 public class SimpleValidationResult extends ValidationResult {
-    Map<String, String> simpleViolationResults;
+    private Map<String, String> simpleViolationResults;
     public SimpleValidationResult(Set<ConstraintViolation> constraintViolations) {
         super(constraintViolations);
         parseSimpleMap();

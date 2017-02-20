@@ -1,10 +1,10 @@
 package org.carbon.sample.auth.basic;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.carbon.component.annotation.Component;
 import org.carbon.web.auth.AuthRequestMapper;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Base64;
 import java.util.Optional;
 
 /**
@@ -21,7 +21,7 @@ public class BasicAuthRequestMapper implements AuthRequestMapper {
                 .filter(header -> header.startsWith(Auth_Basic))
                 .flatMap(header -> {
                     String base64 = header.replace(Auth_Basic, "").trim();
-                    String[] info = new String(Base64.decodeBase64(base64)).split(":");
+                    String[] info = new String(Base64.getDecoder().decode(base64)).split(":");
                     if (info.length != 2) {
                         return Optional.empty();
                     }

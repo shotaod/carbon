@@ -70,6 +70,8 @@ public class InstanceInjector {
                         Object singleton = candidates.get(field.getType());
 
                         if (singleton == null) {
+                            Inject injectAnnotation = field.getAnnotation(Inject.class);
+                            if (injectAnnotation.optional()) return;
                             throwClassNotRegisteredException(clazz, field.getType());
                         }
 

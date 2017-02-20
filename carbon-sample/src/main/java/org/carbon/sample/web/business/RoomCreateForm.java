@@ -1,7 +1,7 @@
 package org.carbon.sample.web.business;
 
 import lombok.Data;
-import org.carbon.sample.tables.pojos.LecturerRoom;
+import org.carbon.sample.ext.jooq.tables.pojos.LecturerRoom;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ public class RoomCreateForm {
     private LocalDateTime endDatetime;
 
     public LecturerRoom toEntity(Long lecturerId) {
-        LecturerRoom entity = new org.carbon.sample.tables.pojos.LecturerRoom();
+        LecturerRoom entity = new org.carbon.sample.ext.jooq.tables.pojos.LecturerRoom();
         entity.setLecturerId(lecturerId);
         entity.setRoomName(roomName);
         entity.setRoomDetail(roomDetail);

@@ -24,8 +24,7 @@ public class ActionExecutor {
             }
             return ActionResult.Result(result);
         } catch (Exception e) {
-            Exception exception = actionInvokeException(action.getActionDefinition().mappingResult(), e);
-            return ActionResult.OnException(exception);
+            throw actionInvokeException(action.getActionDefinition().mappingResult(), e);
         }
     }
 

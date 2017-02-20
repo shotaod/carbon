@@ -12,4 +12,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Inject {}
+public @interface Inject {
+    boolean optional() default false;
+}

@@ -1,5 +1,6 @@
 package org.carbon.web.handler;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,8 +10,13 @@ import javax.servlet.http.HttpServletResponse;
  * @author Shota Oda 2016/10/17.
  */
 public abstract class HttpHandlerChain {
+    private Logger logger = LoggerFactory.getLogger(HttpHandlerChain.class);
     private final Object lock = new Object();
     private HttpHandlerChain handlerChain;
+
+    public String getChainName() {
+        return this.getClass().getSimpleName();
+    }
 
     public final HttpHandlerChain setChain(HttpHandlerChain httpHandlerChain) {
         this.handlerChain = httpHandlerChain;
@@ -28,9 +34,9 @@ public abstract class HttpHandlerChain {
     }
 
     protected void chain(HttpServletRequest request, HttpServletResponse response) {
-        LoggerFactory.getLogger(this.getClass()).debug("start chain");
         if (this.handlerChain == null) return;
 
+        logger.debug(String.format("[%s] start chain ", getChainName()));
         this.handlerChain.chain(request, response);
     }
 }
