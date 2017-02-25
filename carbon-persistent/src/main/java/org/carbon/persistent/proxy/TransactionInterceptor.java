@@ -1,8 +1,7 @@
 package org.carbon.persistent.proxy;
 
-import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import org.carbon.component.generator.proxy.ProxyAdapter;
+import org.carbon.component.construct.proxy.ProxyAdapter;
 import org.carbon.persistent.annotation.Transactional;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;

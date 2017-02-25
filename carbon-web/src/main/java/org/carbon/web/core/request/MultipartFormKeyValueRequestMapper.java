@@ -40,13 +40,13 @@ public class MultipartFormKeyValueRequestMapper implements TypeSafeRequestMapper
             String key = item.getFieldName();
             if (item.isFormField()) {
                 String value = item.getString();
-                return new SimpleKeyValue(key, value);
+                return new SimpleKeyValue<String, Object>(key, value);
             } else {
-                return new SimpleKeyValue(key, item);
+                return new SimpleKeyValue<String, Object>(key, item);
             }
         }).collect(Collectors.toMap(
-                kv -> kv.getKey(),
-                kv -> kv.getValue()
+                SimpleKeyValue::getKey,
+                SimpleKeyValue::getValue
         ));
     }
 }

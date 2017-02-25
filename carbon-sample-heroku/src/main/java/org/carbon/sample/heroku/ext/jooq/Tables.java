@@ -6,12 +6,13 @@ package org.carbon.sample.heroku.ext.jooq;
 
 import javax.annotation.Generated;
 
+import org.carbon.sample.heroku.ext.jooq.tables.Blog;
 import org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion;
 import org.carbon.sample.heroku.ext.jooq.tables.User;
 
 
 /**
- * Convenience access to all tables in d6vh9houtm9ttn
+ * Convenience access to all tables in carbon
  */
 @Generated(
     value = {
@@ -24,12 +25,17 @@ import org.carbon.sample.heroku.ext.jooq.tables.User;
 public class Tables {
 
     /**
-     * The table <code>d6vh9houtm9ttn.schema_version</code>.
+     * The table <code>carbon.blog</code>.
+     */
+    public static final Blog BLOG = org.carbon.sample.heroku.ext.jooq.tables.Blog.BLOG;
+
+    /**
+     * The table <code>carbon.schema_version</code>.
      */
     public static final SchemaVersion SCHEMA_VERSION = org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion.SCHEMA_VERSION;
 
     /**
-     * The table <code>d6vh9houtm9ttn.user</code>.
+     * The table <code>carbon.user</code>.
      */
     public static final User USER = org.carbon.sample.heroku.ext.jooq.tables.User.USER;
 }

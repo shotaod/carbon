@@ -3,8 +3,15 @@ nav {
     height: auto;
 
     .nav-wrapper {
+      min-height: 56px;
       height: auto;
     }
+
+    .nav-content {
+      position: relative;
+      line-height: normal;
+    }
+
   }
 
   color: $navbar-font-color;

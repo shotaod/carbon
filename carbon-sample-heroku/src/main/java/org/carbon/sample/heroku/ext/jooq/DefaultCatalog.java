@@ -27,7 +27,7 @@ import org.jooq.impl.CatalogImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultCatalog extends CatalogImpl {
 
-    private static final long serialVersionUID = -964402380;
+    private static final long serialVersionUID = -341538758;
 
     /**
      * The reference instance of <code></code>
@@ -35,9 +35,9 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
-     * The schema <code>d6vh9houtm9ttn</code>.
+     * The schema <code>carbon</code>.
      */
-    public final D6vh9houtm9ttn D6VH9HOUTM9TTN = org.carbon.sample.heroku.ext.jooq.D6vh9houtm9ttn.D6VH9HOUTM9TTN;
+    public final Carbon CARBON = org.carbon.sample.heroku.ext.jooq.Carbon.CARBON;
 
     /**
      * No further instances allowed
@@ -55,6 +55,6 @@ public class DefaultCatalog extends CatalogImpl {
 
     private final List<Schema> getSchemas0() {
         return Arrays.<Schema>asList(
-            D6vh9houtm9ttn.D6VH9HOUTM9TTN);
+            Carbon.CARBON);
     }
 }

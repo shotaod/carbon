@@ -11,7 +11,7 @@ import org.jooq.impl.SequenceImpl;
 
 
 /**
- * Convenience access to all sequences in d6vh9houtm9ttn
+ * Convenience access to all sequences in carbon
  */
 @Generated(
     value = {
@@ -24,7 +24,12 @@ import org.jooq.impl.SequenceImpl;
 public class Sequences {
 
     /**
-     * The sequence <code>d6vh9houtm9ttn.user_id_seq</code>
+     * The sequence <code>carbon.blog_id_seq</code>
      */
-    public static final Sequence<Long> USER_ID_SEQ = new SequenceImpl<Long>("user_id_seq", D6vh9houtm9ttn.D6VH9HOUTM9TTN, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+    public static final Sequence<Long> BLOG_ID_SEQ = new SequenceImpl<Long>("blog_id_seq", Carbon.CARBON, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
+     * The sequence <code>carbon.user_id_seq</code>
+     */
+    public static final Sequence<Long> USER_ID_SEQ = new SequenceImpl<Long>("user_id_seq", Carbon.CARBON, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 }

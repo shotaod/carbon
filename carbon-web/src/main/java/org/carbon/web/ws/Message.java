@@ -36,10 +36,10 @@ public class Message {
     @Override
     public String toString() {
         StringLineBuilder sb = new StringLineBuilder();
-        List<SimpleKeyValue> values = Arrays.asList(
-                new SimpleKeyValue("from", from),
-                new SimpleKeyValue("to", channels.stream().map(Channel::toString).collect(Collectors.joining(","))),
-                new SimpleKeyValue("content", content)
+        List<SimpleKeyValue<String, ?>> values = Arrays.asList(
+                new SimpleKeyValue<>("from", from),
+                new SimpleKeyValue<>("to", channels.stream().map(Channel::toString).collect(Collectors.joining(","))),
+                new SimpleKeyValue<>("content", content)
         );
         sb.appendLine(BoxedTitleMessage.produceLeft(values));
         return sb.toString();

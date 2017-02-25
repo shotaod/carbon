@@ -15,26 +15,29 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: user_id_seq; Type: SEQUENCE; Schema: carbon; Owner: root
+-- Name: carbon; Type: SCHEMA; Schema: -;
 --
-CREATE SCHEMA IF NOT EXISTS  d6vh9houtm9ttn;
 
-CREATE SEQUENCE IF NOT EXISTS user_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
-
-
+CREATE SCHEMA IF NOT EXISTS carbon;
+SET search_path = carbon;
 SET default_tablespace = '';
 SET default_with_oids = false;
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: carbon;
+--
+
+CREATE SEQUENCE IF NOT EXISTS user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 --
--- Name: user; Type: TABLE; Schema: ; Owner: root
+-- Name: user; Type: TABLE; Schema: carbon;
 --
 
-CREATE TABLE d6vh9houtm9ttn.user (
+CREATE TABLE "carbon"."user" (
     id bigint DEFAULT nextval('user_id_seq'::regclass) NOT NULL,
     email character varying(255) NOT NULL,
     user_name character varying(255) NOT NULL,
@@ -42,20 +45,29 @@ CREATE TABLE d6vh9houtm9ttn.user (
 );
 
 --
--- Name: user user_pkey; Type: CONSTRAINT; Schema: carbon; Owner: root
+-- Name: user user_email_key; Type: CONSTRAINT; Schema: carbon;
 --
 
-ALTER TABLE ONLY d6vh9houtm9ttn.user
+ALTER TABLE ONLY "carbon"."user"
+    ADD CONSTRAINT user_email_key UNIQUE (email);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: carbon;
+--
+
+ALTER TABLE ONLY "carbon"."user"
     ADD CONSTRAINT user_pkey PRIMARY KEY (id);
 
 
 --
--- Name: user_id_pk; Type: INDEX; Schema: carbon; Owner: root
+-- Name: user_id_pk; Type: INDEX; Schema: carbon;
 --
 
-CREATE UNIQUE INDEX user_id_pk ON d6vh9houtm9ttn.user USING btree (id);
+CREATE UNIQUE INDEX user_id_pk ON "carbon"."user" USING btree (id);
 
 
 --
 -- PostgreSQL database dump complete
 --
+

@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
-import org.carbon.sample.heroku.ext.jooq.D6vh9houtm9ttn;
+import org.carbon.sample.heroku.ext.jooq.Carbon;
 import org.carbon.sample.heroku.ext.jooq.Keys;
 import org.carbon.sample.heroku.ext.jooq.tables.records.SchemaVersionRecord;
 import org.jooq.Field;
@@ -34,10 +34,10 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SchemaVersion extends TableImpl<SchemaVersionRecord> {
 
-    private static final long serialVersionUID = 39029606;
+    private static final long serialVersionUID = -1134393762;
 
     /**
-     * The reference instance of <code>d6vh9houtm9ttn.schema_version</code>
+     * The reference instance of <code>carbon.schema_version</code>
      */
     public static final SchemaVersion SCHEMA_VERSION = new SchemaVersion();
 
@@ -50,64 +50,64 @@ public class SchemaVersion extends TableImpl<SchemaVersionRecord> {
     }
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.installed_rank</code>.
+     * The column <code>carbon.schema_version.installed_rank</code>.
      */
     public final TableField<SchemaVersionRecord, Integer> INSTALLED_RANK = createField("installed_rank", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.version</code>.
+     * The column <code>carbon.schema_version.version</code>.
      */
     public final TableField<SchemaVersionRecord, String> VERSION = createField("version", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.description</code>.
+     * The column <code>carbon.schema_version.description</code>.
      */
     public final TableField<SchemaVersionRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.type</code>.
+     * The column <code>carbon.schema_version.type</code>.
      */
     public final TableField<SchemaVersionRecord, String> TYPE = createField("type", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.script</code>.
+     * The column <code>carbon.schema_version.script</code>.
      */
     public final TableField<SchemaVersionRecord, String> SCRIPT = createField("script", org.jooq.impl.SQLDataType.VARCHAR.length(1000).nullable(false), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.checksum</code>.
+     * The column <code>carbon.schema_version.checksum</code>.
      */
     public final TableField<SchemaVersionRecord, Integer> CHECKSUM = createField("checksum", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.installed_by</code>.
+     * The column <code>carbon.schema_version.installed_by</code>.
      */
     public final TableField<SchemaVersionRecord, String> INSTALLED_BY = createField("installed_by", org.jooq.impl.SQLDataType.VARCHAR.length(100).nullable(false), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.installed_on</code>.
+     * The column <code>carbon.schema_version.installed_on</code>.
      */
     public final TableField<SchemaVersionRecord, Timestamp> INSTALLED_ON = createField("installed_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("now()", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.execution_time</code>.
+     * The column <code>carbon.schema_version.execution_time</code>.
      */
     public final TableField<SchemaVersionRecord, Integer> EXECUTION_TIME = createField("execution_time", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.schema_version.success</code>.
+     * The column <code>carbon.schema_version.success</code>.
      */
     public final TableField<SchemaVersionRecord, Boolean> SUCCESS = createField("success", org.jooq.impl.SQLDataType.BOOLEAN.nullable(false), this, "");
 
     /**
-     * Create a <code>d6vh9houtm9ttn.schema_version</code> table reference
+     * Create a <code>carbon.schema_version</code> table reference
      */
     public SchemaVersion() {
         this("schema_version", null);
     }
 
     /**
-     * Create an aliased <code>d6vh9houtm9ttn.schema_version</code> table reference
+     * Create an aliased <code>carbon.schema_version</code> table reference
      */
     public SchemaVersion(String alias) {
         this(alias, SCHEMA_VERSION);
@@ -126,7 +126,7 @@ public class SchemaVersion extends TableImpl<SchemaVersionRecord> {
      */
     @Override
     public Schema getSchema() {
-        return D6vh9houtm9ttn.D6VH9HOUTM9TTN;
+        return Carbon.CARBON;
     }
 
     /**

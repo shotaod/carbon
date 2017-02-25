@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      layout:decorate="~{/base/layout}">
+<head>
+	<meta charset="UTF-8">
+	<title>Create</title>
+</head>
+<body>
+<section layout:fragment="content">
+	<h4>Blog Draft</h4>
+	<form class="row" action="/blog/post" method="post">
+		<div class="input-field col s12">
+			<input id="title" name="title" type="text" />
+			<label for="title">Title</label>
+		</div>
+		<div class="col s12 input-field">
+			<input id="summary" name="summary" type="text" />
+			<label for="summary">Summary</label>
+		</div>
+		<div class="col s12 input-field">
+			<textarea id="content" name="content" class="materialize-textarea"></textarea>
+			<label for="content">Content</label>
+		</div>
+		<button type="submit">create</button>
+	</form>
+</section>
+</body>
+</html>

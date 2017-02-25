@@ -25,15 +25,10 @@ public class HtmlProcessor extends AbstractResponseProcessor {
     }
 
     @Override
-    public boolean process(HttpServletResponse response) {
-        try {
-            response.setContentType("text/html; charset=utf-8");
-            templateEngine.run(this.htmlResponse, response);
-            response.setStatus(HttpServletResponse.SC_OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public boolean doProcess(HttpServletResponse response) throws Exception {
+        response.setContentType("text/html; charset=utf-8");
+        templateEngine.run(this.htmlResponse, response);
+        response.setStatus(HttpServletResponse.SC_OK);
         return true;
     }
 }

@@ -21,7 +21,7 @@ public class HttpOperationProcessor extends AbstractResponseProcessor {
     }
 
     @Override
-    public boolean process(HttpServletResponse response) {
+    public boolean doProcess(HttpServletResponse response) throws Exception {
         switch (httpOperation.getStrategy()) {
             case Forward:
             case Redirect:

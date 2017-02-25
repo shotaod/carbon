@@ -63,6 +63,12 @@
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
         </dependency>
+        <!-- Markdown Parser-->
+        <dependency>
+            <groupId>com.atlassian.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>0.8.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -88,6 +94,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -122,7 +129,7 @@
                     <password>password</password>
                     <url>jdbc:postgresql://carbon.heroku.rdb:25432/d6vh9houtm9ttn</url>
                     <schemas>
-                        <schema>d6vh9houtm9ttn</schema>
+                        <schema>carbon</schema>
                     </schemas>
                     <driver>org.postgresql.Driver</driver>
                 </configuration>

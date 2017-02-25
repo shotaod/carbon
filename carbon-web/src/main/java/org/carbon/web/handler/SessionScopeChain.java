@@ -35,7 +35,7 @@ public class SessionScopeChain extends HttpScopeChain{
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseGet(() -> {
-                    String uuid = UUID.randomUUID().toString();
+                    String uuid = UUID.randomUUID().toString().replace("-","").toUpperCase();
                     tmpSessionKey.set(Optional.of(uuid));
                     return uuid;
                 });

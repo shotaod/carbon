@@ -21,12 +21,12 @@ public class SecurityConfiguration implements SecurityConfigAdapter {
     @Override
     public void configure(org.carbon.web.auth.SecurityConfiguration config) {
         config.define()
-            .base("/")
-            .redirect("/login")
-            .endPoint(HttpMethod.POST, "/login")
-            .logout("/logout")
-            .permitGetAll("/login", "/signup", "/static/**")
-            .permit(HttpMethod.POST, "/signup")
+            .base("/sample/security")
+            .redirect("/sample/security/login")
+            .endPoint(HttpMethod.POST, "/sample/security/login")
+            .logout("/sample/security/logout")
+            .permitGetAll("/sample/security/login", "/sample/security/signup", "/static/**")
+            .permit(HttpMethod.POST, "/sample/security/signup")
             .requestMapper(requestMapper)
             .identifier(authIdentifier)
             .finisher(authFinisher)

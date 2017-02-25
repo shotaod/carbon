@@ -71,6 +71,13 @@ public class UserDao extends DAOImpl<UserRecord, org.carbon.sample.heroku.ext.jo
     }
 
     /**
+     * Fetch a unique record that has <code>email = value</code>
+     */
+    public org.carbon.sample.heroku.ext.jooq.tables.pojos.User fetchOneByEmail(String value) {
+        return fetchOne(User.USER.EMAIL, value);
+    }
+
+    /**
      * Fetch records that have <code>user_name IN (values)</code>
      */
     public List<org.carbon.sample.heroku.ext.jooq.tables.pojos.User> fetchByUserName(String... values) {

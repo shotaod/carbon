@@ -3,12 +3,15 @@ package org.carbon.web.core.mapping;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.annotation.Action;
+import org.carbon.web.annotation.Controller;
 import org.carbon.web.container.ComputedUrl;
 import org.carbon.web.core.ActionArgumentAggregator;
 import org.carbon.web.core.PathVariableResolver;
 import org.carbon.web.def.HttpMethod;
 
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -47,6 +50,8 @@ public class ControllerActionFactory {
 
     public Stream<ActionDefinition> factorize(Object controller) {
         Class<?> controllerClass = controller.getClass();
+        Controller controllerAnnotation = controllerClass.getAnnotation(Controller.class);
+        String controllerRootPath = controllerAnnotation.value();
         return Arrays.stream(controllerClass.getMethods())
             // filtering Action
             .filter(method -> method.isAnnotationPresent(Action.class))
@@ -54,7 +59,8 @@ public class ControllerActionFactory {
             .map(action -> {
                 Action annotation = action.getDeclaredAnnotation(Action.class);
                 HttpMethod method = annotation.method();
-                ComputedUrl computed = pathResolver.resolve(annotation.url(), action);
+                Path path = Paths.get(controllerRootPath, annotation.url());
+                ComputedUrl computed = pathResolver.resolve(path.toString(), action);
                 return new ControllerAction(method, computed, controller, action);
             });
     }

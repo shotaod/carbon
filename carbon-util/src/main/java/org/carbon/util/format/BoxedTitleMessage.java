@@ -41,15 +41,15 @@ public class BoxedTitleMessage {
         }
     }
 
-    public static String produceRight(List<SimpleKeyValue> keyValues) {
+    public static String produceRight(List<SimpleKeyValue<String, ?>> keyValues) {
         return create(keyValues, JoinType.Right());
     }
 
-    public static String produceLeft(List<SimpleKeyValue> keyValues) {
+    public static String produceLeft(List<SimpleKeyValue<String, ?>> keyValues) {
         return create(keyValues, JoinType.Left());
     }
 
-    private static String create(List<SimpleKeyValue> keyValues, JoinType type) {
+    private static String create(List<SimpleKeyValue<String, ?>> keyValues, JoinType type) {
         if (keyValues.isEmpty()) return "";
 
         Integer maxLen = keyValues.stream().map(kv -> kv.getKey().length()).max(Integer::compare).get();

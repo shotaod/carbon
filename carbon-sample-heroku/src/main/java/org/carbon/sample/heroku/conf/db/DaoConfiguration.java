@@ -3,6 +3,7 @@ package org.carbon.sample.heroku.conf.db;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
+import org.carbon.sample.heroku.ext.jooq.tables.daos.BlogDao;
 import org.carbon.sample.heroku.ext.jooq.tables.daos.UserDao;
 import org.jooq.DSLContext;
 import org.jooq.impl.DAOImpl;
@@ -18,6 +19,10 @@ public class DaoConfiguration {
     @Component
     public UserDao userDao() {
         return construct(UserDao.class);
+    }
+    @Component
+    public BlogDao blogDao() {
+        return construct(BlogDao.class);
     }
 
     private <T extends DAOImpl> T construct(Class<T> daoType) {

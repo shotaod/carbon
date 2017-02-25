@@ -10,8 +10,8 @@ import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.exception.IllegalDependencyException;
 import org.carbon.component.exception.PackageScanException;
-import org.carbon.component.generator.InstanceGenerator;
-import org.carbon.component.inject.InstanceInjector;
+import org.carbon.component.construct.ClassConstructor;
+import org.carbon.component.inject.DependencyInjector;
 import org.carbon.component.scan.TargetBaseScanner;
 
 /**
@@ -20,8 +20,8 @@ import org.carbon.component.scan.TargetBaseScanner;
 public class ComponentManager {
 
     private TargetBaseScanner scanner = new TargetBaseScanner();
-    private InstanceGenerator generator = new InstanceGenerator();
-    private InstanceInjector injector  = new InstanceInjector();
+    private ClassConstructor generator = new ClassConstructor();
+    private DependencyInjector injector  = new DependencyInjector();
 
     public Set<Class<?>> scanComponent (Class scanBase) throws PackageScanException {
         return scanner.scan(scanBase, Collections.singleton(Component.class));

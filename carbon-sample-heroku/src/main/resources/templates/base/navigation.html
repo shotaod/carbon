@@ -3,12 +3,14 @@
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <body>
-<nav layout:fragment="navigation">
-	<div class="nav-wrapper">
-		<a href="/home" class="brand-logo">Carbon</a>
-		<ul class="right hide-on-med-and-down">
-			<li><a href="/logout">logout</a></li>
-		</ul>
+<nav layout:fragment="navigation" class="nav-extended">
+	<div class="container">
+		<div class="nav-wrapper">
+			<a href="/home" class="brand-logo">Carbon</a>
+		</div>
+		<div class="nav-content">
+			<div layout:fragment="bread"></div>
+		</div>
 	</div>
 </nav>
 </body>

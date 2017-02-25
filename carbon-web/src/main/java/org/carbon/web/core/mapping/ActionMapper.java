@@ -56,13 +56,13 @@ public class ActionMapper {
     }
 
     private void loggingResult(Map<HttpMethod, List<ActionDefinition>> data) {
-        List<SimpleKeyValue> kvs = data.entrySet().stream().flatMap(e -> {
+        List<SimpleKeyValue<String, ?>> kvs = data.entrySet().stream().flatMap(e -> {
             String hMethod = e.getKey().getCode();
             return e.getValue().stream().map(definedAction -> {
                 String url = definedAction.getComputed().toString();
                 String info = definedAction.mappingResult();
                 String separator = Stream.generate(() -> " ").limit(5 - hMethod.length()).collect(Collectors.joining("", "", ": "));
-                return new SimpleKeyValue(hMethod + separator + url, info);
+                return new SimpleKeyValue<>(hMethod + separator + url, info);
             });
         }).collect(Collectors.toList());
         String boxedTitleLines = BoxedTitleMessage.produceLeft(kvs);

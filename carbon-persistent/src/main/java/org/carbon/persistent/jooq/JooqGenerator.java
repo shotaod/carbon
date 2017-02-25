@@ -22,17 +22,17 @@ public class JooqGenerator {
     private String password;
     private Class<? extends Driver> driverClass;
     private SQLDialect dialect;
-    private String database;
+    private String schema;
     private String packageName;
     private File outputDir;
 
-    public JooqGenerator(String url, String user, String password, Class<? extends Driver> driverClass, SQLDialect dialect, String database, String packageName, File outputDir) {
+    public JooqGenerator(String url, String user, String password, Class<? extends Driver> driverClass, SQLDialect dialect, String schema, String packageName, File outputDir) {
         this.url = url;
         this.user = user;
         this.password = password;
         this.driverClass = driverClass;
         this.dialect = dialect;
-        this.database = database;
+        this.schema = schema;
         this.packageName = packageName;
         this.outputDir = outputDir;
     }
@@ -54,7 +54,7 @@ public class JooqGenerator {
                     .withName(getJooqDBClassName())
                     .withIncludes(".*")
                     .withExcludes("")
-                    .withInputSchema(database)
+                    .withInputSchema(schema)
                     .withForcedTypes(new ForcedType()
                         .withUserType("java.time.LocalDateTime")
                         .withConverter("org.carbon.persistent.adhoc.LocalDateTimeConverter")

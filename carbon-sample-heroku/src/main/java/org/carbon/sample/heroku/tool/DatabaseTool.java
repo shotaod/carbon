@@ -12,6 +12,7 @@ import org.postgresql.Driver;
 public class DatabaseTool {
     private static String host = "carbon.heroku.rdb";
     private static String db = "d6vh9houtm9ttn";
+    private static String schema = "carbon";
     private static String user = "root";
     private static String password = "password";
     private static Integer port = 25432;
@@ -25,7 +26,7 @@ public class DatabaseTool {
                 password,
                 Driver.class,
                 SQLDialect.POSTGRES,
-                db,
+                schema,
                 "org.carbon.sample.heroku.ext.jooq",
                 new File(dist)
         ).generate();

@@ -24,102 +24,102 @@ import javax.annotation.Generated;
 public interface ISchemaVersion extends Serializable {
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.installed_rank</code>.
+     * Setter for <code>carbon.schema_version.installed_rank</code>.
      */
     public void setInstalledRank(Integer value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.installed_rank</code>.
+     * Getter for <code>carbon.schema_version.installed_rank</code>.
      */
     public Integer getInstalledRank();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.version</code>.
+     * Setter for <code>carbon.schema_version.version</code>.
      */
     public void setVersion(String value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.version</code>.
+     * Getter for <code>carbon.schema_version.version</code>.
      */
     public String getVersion();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.description</code>.
+     * Setter for <code>carbon.schema_version.description</code>.
      */
     public void setDescription(String value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.description</code>.
+     * Getter for <code>carbon.schema_version.description</code>.
      */
     public String getDescription();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.type</code>.
+     * Setter for <code>carbon.schema_version.type</code>.
      */
     public void setType(String value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.type</code>.
+     * Getter for <code>carbon.schema_version.type</code>.
      */
     public String getType();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.script</code>.
+     * Setter for <code>carbon.schema_version.script</code>.
      */
     public void setScript(String value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.script</code>.
+     * Getter for <code>carbon.schema_version.script</code>.
      */
     public String getScript();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.checksum</code>.
+     * Setter for <code>carbon.schema_version.checksum</code>.
      */
     public void setChecksum(Integer value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.checksum</code>.
+     * Getter for <code>carbon.schema_version.checksum</code>.
      */
     public Integer getChecksum();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.installed_by</code>.
+     * Setter for <code>carbon.schema_version.installed_by</code>.
      */
     public void setInstalledBy(String value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.installed_by</code>.
+     * Getter for <code>carbon.schema_version.installed_by</code>.
      */
     public String getInstalledBy();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.installed_on</code>.
+     * Setter for <code>carbon.schema_version.installed_on</code>.
      */
     public void setInstalledOn(Timestamp value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.installed_on</code>.
+     * Getter for <code>carbon.schema_version.installed_on</code>.
      */
     public Timestamp getInstalledOn();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.execution_time</code>.
+     * Setter for <code>carbon.schema_version.execution_time</code>.
      */
     public void setExecutionTime(Integer value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.execution_time</code>.
+     * Getter for <code>carbon.schema_version.execution_time</code>.
      */
     public Integer getExecutionTime();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.success</code>.
+     * Setter for <code>carbon.schema_version.success</code>.
      */
     public void setSuccess(Boolean value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.success</code>.
+     * Getter for <code>carbon.schema_version.success</code>.
      */
     public Boolean getSuccess();
 

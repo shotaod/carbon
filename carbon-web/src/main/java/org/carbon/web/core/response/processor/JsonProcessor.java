@@ -12,19 +12,19 @@ import java.io.IOException;
  */
 @Component
 public class JsonProcessor extends AbstractResponseProcessor {
-
     private ObjectMapper mapper = new ObjectMapper();
+    private Object object;
+
+    public JsonProcessor with(Object object) {
+        this.object = object;
+        return this;
+    }
 
     @Override
-    public boolean process(HttpServletResponse response) {
-        try {
-            response.setContentType("application/json; charset=utf-8");
-            mapper.writeValue(response.getWriter(), this.result);
-            response.setStatus(HttpServletResponse.SC_OK);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public boolean doProcess(HttpServletResponse response) throws Exception {
+        response.setContentType("application/json; charset=utf-8");
+        mapper.writeValue(response.getWriter(), this.object);
+        response.setStatus(HttpServletResponse.SC_OK);
+        return true;
     }
 }

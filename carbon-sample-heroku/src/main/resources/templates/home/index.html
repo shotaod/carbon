@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      layout:decorate="~{/base/layout}">
+<head>
+	<meta charset="UTF-8">
+	<title>Home</title>
+</head>
+<body>
+<section layout:fragment="content">
+	<div class="row">
+		<div class="col s12 m4">
+			<div class="card hoverable light-blue darken-2">
+				<a href="/sample/websocket">
+					<div class="card-content white-text">
+						<span class="card-title">WebSocket</span>
+						<p>
+							This is sample chat application page.
+							You enter display name and room id which represents the private room key.
+							Carbon WebSocket is easy to implement.
+							Enjoy chat application!
+						</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col s12 m4">
+			<div class="card hoverable light-blue darken-2">
+				<a href="/sample/security">
+					<div class="card-content white-text">
+						<span class="card-title">Security</span>
+						<p>
+							This is sample login page and secret contents only for authenticated user.
+							First, you should sign up with any data.
+							Then, you can login and see secret content under '/sample/security'
+						</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col s12 m4">
+			<div class="card hoverable light-blue darken-2">
+				<a href="/about">
+					<div class="card-content white-text">
+						<span class="card-title">About</span>
+						<p>I am a very simple card. I am good at containing small bits of information.
+							I am convenient because I require little markup to use effectively. I am similar to what is called a panel
+							in other frameworks.
+						</p>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+</section>
+</body>
+</html>

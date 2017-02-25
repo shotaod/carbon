@@ -13,7 +13,7 @@ import org.carbon.web.def.HttpMethod;
 public class RootRedirectController {
     @Action(url = "/", method = HttpMethod.GET)
     public HttpOperation redirectToMessage() {
-        return RedirectOperation.to("/login");
+        return RedirectOperation.to("/home");
     }
 
     @Action(url = "/cause/error", method = HttpMethod.GET)

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.carbon.component.ComponentManager;
@@ -57,15 +58,39 @@ public class WebStarter {
     // ===================================================================================
     //                                                                              Public
     //                                                                              ======
-    public void start(Class scanBase) {
-        try {
-            prepare(scanBase);
-        } catch (Exception e) {
-            logger.error("Application StartUp Error", e);
-        }
+    public void start(Class scanBase) throws Exception {
+        start(scanBase,
+                () -> logger.info(ChapterAttr.get("Carbon Initialize Finished")),
+                () -> logger.info(ChapterAttr.get("Carbon Start Running")));
     }
 
-    private void prepare(Class scanBase) throws Exception{
+    public void start(Class scanBase, Runnable onPrepare, Runnable onStart) throws Exception{
+        EmbedServer embedServer;
+        // prepare
+        try {
+            embedServer = prepare(scanBase);
+        } catch (Exception e) {
+            logger.error("Application StartUp Error", e);
+            throw e;
+        }
+
+        onPrepare.run();
+
+        // run
+        try {
+            embedServer.run(scanBase);
+        } catch (Exception e) {
+            logger.error("Application Start running Error", e);
+            throw e;
+        }
+
+        onStart.run();
+
+        // await
+        embedServer.await();
+    }
+
+    private EmbedServer prepare(Class scanBase) throws Exception{
         logger.info(new Logo().logo);
         logger.info(ChapterAttr.get("Carbon Initialize Started"));
 
@@ -93,12 +118,7 @@ public class WebStarter {
 
         // get Server
         InstanceContainer appInstancePool = ApplicationPool.instance.getAppPool();
-        EmbedServer embedServer = appInstancePool.getByType(JettyServerBridge.class);
-        embedServer.run(scanBase);
-
-        logger.info(ChapterAttr.get("Carbon Initialize Finished"));
-
-        embedServer.await();
+        return appInstancePool.getByType(JettyServerBridge.class);
     }
 
     // ===================================================================================

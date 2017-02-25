@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
-import org.carbon.sample.heroku.ext.jooq.D6vh9houtm9ttn;
+import org.carbon.sample.heroku.ext.jooq.Carbon;
 import org.carbon.sample.heroku.ext.jooq.Keys;
 import org.carbon.sample.heroku.ext.jooq.tables.records.UserRecord;
 import org.jooq.Field;
@@ -34,10 +34,10 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = -730674180;
+    private static final long serialVersionUID = 438918788;
 
     /**
-     * The reference instance of <code>d6vh9houtm9ttn.user</code>
+     * The reference instance of <code>carbon.user</code>
      */
     public static final User USER = new User();
 
@@ -50,34 +50,34 @@ public class User extends TableImpl<UserRecord> {
     }
 
     /**
-     * The column <code>d6vh9houtm9ttn.user.id</code>.
+     * The column <code>carbon.user.id</code>.
      */
-    public final TableField<UserRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('d6vh9houtm9ttn.user_id_seq'::regclass)", org.jooq.impl.SQLDataType.BIGINT)), this, "");
+    public final TableField<UserRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('carbon.user_id_seq'::regclass)", org.jooq.impl.SQLDataType.BIGINT)), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.user.email</code>.
+     * The column <code>carbon.user.email</code>.
      */
     public final TableField<UserRecord, String> EMAIL = createField("email", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.user.user_name</code>.
+     * The column <code>carbon.user.user_name</code>.
      */
     public final TableField<UserRecord, String> USER_NAME = createField("user_name", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>d6vh9houtm9ttn.user.password</code>.
+     * The column <code>carbon.user.password</code>.
      */
     public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(65).nullable(false), this, "");
 
     /**
-     * Create a <code>d6vh9houtm9ttn.user</code> table reference
+     * Create a <code>carbon.user</code> table reference
      */
     public User() {
         this("user", null);
     }
 
     /**
-     * Create an aliased <code>d6vh9houtm9ttn.user</code> table reference
+     * Create an aliased <code>carbon.user</code> table reference
      */
     public User(String alias) {
         this(alias, USER);
@@ -96,7 +96,7 @@ public class User extends TableImpl<UserRecord> {
      */
     @Override
     public Schema getSchema() {
-        return D6vh9houtm9ttn.D6VH9HOUTM9TTN;
+        return Carbon.CARBON;
     }
 
     /**
@@ -120,7 +120,7 @@ public class User extends TableImpl<UserRecord> {
      */
     @Override
     public List<UniqueKey<UserRecord>> getKeys() {
-        return Arrays.<UniqueKey<UserRecord>>asList(Keys.USER_PKEY);
+        return Arrays.<UniqueKey<UserRecord>>asList(Keys.USER_PKEY, Keys.USER_EMAIL_KEY);
     }
 
     /**

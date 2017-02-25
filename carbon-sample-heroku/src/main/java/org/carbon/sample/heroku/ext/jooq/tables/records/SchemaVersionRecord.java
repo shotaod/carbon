@@ -30,10 +30,10 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord> implements Record10<Integer, String, String, String, String, Integer, String, Timestamp, Integer, Boolean>, ISchemaVersion {
 
-    private static final long serialVersionUID = 36359780;
+    private static final long serialVersionUID = -1839535376;
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.installed_rank</code>.
+     * Setter for <code>carbon.schema_version.installed_rank</code>.
      */
     @Override
     public void setInstalledRank(Integer value) {
@@ -41,7 +41,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.installed_rank</code>.
+     * Getter for <code>carbon.schema_version.installed_rank</code>.
      */
     @Override
     public Integer getInstalledRank() {
@@ -49,7 +49,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.version</code>.
+     * Setter for <code>carbon.schema_version.version</code>.
      */
     @Override
     public void setVersion(String value) {
@@ -57,7 +57,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.version</code>.
+     * Getter for <code>carbon.schema_version.version</code>.
      */
     @Override
     public String getVersion() {
@@ -65,7 +65,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.description</code>.
+     * Setter for <code>carbon.schema_version.description</code>.
      */
     @Override
     public void setDescription(String value) {
@@ -73,7 +73,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.description</code>.
+     * Getter for <code>carbon.schema_version.description</code>.
      */
     @Override
     public String getDescription() {
@@ -81,7 +81,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.type</code>.
+     * Setter for <code>carbon.schema_version.type</code>.
      */
     @Override
     public void setType(String value) {
@@ -89,7 +89,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.type</code>.
+     * Getter for <code>carbon.schema_version.type</code>.
      */
     @Override
     public String getType() {
@@ -97,7 +97,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.script</code>.
+     * Setter for <code>carbon.schema_version.script</code>.
      */
     @Override
     public void setScript(String value) {
@@ -105,7 +105,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.script</code>.
+     * Getter for <code>carbon.schema_version.script</code>.
      */
     @Override
     public String getScript() {
@@ -113,7 +113,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.checksum</code>.
+     * Setter for <code>carbon.schema_version.checksum</code>.
      */
     @Override
     public void setChecksum(Integer value) {
@@ -121,7 +121,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.checksum</code>.
+     * Getter for <code>carbon.schema_version.checksum</code>.
      */
     @Override
     public Integer getChecksum() {
@@ -129,7 +129,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.installed_by</code>.
+     * Setter for <code>carbon.schema_version.installed_by</code>.
      */
     @Override
     public void setInstalledBy(String value) {
@@ -137,7 +137,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.installed_by</code>.
+     * Getter for <code>carbon.schema_version.installed_by</code>.
      */
     @Override
     public String getInstalledBy() {
@@ -145,7 +145,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.installed_on</code>.
+     * Setter for <code>carbon.schema_version.installed_on</code>.
      */
     @Override
     public void setInstalledOn(Timestamp value) {
@@ -153,7 +153,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.installed_on</code>.
+     * Getter for <code>carbon.schema_version.installed_on</code>.
      */
     @Override
     public Timestamp getInstalledOn() {
@@ -161,7 +161,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.execution_time</code>.
+     * Setter for <code>carbon.schema_version.execution_time</code>.
      */
     @Override
     public void setExecutionTime(Integer value) {
@@ -169,7 +169,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.execution_time</code>.
+     * Getter for <code>carbon.schema_version.execution_time</code>.
      */
     @Override
     public Integer getExecutionTime() {
@@ -177,7 +177,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.schema_version.success</code>.
+     * Setter for <code>carbon.schema_version.success</code>.
      */
     @Override
     public void setSuccess(Boolean value) {
@@ -185,7 +185,7 @@ public class SchemaVersionRecord extends UpdatableRecordImpl<SchemaVersionRecord
     }
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.schema_version.success</code>.
+     * Getter for <code>carbon.schema_version.success</code>.
      */
     @Override
     public Boolean getSuccess() {

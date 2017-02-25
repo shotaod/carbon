@@ -83,11 +83,11 @@ public class ConfigHolder {
     }
 
     public void logResult() {
-        List<SimpleKeyValue> kvs = flatConfig.stream().map(conf -> {
+        List<SimpleKeyValue<String, ?>> kvs = flatConfig.stream().map(conf -> {
             Object value;
             if (conf.getError() != null) value = conf.getError();
             else value = conf.getValue();
-            return new SimpleKeyValue(conf.getKey(), value);
+            return new SimpleKeyValue<>(conf.getKey(), value);
         }).collect(Collectors.toList());
         String boxedLines = BoxedTitleMessage.produceLeft(kvs);
         String info = ChapterAttr.getBuilder("Configuration Result").appendLine(boxedLines).toString();

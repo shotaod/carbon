@@ -23,42 +23,42 @@ import javax.annotation.Generated;
 public interface IUser extends Serializable {
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.user.id</code>.
+     * Setter for <code>carbon.user.id</code>.
      */
     public void setId(Long value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.user.id</code>.
+     * Getter for <code>carbon.user.id</code>.
      */
     public Long getId();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.user.email</code>.
+     * Setter for <code>carbon.user.email</code>.
      */
     public void setEmail(String value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.user.email</code>.
+     * Getter for <code>carbon.user.email</code>.
      */
     public String getEmail();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.user.user_name</code>.
+     * Setter for <code>carbon.user.user_name</code>.
      */
     public void setUserName(String value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.user.user_name</code>.
+     * Getter for <code>carbon.user.user_name</code>.
      */
     public String getUserName();
 
     /**
-     * Setter for <code>d6vh9houtm9ttn.user.password</code>.
+     * Setter for <code>carbon.user.password</code>.
      */
     public void setPassword(String value);
 
     /**
-     * Getter for <code>d6vh9houtm9ttn.user.password</code>.
+     * Getter for <code>carbon.user.password</code>.
      */
     public String getPassword();
 

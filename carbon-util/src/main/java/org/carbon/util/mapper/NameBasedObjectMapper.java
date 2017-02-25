@@ -152,7 +152,7 @@ public class NameBasedObjectMapper {
                 Constructor<T> constructor = type.getDeclaredConstructor(parentIfAny.getClass());
                 return constructor.newInstance(parentIfAny);
             } catch (NoSuchMethodException ignore) {
-                // it is possible that Type is static inner class
+                // it is possible when type is 'static inner class'
                 // try type.newInstance()
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
