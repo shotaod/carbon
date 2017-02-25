@@ -21,9 +21,6 @@ import org.slf4j.LoggerFactory;
  */
 public class DependencyInjector {
 
-    // ===================================================================================
-    //                                                                          Logger
-    //                                                                          ==========
     private Logger logger = LoggerFactory.getLogger(DependencyInjector.class);
 
     public Map<Class, Object> inject(Map<Class, Object> singletons, Map<Class, Object> candidate) {
