@@ -4,11 +4,14 @@ import java.util.Optional;
 
 import org.carbon.persistent.PersistentModuleConfigurer;
 import org.carbon.web.WebStarter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Shota Oda 2017/02/12
  */
 public class SampleHerokuStarter {
+    private static Logger logger = LoggerFactory.getLogger(SampleHerokuStarter.class);
     public static void main(String[] args) throws Exception {
         WebStarter starter = new WebStarter();
         starter.setConfig(getConf());
@@ -17,9 +20,10 @@ public class SampleHerokuStarter {
     }
 
     private static String getConf() {
-        System.out.println(System.getProperty("running"));
+        String confProperty = System.getProperty("running");
+        logger.info("Running Mode [{}]", confProperty);
         return Optional.ofNullable(System.getProperty("running")).map(running -> {
-            switch (running) {
+            switch (confProperty) {
                 case "local":
                     return "config-local";
                 case "heroku":

@@ -1,20 +1,22 @@
 package org.carbon.component;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
+import org.carbon.component.construct.ClassConstructor;
 import org.carbon.component.exception.IllegalDependencyException;
 import org.carbon.component.exception.PackageScanException;
-import org.carbon.component.construct.ClassConstructor;
 import org.carbon.component.inject.DependencyInjector;
 import org.carbon.component.scan.TargetBaseScanner;
 import org.carbon.util.format.ChapterAttr;
@@ -108,31 +110,48 @@ public class ComponentManager {
     }
 
     public void loggingDependencies(Map<Class, Object> instances) {
-        StringLineBuilder sb = ChapterAttr.getBuilder("Injection Result");
-        instances.entrySet().stream()
-                .sorted((e1, e2) -> e1.getKey().getName().toLowerCase().compareTo(e2.getKey().getName().toLowerCase()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (can1, can2) -> can1,
-                        LinkedHashMap::new))
-                .forEach((k, v) -> {
-                    this.showDependencies(sb, k, 0);
-                });
+        StringLineBuilder sb = ChapterAttr.getBuilder("Injection Result").appendLine("ApplicationRoot");
+        List<Class> sortedInstance = instances.entrySet().stream()
+                .map(Map.Entry::getKey)
+                .sorted((e1, e2) -> e1.getName().toLowerCase().compareTo(e2.getName().toLowerCase()))
+                .collect(Collectors.toList());
+        sortedInstance
+                .stream()
+                .limit(sortedInstance.size() - 1)
+                .forEach(clazz -> showDependencies(sb, clazz, Collections.singletonList(false)));
+        Class last = sortedInstance.get(sortedInstance.size() - 1);
+        showDependencies(sb, last, Collections.singletonList(true));
         logger.debug(sb.toString());
     }
 
-    private StringLineBuilder showDependencies(StringLineBuilder sb, Class clazz, Integer depth) {
-        String space = Stream.generate(() -> "    ").limit(depth).collect(Collectors.joining());
-        if (depth > 0) {
-            space += (" └─ ");
+    private StringLineBuilder showDependencies(StringLineBuilder sb, Class clazz, List<Boolean> isClosedList) {
+        String closed = "   ";
+        String notClosed = "│  ";
+        String last = "└─ ";
+        String notLast = "├─ ";
+        if (!isClosedList.isEmpty()) {
+            if (isClosedList.size() > 1) {
+                String row = isClosedList.subList(0, isClosedList.size() - 1).stream().map(isClosed -> isClosed ? closed : notClosed).collect(Collectors.joining());
+                sb.append(row);
+            }
+            sb.append(isClosedList.get(isClosedList.size() - 1) ? last : notLast);
+            sb.appendLine(clazz.getName());
         }
-        sb.appendLine(space + clazz.getName());
-        Arrays.stream(clazz.getDeclaredFields())
+        List<Field> injectField = Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Inject.class))
-                .forEach(field -> {
-                    showDependencies(sb, field.getType(), depth + 1);
-                });
-        return sb;
+                .collect(Collectors.toList());
+        if (injectField.isEmpty()) return sb;
+        else if (injectField.size() > 1) {
+            ArrayList<Boolean> copy = new ArrayList<>(isClosedList);
+            copy.add(false);
+            injectField
+                    .stream()
+                    .limit(injectField.size() - 1)
+                    .forEach(field -> showDependencies(sb, field.getType(), copy));
+        }
+        Field lastField = injectField.get(injectField.size() - 1);
+        ArrayList<Boolean> copy = new ArrayList<>(isClosedList);
+        copy.add(true);
+        return showDependencies(sb, lastField.getType(), copy);
     }
 }
