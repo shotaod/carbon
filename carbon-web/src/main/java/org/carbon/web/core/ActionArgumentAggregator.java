@@ -1,5 +1,19 @@
 package org.carbon.web.core;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.util.mapper.NameBasedObjectMapper;
@@ -11,26 +25,12 @@ import org.carbon.web.annotation.Validate;
 import org.carbon.web.container.ArgumentMeta;
 import org.carbon.web.container.ExecutableAction;
 import org.carbon.web.container.PathVariableValues;
-import org.carbon.web.context.ApplicationPool;
-import org.carbon.web.context.RequestContainer;
-import org.carbon.web.context.session.SessionContainer;
+import org.carbon.web.context.app.ApplicationContext;
+import org.carbon.web.context.request.RequestContext;
+import org.carbon.web.context.session.SessionContext;
 import org.carbon.web.core.request.RequestMapper;
 import org.carbon.web.core.validation.SimpleValidationResult;
 import org.carbon.web.core.validation.ValidationResult;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Shota Oda 2016/10/11.
@@ -38,18 +38,18 @@ import java.util.stream.Collectors;
 @Component
 public class ActionArgumentAggregator {
 
+    private ApplicationContext applicationContext = ApplicationContext.instance;
     @Inject
     private RequestMapper requestMapper;
     @Inject
     private Validator validator;
     @Inject
-    private RequestContainer requestPool;
+    private RequestContext requestContext;
     @Inject
-    private SessionContainer sessionPool;
+    private SessionContext sessionContext;
 
     private PathVariableValues pathVariableValues;
     private NameBasedObjectMapper objectMapper = new NameBasedObjectMapper();
-    private ApplicationPool pool = ApplicationPool.instance;
 
     public ActionArgumentAggregator with(PathVariableValues pathVariableValues) {
         this.pathVariableValues = pathVariableValues;
@@ -59,18 +59,18 @@ public class ActionArgumentAggregator {
     public <T> T find(Class<T> type, InstanceSource source) {
         switch (source) {
             case Request:
-                return requestPool.getByType(type);
+                return requestContext.getByType(type);
             case Session:
-                return sessionPool.getByType(type).orElse(null);
+                return sessionContext.getByType(type).orElse(null);
             case Application:
-                return pool.getAppPool().getByType(type);
+                return applicationContext.getByType(type);
             default:
                 return null;
         }
     }
 
     public ExecutableAction resolve(Method method, Object instance) {
-        HttpServletRequest request = requestPool.getByType(HttpServletRequest.class);
+        HttpServletRequest request = requestContext.getByType(HttpServletRequest.class);
 
         List<Parameter> parameters = Arrays.asList(method.getParameters());
 
@@ -90,7 +90,7 @@ public class ActionArgumentAggregator {
             } else if (parameter.isAnnotationPresent(RequestBody.class)) {
                 resolved = mapRequestBody(request, paramType);
             } else if (parameter.isAnnotationPresent(Session.class)) {
-                resolved = sessionPool.getByType(paramType).orElse(null);
+                resolved = sessionContext.getByType(paramType).orElse(null);
             } else if (ValidationResult.class.isAssignableFrom(paramType)) {
                 ValidationResult vr;
                 if (paramType.equals(SimpleValidationResult.class)) {
@@ -100,7 +100,7 @@ public class ActionArgumentAggregator {
                 }
                 resolved = vr;
             } else {
-                resolved = pool.getAppPool().getByType(paramType);
+                resolved = applicationContext.getByType(paramType);
             }
 
             resolvedArguments.put(paramName, new ArgumentMeta(parameter, resolved));

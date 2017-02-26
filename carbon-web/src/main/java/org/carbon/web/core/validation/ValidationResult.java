@@ -1,7 +1,7 @@
 package org.carbon.web.core.validation;
 
-import javax.validation.ConstraintViolation;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
 
 /**
  * @author Shota Oda 2016/12/11.

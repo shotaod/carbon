@@ -14,7 +14,7 @@ import org.jooq.impl.DefaultDSLContext;
  * @author Shota Oda 2016/11/26.
  */
 @Configuration
-public class JooqConfigurer {
+public class JooqConfiguration {
     @Inject
     private DataSource dataSource;
 

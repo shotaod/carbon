@@ -17,10 +17,6 @@ public class InstanceContainer {
         this.instances = instances;
     }
 
-    public Map<Class, Object> getInstances() {
-        return instances;
-    }
-
     @SuppressWarnings("unchecked")
     public void set(Object object, Class typeAs) {
         boolean assignableFrom = typeAs.isAssignableFrom(object.getClass());

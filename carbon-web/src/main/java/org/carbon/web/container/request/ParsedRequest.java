@@ -1,8 +1,8 @@
 package org.carbon.web.container.request;
 
-import org.carbon.web.def.HttpMethod;
-
 import javax.servlet.http.HttpServletRequest;
+
+import org.carbon.web.def.HttpMethod;
 
 /**
  * @author Shota Oda 2016/10/12.

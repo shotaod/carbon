@@ -1,12 +1,12 @@
 package org.carbon.web.core.response.processor;
 
-import org.carbon.web.core.response.AbstractResponseProcessor;
-import org.carbon.web.core.response.HtmlResponse;
+import javax.servlet.http.HttpServletResponse;
+
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
+import org.carbon.web.core.response.AbstractResponseProcessor;
+import org.carbon.web.core.response.HtmlResponse;
 import org.carbon.web.core.response.template.TemplateEngineWrapper;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Shota Oda 2016/10/14.

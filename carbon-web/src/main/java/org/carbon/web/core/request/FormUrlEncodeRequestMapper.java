@@ -1,16 +1,15 @@
 package org.carbon.web.core.request;
 
-import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-import org.carbon.util.mapper.NameBasedObjectMapper;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+
+import org.carbon.component.annotation.Component;
+import org.carbon.util.mapper.NameBasedObjectMapper;
 
 /**
  * @author Shota Oda 2016/11/29.

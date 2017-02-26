@@ -1,7 +1,7 @@
 package org.carbon.web.auth;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Shota Oda 2016/11/03.

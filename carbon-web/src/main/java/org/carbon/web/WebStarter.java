@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.carbon.component.ComponentManager;
@@ -15,12 +14,11 @@ import org.carbon.modular.ModuleConfigurer;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.util.mapper.ConfigHolder;
 import org.carbon.web.conf.WebProperty;
-import org.carbon.web.context.ActionDefinitionContainer;
-import org.carbon.web.context.ApplicationPool;
 import org.carbon.web.context.InstanceContainer;
-import org.carbon.web.context.SecurityContainer;
-import org.carbon.web.core.SecurityConfigurator;
-import org.carbon.web.core.mapping.ActionMapper;
+import org.carbon.web.exception.ApplicationStartException;
+import org.carbon.web.mapping.ActionMappingContext;
+import org.carbon.web.context.app.ApplicationContext;
+import org.carbon.web.mapping.ActionMappingConfiguration;
 import org.carbon.web.def.Logo;
 import org.carbon.web.server.EmbedServer;
 import org.carbon.web.server.jetty.JettyServerBridge;
@@ -42,9 +40,11 @@ public class WebStarter {
     //                                                                          ==========
     private String config = "config";
     private List<Class<? extends ModuleConfigurer>> moduleConfigurers = new ArrayList<>();
+
     public void setConfig(String config) {
         this.config = config;
     }
+
     @SafeVarargs
     public final void setModuleConfigurers(Class<? extends ModuleConfigurer>... moduleConfigurers) {
         this.moduleConfigurers = Arrays.asList(moduleConfigurers);
@@ -64,14 +64,13 @@ public class WebStarter {
                 () -> logger.info(ChapterAttr.get("Carbon Start Running")));
     }
 
-    public void start(Class scanBase, Runnable onPrepare, Runnable onStart) throws Exception{
+    public void start(Class scanBase, Runnable onPrepare, Runnable onStart) throws Exception {
         EmbedServer embedServer;
         // prepare
         try {
             embedServer = prepare(scanBase);
         } catch (Exception e) {
-            logger.error("Application StartUp Error", e);
-            throw e;
+            throw new ApplicationStartException("Application StartUp Error", e);
         }
 
         onPrepare.run();
@@ -80,8 +79,7 @@ public class WebStarter {
         try {
             embedServer.run(scanBase);
         } catch (Exception e) {
-            logger.error("Application Start running Error", e);
-            throw e;
+            throw new ApplicationStartException("Application Start running Error", e);
         }
 
         onStart.run();
@@ -90,13 +88,13 @@ public class WebStarter {
         embedServer.await();
     }
 
-    private EmbedServer prepare(Class scanBase) throws Exception{
+    private EmbedServer prepare(Class scanBase) throws Exception {
         logger.info(new Logo().logo);
         logger.info(ChapterAttr.get("Carbon Initialize Started"));
 
         Map<Class, Object> dependency = new HashMap<>();
 
-        ConfigHolder configHolder = new ConfigHolder(config +".yml");
+        ConfigHolder configHolder = new ConfigHolder(config + ".yml");
         dependency.put(ConfigHolder.class, configHolder);
 
         // resolve external module
@@ -111,14 +109,11 @@ public class WebStarter {
         WebProperty webProperty = configHolder.findOne("web", WebProperty.class).get();
         dependency.put(WebProperty.class, webProperty);
 
-        resolveDependency(scanBase, moduleClasses, dependency);
+        InstanceContainer appInstances = resolveDependency(scanBase, moduleClasses, dependency);
 
-        setupWeb();
-        setupSecurity();
+        ApplicationContext.init(appInstances);
 
-        // get Server
-        InstanceContainer appInstancePool = ApplicationPool.instance.getAppPool();
-        return appInstancePool.getByType(JettyServerBridge.class);
+        return appInstances.getByType(JettyServerBridge.class);
     }
 
     // ===================================================================================
@@ -136,7 +131,7 @@ public class WebStarter {
                 .collect(Collectors.toSet());
     }
 
-    private void resolveDependency(Class scanBase, Set<Class> configurations, Map<Class, Object> dependency) throws Exception{
+    private InstanceContainer resolveDependency(Class scanBase, Set<Class> configurations, Map<Class, Object> dependency) throws Exception {
         // load component -> create component
         Set<Class<?>> frameworkManaged = componentManager.scanComponent(ConfigurationBase.class);
         Set<Class<?>> clientManaged = componentManager.scanComponent(scanBase);
@@ -147,22 +142,6 @@ public class WebStarter {
         allManaged.addAll(configurations);
 
         Map<Class, Object> instances = componentManager.generate(allManaged, dependency);
-        ApplicationPool.instance.setPool(instances);
-    }
-
-    private void setupWeb() {
-        ApplicationPool app = ApplicationPool.instance;
-        InstanceContainer appInstances = app.getAppPool();
-        ActionMapper actionMapper = appInstances.getByType(ActionMapper.class);
-        ActionDefinitionContainer actions = actionMapper.map(appInstances.getInstances().values().stream().collect(Collectors.toList()));
-        app.setPool(actions);
-    }
-
-    private void setupSecurity() {
-        InstanceContainer appInstances = ApplicationPool.instance.getAppPool();
-        SecurityConfigurator securityConfigurator = appInstances.getByType(SecurityConfigurator.class);
-        SecurityContainer securities = securityConfigurator.map(appInstances.getInstances());
-
-        ApplicationPool.instance.setPool(securities);
+        return new InstanceContainer(instances);
     }
 }

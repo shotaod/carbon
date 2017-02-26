@@ -1,23 +1,23 @@
 package org.carbon.web.core;
 
-import org.carbon.component.annotation.Inject;
-import org.carbon.web.auth.AuthSessionManager;
-import org.carbon.web.auth.AuthStrategy;
-import org.carbon.web.context.SecurityContainer;
-import org.carbon.web.context.session.SessionContainer;
-import org.carbon.web.def.HttpMethod;
-import org.carbon.web.util.ResponseUtil;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Inject;
 import org.carbon.web.auth.AuthEventListener;
 import org.carbon.web.auth.AuthIdentity;
 import org.carbon.web.auth.AuthRequestMapper;
+import org.carbon.web.auth.AuthSessionManager;
+import org.carbon.web.auth.AuthStrategy;
+import org.carbon.web.auth.AuthStrategyContext;
+import org.carbon.web.context.session.SessionContext;
+import org.carbon.web.def.HttpMethod;
 import org.carbon.web.exception.UserIdentityNotFoundException;
+import org.carbon.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 /**
  * @author Shota Oda 2016/10/27.
@@ -28,20 +28,21 @@ public class Authenticator {
     private Logger logger = LoggerFactory.getLogger(Authenticator.class);
 
     @Inject
-    private SessionContainer session;
+    private SessionContext session;
+    @Inject
+    private AuthStrategyContext authStrategyContext;
 
     /**
      * @return true if authorized, false if not.
      */
-    public boolean authenticate(SecurityContainer securityContainer,
-                                HttpServletRequest request,
+    public boolean authenticate(HttpServletRequest request,
                                 HttpServletResponse response) {
         logger.debug("[start  ] -> request: {}", request.getPathInfo());
 
         // -----------------------------------------------------
         //                                               Check where Security need or not
         //                                               -------
-        if (!securityContainer.existSecurity()) {
+        if (!authStrategyContext.existSecurity()) {
             logger.debug("[end    ] -> No Security in web app");
             return true;
         }
@@ -50,7 +51,7 @@ public class Authenticator {
         //                                               Find Security Strategy
         //                                               -------
         String requestPath = Optional.ofNullable(request.getPathInfo()).orElse("");
-        Optional<AuthStrategy<? extends AuthIdentity>> strategyOp = securityContainer.getStrategies().stream()
+        Optional<AuthStrategy<? extends AuthIdentity>> strategyOp = authStrategyContext.getStrategies().stream()
                 .filter(strategy -> requestPath.startsWith(strategy.getBaseUrl()))
                 .findFirst();
 

@@ -1,15 +1,15 @@
 package org.carbon.web.handler;
 
-import org.carbon.component.annotation.Inject;
-import org.carbon.component.annotation.Component;
-import org.carbon.web.context.session.SessionContainer;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Inject;
+import org.carbon.web.context.session.SessionContext;
 
 /**
  * @author Shota Oda 2016/10/17.
@@ -26,7 +26,7 @@ public class SessionScopeChain extends HttpScopeChain{
     };
 
     @Inject
-    private SessionContainer sessionContainer;
+    private SessionContext sessionContext;
 
     @Override
     protected void in(HttpServletRequest request, HttpServletResponse response) {
@@ -39,7 +39,7 @@ public class SessionScopeChain extends HttpScopeChain{
                     tmpSessionKey.set(Optional.of(uuid));
                     return uuid;
                 });
-        sessionContainer.setSessionKey(sessionKey);
+        sessionContext.setSessionKey(sessionKey);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class SessionScopeChain extends HttpScopeChain{
             });
         } finally {
             tmpSessionKey.remove();
-            sessionContainer.clear();
+            sessionContext.clear();
         }
     }
 }

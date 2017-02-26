@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-import org.carbon.web.context.RequestContainer;
+import org.carbon.web.context.request.RequestContext;
 import org.carbon.web.core.response.HtmlResponse;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -22,7 +22,7 @@ public class TemplateEngineWrapper {
     @Inject
     private TemplateEngine templateEngine;
     @Inject
-    private RequestContainer requestPool;
+    private RequestContext requestPool;
 
     public void run(HtmlResponse source, HttpServletResponse response) throws IOException{
         ContextHandler.Context context = WebAppContext.getCurrentContext();

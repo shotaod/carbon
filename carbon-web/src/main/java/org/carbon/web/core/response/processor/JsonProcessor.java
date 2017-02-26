@@ -1,11 +1,10 @@
 package org.carbon.web.core.response.processor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.carbon.web.core.response.AbstractResponseProcessor;
-import org.carbon.component.annotation.Component;
-
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.carbon.component.annotation.Component;
+import org.carbon.web.core.response.AbstractResponseProcessor;
 
 /**
  * @author Shota Oda 2016/10/14.

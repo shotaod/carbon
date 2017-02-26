@@ -1,6 +1,13 @@
-package org.carbon.web.core.mapping;
+package org.carbon.web.mapping;
+
+import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
@@ -9,16 +16,10 @@ import org.carbon.web.core.ActionArgumentAggregator;
 import org.carbon.web.core.PathVariableResolver;
 import org.carbon.web.def.HttpMethod;
 
-import java.lang.reflect.Method;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 /**
  * @author Shota Oda 2017/01/04.
  */
-@Component
+@Configuration
 public class ControllerActionFactory {
 
     private static class ControllerAction extends ActionDefinition {

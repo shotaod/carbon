@@ -1,9 +1,9 @@
 package org.carbon.web.ws;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketFactory;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Shota Oda 2017/01/06.

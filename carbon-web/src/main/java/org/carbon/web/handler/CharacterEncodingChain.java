@@ -1,9 +1,9 @@
 package org.carbon.web.handler;
 
-import org.carbon.component.annotation.Component;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.carbon.component.annotation.Component;
 
 /**
  * @author Shota Oda 2016/10/22.

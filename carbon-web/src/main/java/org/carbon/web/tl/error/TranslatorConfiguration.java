@@ -7,7 +7,7 @@ import org.carbon.web.conf.WebProperty;
 import org.carbon.web.core.response.processor.HtmlProcessor;
 
 /**
- * @author ubuntu 2017/02/19.
+ * @author Shota Oda 2017/02/19.
  */
 @Configuration
 public class TranslatorConfiguration {

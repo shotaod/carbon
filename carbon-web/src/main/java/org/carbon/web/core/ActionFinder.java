@@ -1,16 +1,17 @@
 package org.carbon.web.core;
 
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+
 import org.carbon.component.annotation.Component;
-import org.carbon.web.container.RequestAssociatedAction;
+import org.carbon.component.annotation.Inject;
 import org.carbon.web.container.ComputedUrl;
 import org.carbon.web.container.PathVariableValues;
-import org.carbon.web.context.ActionDefinitionContainer;
-import org.carbon.web.core.mapping.ActionDefinition;
+import org.carbon.web.container.RequestAssociatedAction;
+import org.carbon.web.mapping.ActionMappingContext;
+import org.carbon.web.mapping.ActionDefinition;
 import org.carbon.web.def.HttpMethod;
 import org.carbon.web.exception.ActionNotFoundException;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author Shota Oda 2016/10/07.
@@ -51,17 +52,20 @@ public class ActionFinder {
         }
     }
 
-    public RequestAssociatedAction find(HttpServletRequest request, ActionDefinitionContainer container) {
+    @Inject
+    private ActionMappingContext actionMappingContext;
+
+    public RequestAssociatedAction find(HttpServletRequest request) {
         // classify by HttpMethod
-        List<ActionDefinition> actionDefinitions = filterByHttpMethod(request, container);
+        List<ActionDefinition> actionDefinitions = filterByHttpMethod(request);
 
         // map Action by Url
         return findAction(request, actionDefinitions);
     }
 
-    private List<ActionDefinition> filterByHttpMethod(HttpServletRequest request, ActionDefinitionContainer container) {
+    private List<ActionDefinition> filterByHttpMethod(HttpServletRequest request) {
         HttpMethod httpMethod = HttpMethod.codeOf(request.getMethod());
-        return container.getContainer().get(httpMethod);
+        return actionMappingContext.getByHttpMethod(httpMethod);
     }
 
     private RequestAssociatedAction findAction(HttpServletRequest request, List<ActionDefinition> actionDefinitions) {

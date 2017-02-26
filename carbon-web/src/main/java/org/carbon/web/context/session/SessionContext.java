@@ -1,26 +1,28 @@
 package org.carbon.web.context.session;
 
+import java.util.Optional;
+
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-
-import java.util.Optional;
+import org.carbon.web.context.Context;
 
 /**
  * @author Shota Oda 2016/10/12.
  */
 @Component
-public class SessionContainer {
+public class SessionContext implements Context {
     private static ThreadLocal<String> sessionKey = new ThreadLocal<String>() {
         @Override
         protected String initialValue() {
             return "";
         }
     };
+
     @Inject(optional = true)
     private SessionStore sessionStore = new InMemorySessionStore();
 
     public void setSessionKey(String sessionKey) {
-        SessionContainer.sessionKey.set(sessionKey);
+        SessionContext.sessionKey.set(sessionKey);
     }
 
     public void setObject(Object object) {

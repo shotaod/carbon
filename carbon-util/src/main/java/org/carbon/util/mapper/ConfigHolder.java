@@ -79,7 +79,9 @@ public class ConfigHolder {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        logResult();
+        if (logger.isInfoEnabled()) {
+            logResult();
+        }
     }
 
     public void logResult() {
@@ -88,7 +90,7 @@ public class ConfigHolder {
             if (conf.getError() != null) value = conf.getError();
             else value = conf.getValue();
             return new SimpleKeyValue<>(conf.getKey(), value);
-        }).collect(Collectors.toList());
+        }).sorted((kvs1,kvs2)->kvs1.getKey().compareTo(kvs2.getKey())).collect(Collectors.toList());
         String boxedLines = BoxedTitleMessage.produceLeft(kvs);
         String info = ChapterAttr.getBuilder("Configuration Result").appendLine(boxedLines).toString();
         logger.info(info);

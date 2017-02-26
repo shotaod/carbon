@@ -1,13 +1,13 @@
 package org.carbon.web.ws;
 
-import org.carbon.util.SimpleKeyValue;
-import org.carbon.util.format.BoxedTitleMessage;
-import org.carbon.util.format.StringLineBuilder;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.carbon.util.SimpleKeyValue;
+import org.carbon.util.format.BoxedTitleMessage;
+import org.carbon.util.format.StringLineBuilder;
 
 /**
  * @author Shota Oda 2017/01/02.

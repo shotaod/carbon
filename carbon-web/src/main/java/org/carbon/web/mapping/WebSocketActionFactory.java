@@ -1,6 +1,18 @@
-package org.carbon.web.core.mapping;
+package org.carbon.web.mapping;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.annotation.Channeled;
 import org.carbon.web.annotation.OnClose;
@@ -19,21 +31,10 @@ import org.carbon.web.ws.WebSocketAcceptorFactory;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 /**
  * @author Shota Oda 2017/01/04.
  */
-@Component
+@Configuration
 public class WebSocketActionFactory {
 
     private static class AdapterAction extends ActionDefinition {

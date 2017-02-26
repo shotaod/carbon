@@ -1,9 +1,9 @@
 package org.carbon.web.core.request;
 
+import java.util.Optional;
+
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-
-import java.util.Optional;
 
 /**
  * @author Shota Oda 2016/11/29.

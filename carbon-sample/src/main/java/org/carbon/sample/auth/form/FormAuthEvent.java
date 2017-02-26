@@ -4,7 +4,7 @@ import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.sample.web.session.SessionInfo;
 import org.carbon.web.auth.AuthEventListener;
-import org.carbon.web.context.session.SessionContainer;
+import org.carbon.web.context.session.SessionContext;
 import org.carbon.web.util.ResponseUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 @Component
 public class FormAuthEvent implements AuthEventListener {
     @Inject
-    private SessionContainer sessionContainer;
+    private SessionContext sessionContext;
     @Override
-    public void onAuth(String username, SessionContainer sessionContainer) {
+    public void onAuth(String username, SessionContext sessionContext) {
         SessionInfo sessionInfo = new SessionInfo();
         sessionInfo.setUsername(username);
         sessionInfo.setDateTime(LocalDateTime.now());
-        sessionContainer.setObject(sessionInfo);
+        sessionContext.setObject(sessionInfo);
     }
 
     @Override

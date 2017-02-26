@@ -1,22 +1,15 @@
 package org.carbon.web.conf;
 
-import nz.net.ultraq.thymeleaf.LayoutDialect;
-import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Configuration;
-import org.carbon.component.annotation.Inject;
-import org.carbon.util.mapper.NameBasedObjectMapper;
-import org.carbon.web.context.session.InMemorySessionStore;
-import org.carbon.web.context.session.RedisSessionStore;
-import org.carbon.web.context.session.SessionStore;
-import org.carbon.web.tl.error.HttpErrorTranslator;
-import org.carbon.web.tl.error.MinimumHtmlTranslator;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+
+import nz.net.ultraq.thymeleaf.LayoutDialect;
+import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Configuration;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 
 /**

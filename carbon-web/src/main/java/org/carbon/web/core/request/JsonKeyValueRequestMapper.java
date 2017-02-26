@@ -1,12 +1,12 @@
 package org.carbon.web.core.request;
 
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.carbon.component.annotation.Component;
 import org.carbon.web.exception.RequestMappingException;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 /**
  * @author Shota Oda 2016/10/12.

@@ -6,7 +6,7 @@ import org.carbon.web.core.response.HtmlResponse;
 import org.carbon.web.def.HttpMethod;
 
 /**
- * @author ubuntu 2017/02/23.
+ * @author Shota Oda 2017/02/23.
  */
 @Controller
 public class HomeController {

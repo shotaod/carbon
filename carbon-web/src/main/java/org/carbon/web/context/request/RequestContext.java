@@ -1,15 +1,17 @@
-package org.carbon.web.context;
-
-import org.carbon.component.annotation.Component;
+package org.carbon.web.context.request;
 
 import java.util.HashMap;
+
+import org.carbon.component.annotation.Component;
+import org.carbon.web.context.Context;
+import org.carbon.web.context.InstanceContainer;
 
 /**
  * @author Shota Oda 2016/10/14.
  */
 @Component
-public class RequestContainer {
-    private RequestContainer() {}
+public class RequestContext implements Context {
+    private RequestContext() {}
     private static ThreadLocal<InstanceContainer> threadLocal = new ThreadLocal<InstanceContainer>() {
         @Override
         protected InstanceContainer initialValue() {

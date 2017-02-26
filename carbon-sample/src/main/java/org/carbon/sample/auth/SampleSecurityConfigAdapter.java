@@ -12,15 +12,15 @@ import org.carbon.sample.auth.consumer.ConsumerAuthEvent;
 import org.carbon.sample.auth.consumer.ConsumerAuthIdentifier;
 import org.carbon.sample.auth.form.FormAuthEvent;
 import org.carbon.sample.auth.form.identity.FormAuthIdentifier;
-import org.carbon.web.auth.SecurityConfigAdapter;
-import org.carbon.web.auth.SecurityConfiguration;
+import org.carbon.web.auth.AuthConfigAdapter;
+import org.carbon.web.auth.AuthDefinition;
 import org.carbon.web.def.HttpMethod;
 
 /**
  * @author Shota Oda 2016/11/03.
  */
 @Component
-public class SampleSecurityConfigAdapter implements SecurityConfigAdapter {
+public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
 
     // -----------------------------------------------------
     //                                               for Basic Auth
@@ -59,7 +59,7 @@ public class SampleSecurityConfigAdapter implements SecurityConfigAdapter {
     private BusinessAuthIdentifier businessAuthIdentifier;
 
     @Override
-    public void configure(SecurityConfiguration config) {
+    public void configure(AuthDefinition config) {
         config
             .define()
                 .identifier(basicIdentifier)

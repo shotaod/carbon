@@ -19,7 +19,7 @@ import org.carbon.persistent.exception.PersistentSetupException;
 import org.carbon.persistent.hibernate.AutoDDL;
 import org.carbon.persistent.hibernate.EntitiesInfo;
 import org.carbon.persistent.hibernate.HibernateConfigurer;
-import org.carbon.persistent.jooq.JooqConfigurer;
+import org.carbon.persistent.jooq.JooqConfiguration;
 import org.carbon.util.mapper.ConfigHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +71,7 @@ public class PersistentModuleConfigurer implements ModuleConfigurer {
                 classes.add(HibernateConfigurer.class);
                 break;
             case Jooq:
-                classes.add(JooqConfigurer.class);
+                classes.add(JooqConfiguration.class);
                 break;
             case None:
             default:

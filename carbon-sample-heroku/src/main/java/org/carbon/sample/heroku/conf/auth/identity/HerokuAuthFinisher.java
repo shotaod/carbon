@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.carbon.component.annotation.Component;
 import org.carbon.web.auth.AuthEventListener;
-import org.carbon.web.context.session.SessionContainer;
+import org.carbon.web.context.session.SessionContext;
 import org.carbon.web.util.ResponseUtil;
 
 /**
@@ -14,7 +14,7 @@ import org.carbon.web.util.ResponseUtil;
 @Component
 public class HerokuAuthFinisher implements AuthEventListener {
     @Override
-    public void onAuth(String username, SessionContainer sessionContainer) {
+    public void onAuth(String username, SessionContext sessionContext) {
 
     }
 

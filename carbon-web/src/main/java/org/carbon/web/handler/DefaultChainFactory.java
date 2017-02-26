@@ -57,7 +57,7 @@ public class DefaultChainFactory {
             errorWrapperChain,
             coreDispatchChain
         )
-        .map(chain -> "└━ "+chain.getChainName())
+        .map(chain -> "└─ "+chain.getChainName())
         .collect(Collectors.joining("\n"));
 
         return ChapterAttr.getBuilder("Chain Processor Result")

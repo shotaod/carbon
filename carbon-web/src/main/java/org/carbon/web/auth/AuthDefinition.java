@@ -1,10 +1,5 @@
 package org.carbon.web.auth;
 
-import org.carbon.util.format.StringLineBuilder;
-import org.carbon.web.context.session.SessionContainer;
-import org.carbon.web.def.HttpMethod;
-import org.carbon.web.exception.InsufficientSecurityConfigException;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,14 +8,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.carbon.util.format.StringLineBuilder;
+import org.carbon.web.context.session.SessionContext;
+import org.carbon.web.def.HttpMethod;
+import org.carbon.web.exception.InsufficientSecurityConfigException;
+
 /**
  * @author Shota Oda 2016/11/03.
  */
-public class SecurityConfiguration {
+public class AuthDefinition {
     public class Rule<IDENTITY extends AuthIdentity> {
 
         private Class<IDENTITY> _identity;
-        private SecurityConfiguration baseConfiguration;
+        private AuthDefinition authDefinition;
         private String _url;
         private SimpleRequest _loginRequest;
         private Set<SimpleRequest> _permitRequests;
@@ -29,8 +29,8 @@ public class SecurityConfiguration {
         private AuthRequestMapper _requestMapper;
         private AuthIdentifier<IDENTITY> _identifier;
         private AuthEventListener _finisher;
-        private Rule(SecurityConfiguration baseConfiguration) {
-            this.baseConfiguration = baseConfiguration;
+        private Rule(AuthDefinition authDefinition) {
+            this.authDefinition = authDefinition;
             this._permitRequests = new HashSet<>();
         }
         public Rule base(String url) {
@@ -82,7 +82,7 @@ public class SecurityConfiguration {
             this._finisher = finisher;
             return this;
         }
-        public SecurityConfiguration end() {
+        public AuthDefinition end() {
             StringLineBuilder sb = new StringLineBuilder();
             if (_url == null) sb.appendLine("- url");
             if (_loginRequest == null) sb.appendLine("- endPoint ");
@@ -93,8 +93,8 @@ public class SecurityConfiguration {
             if (_finisher == null) sb.appendLine("- finisher");
             if (!sb.toString().isEmpty()) throw new InsufficientSecurityConfigException("below config is not defind\n"+sb.toString());
 
-            baseConfiguration.rules.add(this);
-            return baseConfiguration;
+            authDefinition.rules.add(this);
+            return authDefinition;
         }
 
         private AuthStrategy<IDENTITY> convert() {
@@ -112,17 +112,17 @@ public class SecurityConfiguration {
             };
             AuthSessionManager<IDENTITY> sessionManger = new AuthSessionManager<IDENTITY>() {
                 @Override
-                public Optional<IDENTITY> get(SessionContainer session) {
+                public Optional<IDENTITY> get(SessionContext session) {
                     return session.getByType(_identity);
                 }
 
                 @Override
-                public void set(AuthIdentity identity, SessionContainer session) {
+                public void set(AuthIdentity identity, SessionContext session) {
                     session.setObject(identity);
                 }
 
                 @Override
-                public void remove(SessionContainer session) {
+                public void remove(SessionContext session) {
                     session.removeObject(_identity);
                 }
             };
@@ -139,7 +139,7 @@ public class SecurityConfiguration {
     }
     private List<Rule> rules;
 
-    public SecurityConfiguration() {
+    public AuthDefinition() {
         rules = new ArrayList<>();
     }
 

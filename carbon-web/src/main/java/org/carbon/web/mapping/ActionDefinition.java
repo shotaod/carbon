@@ -1,4 +1,4 @@
-package org.carbon.web.core.mapping;
+package org.carbon.web.mapping;
 
 import org.carbon.web.container.ComputedUrl;
 import org.carbon.web.core.ActionArgumentAggregator;

@@ -1,7 +1,7 @@
 package org.carbon.web.container;
 
 import org.carbon.web.core.ActionArgumentAggregator;
-import org.carbon.web.core.mapping.ActionDefinition;
+import org.carbon.web.mapping.ActionDefinition;
 
 /**
  * @author Shota Oda 2016/10/05.

@@ -1,11 +1,11 @@
 package org.carbon.web.core.request;
 
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.exception.RequestMappingException;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 /**
  * @author Shota Oda 2016/10/12.
