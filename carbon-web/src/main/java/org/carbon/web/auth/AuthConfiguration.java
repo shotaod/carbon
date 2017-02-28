@@ -15,7 +15,7 @@ import org.carbon.component.annotation.Inject;
 @Configuration
 public class AuthConfiguration {
 
-    @Inject(optional = true)
+    @Inject
     private AuthConfigAdapter configAdapter;
 
     @Component
