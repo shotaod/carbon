@@ -1,13 +1,11 @@
 package org.carbon.component.inject;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,9 +15,8 @@ import java.util.stream.Stream;
 import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Inject;
 import org.carbon.component.exception.ClassNotRegisteredException;
+import org.carbon.component.exception.DependencyAccessException;
 import org.carbon.component.exception.IllegalDependencyException;
-import org.carbon.util.format.ChapterAttr;
-import org.carbon.util.format.StringLineBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +67,7 @@ public class DependencyInjector {
                             Set<Class<? extends Annotation>> assembleTargetAnnotations = Stream.of(assembleAnnotation.value()).collect(Collectors.toSet());
                             fieldValue = candidates.entrySet().stream()
                                     .filter(entry -> assembleTargetAnnotations.stream()
-                                            .anyMatch(assembleTargetAnnotation -> entry.getKey().isAnnotationPresent(assembleTargetAnnotation))
+                                            .anyMatch(assembleTargetAnnotation -> ((Class<?>)entry.getKey()).isAnnotationPresent(assembleTargetAnnotation))
                                     )
                                     .map(Map.Entry::getValue)
                                     .collect(Collectors.toList());
@@ -100,7 +97,7 @@ public class DependencyInjector {
                         field.setAccessible(true);
                         field.set(object, fieldValue);
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        throw new DependencyAccessException(e);
                     }
                 });
         return object;
