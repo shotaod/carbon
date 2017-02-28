@@ -1,24 +1,32 @@
 package org.carbon.component.construct.proxy.interceptor;
 
-import net.sf.cglib.proxy.MethodInterceptor;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import net.sf.cglib.proxy.MethodProxy;
+import org.carbon.component.construct.proxy.ProxyAdapter;
 import org.carbon.component.construct.proxy.annotation.InOutLogging;
 import org.carbon.util.SimpleKeyValue;
 import org.carbon.util.format.BoxedTitleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * @author Shota Oda 2016/10/02.
  */
-public class InOutLoggingInterceptor implements MethodInterceptor{
+public class InOutLoggingInterceptor implements ProxyAdapter{
 
     private Logger logger = LoggerFactory.getLogger(InOutLoggingInterceptor.class);
+
+    @Override
+    public boolean shouldHandle(Class clazz) {
+        return Stream.of(clazz.getDeclaredMethods()).anyMatch(method -> method.isAnnotationPresent(InOutLogging.class));
+    }
+
+    @Override
     public Object intercept(Object obj, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
 
         boolean shouldProxy = method.isAnnotationPresent(InOutLogging.class);

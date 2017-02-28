@@ -60,7 +60,7 @@ public class ClassConstructor {
             .map(clazz -> (ProxyAdapter) constructClass(clazz))
             .collect(Collectors.toList());
 
-        Map<Class, Object> result = classes.stream()
+        return classes.stream()
             .filter(clazz -> !clazz.isInterface() && !clazz.isAnnotation())
             .map(clazz -> {
                 if (proxyAdapters.isEmpty()) {
@@ -84,12 +84,11 @@ public class ClassConstructor {
                 ClassAndObject::getC,
                 ClassAndObject::getO
             ));
-        return result;
     }
 
     public Map<Class, Object> generateMethodComponent(Map<Class, Object> configurations) {
         return configurations.entrySet().stream()
-            .flatMap(entry -> genByMethodComponent(entry.getKey(), entry.getValue()))
+            .flatMap(entry -> doGenerateByMethodComponent(entry.getKey(), entry.getValue()))
             .collect(Collectors.toMap(
                 ClassAndObject::getC,
                 ClassAndObject::getO
@@ -106,7 +105,7 @@ public class ClassConstructor {
         }
     }
 
-    private Stream<ClassAndObject> genByMethodComponent(Class<?> type, Object object) {
+    private Stream<ClassAndObject> doGenerateByMethodComponent(Class<?> type, Object object) {
         if (type.isAnnotationPresent(Configuration.class)) {
             return Arrays.stream(type.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(Component.class))
