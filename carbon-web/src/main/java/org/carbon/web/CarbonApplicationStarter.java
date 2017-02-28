@@ -16,9 +16,7 @@ import org.carbon.util.mapper.ConfigHolder;
 import org.carbon.web.conf.WebProperty;
 import org.carbon.web.context.InstanceContainer;
 import org.carbon.web.exception.ApplicationStartException;
-import org.carbon.web.mapping.ActionMappingContext;
 import org.carbon.web.context.app.ApplicationContext;
-import org.carbon.web.mapping.ActionMappingConfiguration;
 import org.carbon.web.def.Logo;
 import org.carbon.web.server.EmbedServer;
 import org.carbon.web.server.jetty.JettyServerBridge;
@@ -28,12 +26,12 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Shota Oda 2016/10/06.
  */
-public class WebStarter {
+public class CarbonApplicationStarter {
 
     // ===================================================================================
     //                                                                          Logger
     //                                                                          ==========
-    private Logger logger = LoggerFactory.getLogger(WebStarter.class);
+    private Logger logger = LoggerFactory.getLogger(CarbonApplicationStarter.class);
 
     // ===================================================================================
     //                                                                          Field

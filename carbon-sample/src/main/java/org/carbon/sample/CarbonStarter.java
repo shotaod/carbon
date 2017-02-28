@@ -1,14 +1,14 @@
 package org.carbon.sample;
 
 import org.carbon.persistent.PersistentModuleConfigurer;
-import org.carbon.web.WebStarter;
+import org.carbon.web.CarbonApplicationStarter;
 
 /**
  * @author Shota Oda 2016/10/02
  */
 public class CarbonStarter {
     public static void main(String[] args) throws Exception {
-        WebStarter starter = new WebStarter();
+        CarbonApplicationStarter starter = new CarbonApplicationStarter();
         starter.setConfig("config");
         starter.setModuleConfigurers(PersistentModuleConfigurer.class);
         starter.start(ScanBase.class);

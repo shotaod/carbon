@@ -3,7 +3,7 @@ package org.carbon.sample.heroku;
 import java.util.Optional;
 
 import org.carbon.persistent.PersistentModuleConfigurer;
-import org.carbon.web.WebStarter;
+import org.carbon.web.CarbonApplicationStarter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class SampleHerokuStarter {
     private static Logger logger = LoggerFactory.getLogger(SampleHerokuStarter.class);
     public static void main(String[] args) throws Exception {
-        WebStarter starter = new WebStarter();
+        CarbonApplicationStarter starter = new CarbonApplicationStarter();
         starter.setConfig(getConf());
         starter.setModuleConfigurers(PersistentModuleConfigurer.class);
         starter.start(ScanBase.class);
