@@ -3,7 +3,7 @@ module.exports = {
     'message/room': './pages/message/room.js',
   },
   output: {
-    path: __dirname + '/../resources/static/js',
+    path: __dirname + '/../../resources/static/js',
     filename: '[name].js',
     publicPath: '/public/'
   },
