@@ -5,15 +5,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>carbon</groupId>
-    <artifactId>carbon-modular</artifactId>
+    <artifactId>carbon-authentication</artifactId>
     <version>0.1.0-BETA</version>
-    <name>Carbon Modular</name>
+    <name>Carbon Authentication</name>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+
     <dependencies>
         <!-- Carbons -->
+        <dependency>
+            <groupId>carbon</groupId>
+            <artifactId>carbon-component</artifactId>
+            <version>0.1.0-BETA</version>
+        </dependency>
         <dependency>
             <groupId>carbon</groupId>
             <artifactId>carbon-util</artifactId>
@@ -21,15 +28,27 @@
         </dependency>
         <dependency>
             <groupId>carbon</groupId>
-            <artifactId>carbon-component</artifactId>
+            <artifactId>carbon-modular</artifactId>
             <version>0.1.0-BETA</version>
         </dependency>
-        <!-- Logger インターフェース -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <scope>runtime</scope>
+            <groupId>carbon</groupId>
+            <artifactId>carbon-web</artifactId>
+            <version>0.1.0-BETA</version>
+        </dependency>
+
+        <!-- Logger interface -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.22</version>
+        </dependency>
+        <!-- bridge from log4j to slf4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.7.22</version>
         </dependency>
     </dependencies>
+
 </project>

@@ -1,8 +1,11 @@
 package org.carbon.web.handler;
 
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.util.format.ChapterAttr;
@@ -15,12 +18,20 @@ import org.slf4j.LoggerFactory;
 @Component
 public class DefaultChainFactory {
     private Logger logger = LoggerFactory.getLogger(DefaultChainFactory.class);
-    @Inject
-    private ErrorWrapperChain errorWrapperChain;
+    private Set<Class<? extends HttpHandlerChain>> DefaultChains = Stream.of(
+            CharacterEncodingChain.class,
+            ErrorWrapperChain.class,
+            LoggingScopeChain.class,
+            SessionScopeChain.class,
+            RequestScopeChain.class,
+            CoreDispatchChain.class,
+            XHttpHeaderChain.class
+    ).collect(Collectors.toSet());
+
     @Inject
     private CharacterEncodingChain encodingChain;
     @Inject
-    private XHttpHeaderChain xHeaderChain;
+    private ErrorWrapperChain errorWrapperChain;
     @Inject
     private LoggingScopeChain loggingScopeChain;
     @Inject
@@ -29,16 +40,33 @@ public class DefaultChainFactory {
     private RequestScopeChain requestScopeChain;
     @Inject
     private CoreDispatchChain coreDispatchChain;
+    @Inject
+    private XHttpHeaderChain xHeaderChain;
+
+    @Assemble
+    private List<HttpHandlerChain> handlers;
 
     public HttpHandlerChain factorize() {
         logger.debug("[chain] start initialize");
+        List<HttpHandlerChain> additionalHandlers = handlers.stream()
+                .filter(handler -> !DefaultChains.stream().anyMatch(defaultChain -> defaultChain.isAssignableFrom(handler.getClass())))
+                .collect(Collectors.toList());
+
+        if (logger.isDebugEnabled()) {
+            additionalHandlers.forEach(handler -> logger.debug("Detect additional handler {}", handler.getClass()));
+            if (additionalHandlers.isEmpty()) {
+                logger.debug("No additional handler is found");
+            }
+        }
+
         encodingChain
                 .setChain(loggingScopeChain)
-                .setChain(xHeaderChain)
                 .setChain(sessionScopeChain)
                 .setChain(requestScopeChain)
                 .setChain(errorWrapperChain)
-                .setChain(coreDispatchChain);
+                .setChains(additionalHandlers)
+                .setChain(coreDispatchChain)
+                .setChain(xHeaderChain);
         logger.debug("[chain] finish initialize");
 
         if (logger.isInfoEnabled()) {
@@ -48,20 +76,9 @@ public class DefaultChainFactory {
     }
 
     private String resultInfo() {
-        String chainResult = Stream.of(
-            encodingChain,
-            loggingScopeChain,
-            xHeaderChain,
-            sessionScopeChain,
-            requestScopeChain,
-            errorWrapperChain,
-            coreDispatchChain
-        )
-        .map(chain -> "└─ "+chain.getChainName())
-        .collect(Collectors.joining("\n"));
 
         return ChapterAttr.getBuilder("Chain Processor Result")
-                .appendLine(chainResult)
+                .appendLine(encodingChain.getChainResult())
                 .toString();
     }
 }

@@ -34,6 +34,7 @@ public class DependencyInjector {
     }
 
     public Map<Class, Object> injectOnlySatisfied(Map<Class, Object> singletons, Map<Class, Object> candidate) {
+        logger.debug("Start injection only for satisfied dependency");
         return singletons.entrySet().stream()
                 .flatMap(entry -> {
                     Class key = entry.getKey();
@@ -42,6 +43,7 @@ public class DependencyInjector {
                         instance = inject(key, entry.getValue(), candidate);
                         return Stream.of((Map.Entry<Class, Object>) new AbstractMap.SimpleEntry<>(key, instance));
                     } catch (ClassNotRegisteredException ignore) {
+                        logger.debug("Dismiss exception[{}],Try again after dependency is satisfied", ignore.getClass());
                         return Stream.empty();
                     }
                 })
@@ -58,35 +60,51 @@ public class DependencyInjector {
                     try {
                         // assemble inject check
                         Object fieldValue = null;
+                        Class<?> fieldType = field.getType();
                         if (field.isAnnotationPresent(Assemble.class)) {
-                            Type generic = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-                            if (generic.equals(Object.class) && !List.class.isAssignableFrom(field.getType())) {
+                            Class<?> generic = (Class<?>)((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+                            if (!List.class.isAssignableFrom(fieldType)) {
                                 throwIllegalAssembleAnnotateException(object.getClass());
                             }
-                            Assemble assembleAnnotation = field.getAnnotation(Assemble.class);
-                            Set<Class<? extends Annotation>> assembleTargetAnnotations = Stream.of(assembleAnnotation.value()).collect(Collectors.toSet());
-                            fieldValue = candidates.entrySet().stream()
-                                    .filter(entry -> assembleTargetAnnotations.stream()
-                                            .anyMatch(assembleTargetAnnotation -> ((Class<?>)entry.getKey()).isAnnotationPresent(assembleTargetAnnotation))
-                                    )
-                                    .map(Map.Entry::getValue)
-                                    .collect(Collectors.toList());
-                        } else if (field.isAnnotationPresent(Inject.class)) {
-                            // try find same class
-                            fieldValue = candidates.get(field.getType());
+                            if (generic.equals(Object.class)) {
+                                Assemble assembleAnnotation = field.getAnnotation(Assemble.class);
+                                Set<Class<? extends Annotation>> assembleTargetAnnotations = Stream.of(assembleAnnotation.value()).collect(Collectors.toSet());
+                                logger.debug("[Assemble] search dependencies by annotation{}", assembleTargetAnnotations);
 
-                            // try find sub class
+                                fieldValue = candidates.entrySet().stream()
+                                        .filter(entry -> assembleTargetAnnotations.stream()
+                                                .anyMatch(assembleTargetAnnotation -> ((Class<?>)entry.getKey()).isAnnotationPresent(assembleTargetAnnotation))
+                                        )
+                                        .map(Map.Entry::getValue)
+                                        .collect(Collectors.toList());
+                            } else {
+                                logger.debug("[Assemble] search dependencies by generic fieldType[{}] for field '{}' in [{}]", generic.getName(), field.getName(), field.getDeclaringClass());
+                                fieldValue = candidates.entrySet().stream()
+                                        .filter(entry -> generic.isAssignableFrom(entry.getKey()))
+                                        .map(Map.Entry::getValue)
+                                        .collect(Collectors.toList());
+                            }
+                            logger.debug("[Assemble] result is {}", fieldValue);
+                        } else if (field.isAnnotationPresent(Inject.class)) {
+                            logger.debug("[Inject  ] search by same class [{}]", fieldType.getName());
+                            fieldValue = candidates.get(fieldType);
+
                             if (fieldValue == null) {
+                                logger.debug("[Inject  ] search by sub class of [{}]", fieldType.getName());
                                 List<Map.Entry<Class, Object>> subClassCandidate = candidates.entrySet()
                                         .stream()
-                                        .filter(entry -> field.getType().isAssignableFrom(entry.getKey()))
+                                        .filter(entry -> fieldType.isAssignableFrom(entry.getKey()))
                                         .collect(Collectors.toList());
                                 if (subClassCandidate.isEmpty()) {
                                     Inject injectAnnotation = field.getAnnotation(Inject.class);
-                                    if (injectAnnotation.optional()) return;
-                                    throwClassNotRegisteredException(object.getClass(), field.getType());
+                                    logger.debug("[Inject  ]Fail to find dependency for field [{}] in class [{}]", fieldType, field.getDeclaringClass().getName());
+                                    if (injectAnnotation.optional()) {
+                                        logger.debug("[Inject  ]Dismiss fail to find dependency, as @Inject(optional=true)");
+                                        return;
+                                    }
+                                    throwClassNotRegisteredException(object.getClass(), fieldType);
                                 } else if (subClassCandidate.size() > 1) {
-                                    throwIllegalDependencyException(object.getClass(), field.getType(), subClassCandidate);
+                                    throwIllegalDependencyException(object.getClass(), fieldType, subClassCandidate);
                                 }
                                 fieldValue = subClassCandidate.get(0).getValue();
                             }

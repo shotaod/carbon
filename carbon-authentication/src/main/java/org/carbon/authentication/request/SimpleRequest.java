@@ -1,4 +1,4 @@
-package org.carbon.web.auth;
+package org.carbon.authentication.request;
 
 import org.carbon.web.def.HttpMethod;
 

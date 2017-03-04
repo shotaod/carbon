@@ -19,7 +19,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.carbon.component.annotation.Transparent;
 import org.carbon.component.exception.PackageScanException;
 import org.carbon.component.exception.UnsupportedProtocolException;
 import org.slf4j.Logger;
@@ -37,6 +39,12 @@ public class TargetBaseScanner {
     private static final String Class_Suffix = ".class";
     private static final int Class_Suffix_Length = Class_Suffix.length();
 
+    private static final Set<Class<? extends Annotation>> Annotations_Escape = Stream.of(
+            Documented.class,
+            Retention.class,
+            Target.class
+    ).collect(Collectors.toSet());
+
     // ===================================================================================
     //                                                                       Private Field
     //                                                                       =============
@@ -50,10 +58,14 @@ public class TargetBaseScanner {
     //                                                                       Public Method
     //                                                                       =============
     public Set<Class<?>> scan(Class scanBase, Set<Class<? extends Annotation>> scanTargets) throws PackageScanException {
-        return walkPackage(scanBase.getPackage()).stream()
-            .map(this::getClass)
-            .filter(clazz -> isScanTarget(clazz, scanTargets))
-            .collect(Collectors.toSet());
+        Package scanBasePackage = scanBase.getPackage();
+        logger.debug("Start scan at package [{}]", scanBasePackage);
+        logger.debug("Escape annotations are {}", Annotations_Escape);
+        return walkPackage(scanBasePackage).stream()
+                .map(this::getClassNullable)
+                .filter(clazz -> clazz != null)
+                .filter(clazz -> isScanTarget(clazz, scanTargets))
+                .collect(Collectors.toSet());
     }
 
     // ===================================================================================
@@ -77,28 +89,28 @@ public class TargetBaseScanner {
 
             try {
                 Files.find(scanBasePath, Integer.MAX_VALUE, (path, attr) -> isClassFile(path))
-                    .forEach(path -> {
-                        String fqn = getClassFqn(fileRootPath, path);
-                        classNames.add(fqn);
-                    });
+                        .forEach(path -> {
+                            String fqn = getClassFqn(fileRootPath, path);
+                            classNames.add(fqn);
+                        });
             } catch (IOException e) {
                 throw new PackageScanException(protocol, e);
             }
         } else if (Protocol_Jar.equals(protocol)) {
             Enumeration<JarEntry> entries;
             try {
-                JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
+                JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
                 entries = jarURLConnection.getJarFile().entries();
             } catch (IOException e) {
                 throw new PackageScanException(protocol, e);
             }
-            URL[] urls = { url };
+            URL[] urls = {url};
             classLoader = URLClassLoader.newInstance(urls);
             while (entries.hasMoreElements()) {
                 JarEntry je = entries.nextElement();
 
-                if(je.isDirectory() || !je.getName().endsWith(Class_Suffix)) continue;
-                String className = je.getName().substring(0,je.getName().length()-Class_Suffix_Length).replace('/', '.');
+                if (je.isDirectory() || !je.getName().endsWith(Class_Suffix)) continue;
+                String className = je.getName().substring(0, je.getName().length() - Class_Suffix_Length).replace('/', '.');
                 classNames.add(className);
             }
         } else {
@@ -136,7 +148,7 @@ public class TargetBaseScanner {
         return classFQN;
     }
 
-    private Class<?> getClass(String className) {
+    private Class<?> getClassNullable(String className) {
         try {
             Class<?> clazz = classLoader.loadClass(className);
             if (clazz.isAnnotation() || clazz.isInterface()) return null;
@@ -148,14 +160,14 @@ public class TargetBaseScanner {
     }
 
     private boolean isScanTarget(Class<?> clazz, Set<Class<? extends Annotation>> scanTargets) {
-        if (clazz == null) return false;
         Annotation[] declaredAnnotations = clazz.getDeclaredAnnotations();
+        if (clazz.isAnnotationPresent(Transparent.class)) return false;
         if (declaredAnnotations.length == 0) return false;
-        if (clazz.equals(Documented.class) || clazz.equals(Retention.class) || clazz.equals(Target.class)) return false;
         if (scanTargets.stream().anyMatch(clazz::isAnnotationPresent)) return true;
 
         return Arrays.stream(declaredAnnotations)
-            .map(Annotation::annotationType)
-            .anyMatch(type -> isScanTarget(type, scanTargets));
+                .map(Annotation::annotationType)
+                .filter(annotation -> !Annotations_Escape.contains(annotation))
+                .anyMatch(type -> isScanTarget(type, scanTargets));
     }
 }

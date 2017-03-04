@@ -16,22 +16,16 @@ import org.slf4j.LoggerFactory;
  */
 @Component
 public class CarbonCore {
-
-    private Logger logger = LoggerFactory.getLogger(CarbonCore.class);
+    private static Logger logger = LoggerFactory.getLogger(CarbonCore.class);
 
     @Inject
     private ActionFinder actionFinder;
-    @Inject
-    private Authenticator authenticator;
     @Inject
     private ActionExecutor actionExecutor;
     @Inject
     private ActionFinisher actionFinisher;
 
     public void execute(HttpServletRequest request, HttpServletResponse response) {
-        boolean authenticate = authenticator.authenticate(request, response);
-        if (!authenticate) return;
-
         // create action container by url
         // with resolving url variable
         // with auth

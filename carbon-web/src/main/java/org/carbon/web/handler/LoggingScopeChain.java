@@ -56,8 +56,6 @@ public class LoggingScopeChain extends HttpScopeChain {
                 .map(name -> new SimpleKeyValue<>(name, response.getHeader(name)))
                 .collect(Collectors.toList());
         headers.addAll(values);
-        headers.add(0, new SimpleKeyValue<>("Response Headers", "↓↓↓Values Below↓↓↓↓↓↓"));
-        headers.add(new SimpleKeyValue<>("Response Headers", "↑↑↑End Of Values↑↑↑↑↑↑"));
-        logger.debug(ChapterAttr.getBuilder("Response").appendLine(BoxedTitleMessage.produceLeft(headers)).toString());
+        logger.debug(ChapterAttr.getBuilder("Response [" + response.getStatus() + "]").appendLine(BoxedTitleMessage.produceLeft(headers)).toString());
     }
 }

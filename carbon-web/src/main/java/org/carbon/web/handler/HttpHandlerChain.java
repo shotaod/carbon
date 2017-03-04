@@ -1,5 +1,7 @@
 package org.carbon.web.handler;
 
+import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,25 +20,39 @@ public abstract class HttpHandlerChain {
         return this.getClass().getSimpleName();
     }
 
+    public String getChainResult() {
+        return String.format("└─ %s", getChainName()) +
+                Optional.ofNullable(handlerChain)
+                        .map(HttpHandlerChain::getChainResult)
+                        .map(child -> "\n" + child)
+                        .orElse("");
+    }
+
     public final HttpHandlerChain setChain(HttpHandlerChain httpHandlerChain) {
         this.handlerChain = httpHandlerChain;
         return httpHandlerChain;
     }
 
+    public final HttpHandlerChain setChains(List<HttpHandlerChain> handlerChains) {
+        return handlerChains.stream().reduce(this, HttpHandlerChain::setChain);
+    }
+
     public final void startSync(HttpServletRequest request, HttpServletResponse response) {
+        logger.debug("[{}] start sync", getChainName());
         synchronized (lock) {
-            this.chain(request, response);
+            chain(request, response);
         }
     }
 
     public final void startAsync(HttpServletRequest request, HttpServletResponse response) {
-        this.chain(request, response);
+        logger.debug("[{}] start async", getChainName());
+        chain(request, response);
     }
 
     protected void chain(HttpServletRequest request, HttpServletResponse response) {
         if (this.handlerChain == null) return;
 
-        logger.debug(String.format("[%s] start chain ", getChainName()));
+        logger.debug("[{}] start chain ", this.handlerChain.getChainName());
         this.handlerChain.chain(request, response);
     }
 }

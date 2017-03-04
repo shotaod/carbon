@@ -1,4 +1,4 @@
-package org.carbon.web.core;
+package org.carbon.authentication;
 
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -6,12 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-import org.carbon.web.auth.AuthEventListener;
-import org.carbon.web.auth.AuthIdentity;
-import org.carbon.web.auth.AuthRequestMapper;
-import org.carbon.web.auth.AuthSessionManager;
-import org.carbon.web.auth.AuthStrategy;
-import org.carbon.web.auth.AuthStrategyContext;
 import org.carbon.web.context.session.SessionContext;
 import org.carbon.web.def.HttpMethod;
 import org.carbon.web.exception.UserIdentityNotFoundException;

@@ -10,7 +10,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.carbon.component.ComponentManager;
+import org.carbon.modular.ModuleConfigurationResult;
 import org.carbon.modular.ModuleConfigurer;
+import org.carbon.modular.ModuleConfigurerResolver;
+import org.carbon.modular.ModuleDependency;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.util.mapper.ConfigHolder;
 import org.carbon.web.conf.WebProperty;
@@ -44,14 +47,9 @@ public class CarbonApplicationStarter {
     }
 
     @SafeVarargs
-    public final void setModuleConfigurers(Class<? extends ModuleConfigurer>... moduleConfigurers) {
+    public final void addModuleConfigurers(Class<? extends ModuleConfigurer>... moduleConfigurers) {
         this.moduleConfigurers = Arrays.asList(moduleConfigurers);
     }
-
-    // ===================================================================================
-    //                                                                          Member
-    //                                                                          ==========
-    private ComponentManager componentManager = new ComponentManager();
 
     // ===================================================================================
     //                                                                              Public
@@ -92,22 +90,19 @@ public class CarbonApplicationStarter {
 
         Map<Class, Object> dependency = new HashMap<>();
 
-        ConfigHolder configHolder = new ConfigHolder(config + ".yml");
+        String configFileName = config + ".yml";
+        ConfigHolder configHolder = new ConfigHolder(configFileName);
         dependency.put(ConfigHolder.class, configHolder);
 
-        // resolve external module
-        List<? extends ModuleConfigurer> moduleConfigurers = this.moduleConfigurers.stream()
-                .map(registerClass -> componentManager.constructClass(registerClass))
-                .collect(Collectors.toList());
-        Map<Class, Object> moduleObjects = setupModuleObjects(moduleConfigurers, scanBase, configHolder);
-        Set<Class> moduleClasses = setupModuleClasses(moduleConfigurers, scanBase, configHolder);
-
-        dependency.putAll(moduleObjects);
-
-        WebProperty webProperty = configHolder.findOne("web", WebProperty.class).get();
+        WebProperty webProperty = configHolder.findOne("web", WebProperty.class).orElseThrow(() ->
+                new IllegalStateException("Not Found Web Property at " + configFileName));
         dependency.put(WebProperty.class, webProperty);
 
-        InstanceContainer appInstances = resolveDependency(scanBase, moduleClasses, dependency);
+        // resolve external module
+        ModuleDependency moduleDependency = resolveModuleConfigurer(scanBase, configHolder);
+
+        dependency.putAll(moduleDependency.getInstances());
+        InstanceContainer appInstances = resolveDependency(scanBase, moduleDependency.getClasses(), dependency);
 
         ApplicationContext.init(appInstances);
 
@@ -117,19 +112,13 @@ public class CarbonApplicationStarter {
     // ===================================================================================
     //                                                                             Private
     //                                                                             =======
-    private Map<Class, Object> setupModuleObjects(List<? extends ModuleConfigurer> moduleConfigurers, Class scanBase, ConfigHolder configHolder) {
-        return moduleConfigurers.stream()
-                .flatMap(moduleConfigurer -> moduleConfigurer.registerObject(scanBase, configHolder).entrySet().stream())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    private ModuleDependency resolveModuleConfigurer(Class scanBase, ConfigHolder configHolder) {
+        ModuleConfigurerResolver moduleConfigurerResolver = new ModuleConfigurerResolver();
+        return moduleConfigurerResolver.resolve(this.moduleConfigurers, scanBase, configHolder);
     }
 
-    private Set<Class> setupModuleClasses(List<? extends ModuleConfigurer> moduleConfigurers, Class scanBase, ConfigHolder configHolder) {
-        return moduleConfigurers.stream()
-                .flatMap(moduleConfigurer -> moduleConfigurer.registerClass(scanBase, configHolder).stream())
-                .collect(Collectors.toSet());
-    }
-
-    private InstanceContainer resolveDependency(Class scanBase, Set<Class> configurations, Map<Class, Object> dependency) throws Exception {
+    private InstanceContainer resolveDependency(Class scanBase, Set<Class<?>> configurations, Map<Class, Object> dependency) throws Exception {
+        ComponentManager componentManager = new ComponentManager();
         // load component -> create component
         Set<Class<?>> frameworkManaged = componentManager.scanComponent(ConfigurationBase.class);
         Set<Class<?>> clientManaged = componentManager.scanComponent(scanBase);

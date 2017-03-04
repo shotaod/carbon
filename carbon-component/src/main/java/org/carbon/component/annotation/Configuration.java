@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * For produce Component by Method
- * assert using with @Component in Method
- * and this annotated class is also resolved @Inject
+ * Class annotated by @Configuration can produce Component by Method.<br/>
+ * Target method should be annotated by {@link Component}.<br/>
+ * Class annotated by @Configuration is also resolved @Inject like {@link Component}.<br/>
  * @see Component
  * @author Shota Oda 2016/10/15.
  */

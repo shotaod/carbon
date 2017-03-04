@@ -1,4 +1,4 @@
-package org.carbon.web.auth;
+package org.carbon.authentication;
 
 import org.carbon.web.exception.UserIdentityNotFoundException;
 

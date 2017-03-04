@@ -7,19 +7,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.Entity;
+import java.util.stream.Stream;
 import javax.sql.DataSource;
 
-import org.carbon.component.ComponentManager;
-import org.carbon.component.exception.PackageScanException;
+import org.carbon.modular.ModuleConfigurationResult;
 import org.carbon.modular.ModuleConfigurer;
+import org.carbon.persistent.hibernate.AutoDDL;
+import org.carbon.persistent.hibernate.HibernateConfiguration;
+import org.carbon.persistent.jooq.JooqConfiguration;
 import org.carbon.persistent.prop.DataSourceProperty;
 import org.carbon.persistent.prop.PersistentImplementation;
-import org.carbon.persistent.exception.PersistentSetupException;
-import org.carbon.persistent.hibernate.AutoDDL;
-import org.carbon.persistent.hibernate.EntitiesInfo;
-import org.carbon.persistent.hibernate.HibernateConfigurer;
-import org.carbon.persistent.jooq.JooqConfiguration;
+import org.carbon.persistent.proxy.TransactionInterceptor;
+import org.carbon.util.format.ChapterAttr;
+import org.carbon.util.format.StringLineBuilder;
 import org.carbon.util.mapper.ConfigHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,49 +35,49 @@ public class PersistentModuleConfigurer implements ModuleConfigurer {
     private final String AutoDDLKey = "persistent.option.autoddl";
 
     @Override
-    public Map<Class, Object> registerObject(Class scanBase, ConfigHolder configHolder) {
-        Map<Class, Object> dependency = new HashMap<>();
-        if (getPersistentImplementation(configHolder) == PersistentImplementation.Hibernate) {
-            ComponentManager componentManager = new ComponentManager();
-            Set<Class<?>> entities;
-            try {
-                entities = componentManager.scan(scanBase, Collections.singleton(Entity.class));
-            } catch (PackageScanException e) {
-                throw new PersistentSetupException("Fail scan entities", e);
-            }
-            EntitiesInfo entitiesInfo = new EntitiesInfo(entities.stream().map(Class::getName).collect(Collectors.toList()));
-            AutoDDL autoDDL = configHolder.findPrimitive(AutoDDLKey, String.class).map(AutoDDL::actionOf).orElse(AutoDDL.None);
+    public ModuleConfigurationResult configure(Class scanBase, ConfigHolder configHolder) {
+        PersistentImplementation persistentImplementation = getPersistentImplementation(configHolder);
+        logger.debug("Persistent implementation is {}", persistentImplementation);
 
-            dependency.put(EntitiesInfo.class, entitiesInfo);
-            dependency.put(AutoDDL.class, autoDDL);
+        // set up instances
+        logger.debug("① Start set up instances managed by PersistentModule");
+        Map<Class<?>, Object> instances = new HashMap<>();
+        if (persistentImplementation == PersistentImplementation.Hibernate) {
+            AutoDDL autoDDL = configHolder.findPrimitive(AutoDDLKey, String.class).map(AutoDDL::actionOf).orElse(AutoDDL.None);
+            instances.put(AutoDDL.class, autoDDL);
         }
 
         Optional<DataSourceProperty> optionalProperty = configHolder.findOne(DataSourceKey, DataSourceProperty.class);
         if (optionalProperty.isPresent()) {
             logger.info("Detect Datasource property. Create and Inject Datasource");
-            dependency.put(DataSource.class, optionalProperty.get().toDataSource());
+            instances.put(DataSource.class, optionalProperty.get().toDataSource());
         } else {
             logger.info("Cannot Detect Datasource property. Expect to be loaded custom Datasource.");
         }
-        return dependency;
-    }
 
-    @Override
-    public Set<Class> registerClass(Class scanBase, ConfigHolder configHolder) {
-        PersistentImplementation persistentImplementation = getPersistentImplementation(configHolder);
-        Set<Class> classes = new HashSet<>();
+        // set up classes
+        logger.debug("② Start set up classes by PersistentModule");
+        Set<Class<?>> classes = new HashSet<>();
         switch (persistentImplementation) {
             case Hibernate:
-                classes.add(HibernateConfigurer.class);
+                classes.add(HibernateConfiguration.class);
                 break;
             case Jooq:
                 classes.add(JooqConfiguration.class);
                 break;
-            case None:
-            default:
+            // noop
+            // case None:
+            // default:
         }
 
-        return classes;
+        if (logger.isInfoEnabled()) {
+            Stream<String> instancesStream = instances.keySet().stream().map(clazz -> "- " + clazz.getName());
+            Stream<String> configStream = classes.stream().map(clazz -> "- " + clazz.getName());
+            String dependencies = Stream.concat(instancesStream, configStream).collect(Collectors.joining("\n"));
+            StringLineBuilder resultInfo = ChapterAttr.getBuilder("Persistent Configure Result").appendLine(dependencies);
+            logger.info(resultInfo.toString());
+        }
+        return new ModuleConfigurationResult(classes, instances, Collections.singleton(PersistentScanBase.class));
     }
 
     private PersistentImplementation getPersistentImplementation(ConfigHolder configHolder) {

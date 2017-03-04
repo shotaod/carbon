@@ -1,4 +1,4 @@
-package org.carbon.web.auth;
+package org.carbon.authentication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

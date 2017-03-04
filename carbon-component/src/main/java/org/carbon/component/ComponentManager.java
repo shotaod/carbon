@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,17 +31,18 @@ public class ComponentManager {
 
     private TargetBaseScanner scanner = new TargetBaseScanner();
     private ClassConstructor generator = new ClassConstructor();
-    private DependencyInjector injector  = new DependencyInjector();
+    private DependencyInjector injector = new DependencyInjector();
 
-    public Set<Class<?>> scanComponent (Class scanBase) throws PackageScanException {
+    public Set<Class<?>> scanComponent(Class scanBase) throws PackageScanException {
         return scanner.scan(scanBase, Collections.singleton(Component.class));
     }
+
     public Set<Class<?>> scan(Class scanBase, Set<Class<? extends Annotation>> scanTargets) throws PackageScanException {
         return scanner.scan(scanBase, scanTargets);
     }
 
     @SuppressWarnings("unchecked")
-    public Map<Class, Object> generate(Set<Class> classes, Map<Class,Object> dependency) throws Exception{
+    public Map<Class, Object> generate(Set<Class> classes, Map<Class, Object> dependency) throws Exception {
         Map<Class, Object> instances = generator.generate(classes);
         instances.putAll(dependency);
         /*
@@ -52,11 +52,11 @@ public class ComponentManager {
         */
         // 1.
         Map<Class, Object> configurations = instances.entrySet().stream()
-            .filter(entry -> entry.getKey().isAnnotationPresent(Configuration.class))
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                Map.Entry::getValue
-            ));
+                .filter(entry -> entry.getKey().isAnnotationPresent(Configuration.class))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
 
         if (logger.isInfoEnabled()) {
             loggingConfiguration(configurations);
@@ -64,11 +64,11 @@ public class ComponentManager {
 
         while (!configurations.isEmpty()) {
             Map<Class, Object> tmp = injector.injectOnlySatisfied(configurations, instances).entrySet().stream()
-                .peek(entry -> configurations.remove(entry.getKey()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue
-                ));
+                    .peek(entry -> configurations.remove(entry.getKey()))
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue
+                    ));
             if (tmp.isEmpty()) {
                 throwIllegalDependencyException(configurations);
             }
@@ -81,14 +81,14 @@ public class ComponentManager {
             loggingDependencies(injected);
         }
         return injected.entrySet().stream()
-            // exclude dependency
-            .filter(e -> !dependency.containsKey(e.getKey()))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                // exclude dependency
+                .filter(e -> !dependency.containsKey(e.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @SuppressWarnings("unchecked")
     public <T> T constructClass(Class<T> clazz) {
-        return (T)generator.constructClass(clazz);
+        return (T) generator.constructClass(clazz);
     }
 
 

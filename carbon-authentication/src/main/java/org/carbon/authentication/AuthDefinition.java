@@ -1,4 +1,4 @@
-package org.carbon.web.auth;
+package org.carbon.authentication;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.carbon.authentication.request.SimpleRequest;
 import org.carbon.util.format.StringLineBuilder;
 import org.carbon.web.context.session.SessionContext;
 import org.carbon.web.def.HttpMethod;

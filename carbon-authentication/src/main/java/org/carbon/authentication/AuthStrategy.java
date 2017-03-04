@@ -1,5 +1,11 @@
-package org.carbon.web.auth;
+package org.carbon.authentication;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.carbon.util.SimpleKeyValue;
+import org.carbon.util.format.BoxedTitleMessage;
 import org.carbon.web.def.HttpMethod;
 
 /**
@@ -72,5 +78,16 @@ public abstract class AuthStrategy<IDENTITY extends AuthIdentity> {
     }
     public AuthEventListener getFinisher() {
         return finisher;
+    }
+
+    @Override
+    public String toString() {
+        List<SimpleKeyValue<String, ?>> kvs = Stream.of(
+                new SimpleKeyValue<>("Identity Class", identityType.getName()),
+                new SimpleKeyValue<>("Target Base Path", baseUrl),
+                new SimpleKeyValue<>("Logout Path", logoutUrl),
+                new SimpleKeyValue<>("NoAuth Redirect to", redirectUrl)
+        ).collect(Collectors.toList());
+        return BoxedTitleMessage.produceLeft(kvs);
     }
 }
