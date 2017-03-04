@@ -1,7 +1,11 @@
 package org.carbon.sample.web.business;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Inject;
 import org.carbon.persistent.annotation.Transactional;
-import org.carbon.sample.web.business.dto.ScheduleDto;
 import org.carbon.sample.ext.jooq.Tables;
 import org.carbon.sample.ext.jooq.tables.daos.LecturerDao;
 import org.carbon.sample.ext.jooq.tables.daos.LecturerRoomDao;
@@ -10,15 +14,11 @@ import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
 import org.carbon.sample.ext.jooq.tables.pojos.LecturerRoom;
 import org.carbon.sample.ext.jooq.tables.pojos.LecturerSchedule;
 import org.carbon.sample.ext.jooq.tables.pojos.Student;
-import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
 import org.carbon.sample.web.business.dto.LecturerRoomDto;
+import org.carbon.sample.web.business.dto.ScheduleDto;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Shota Oda 2016/11/28.
@@ -37,14 +37,14 @@ public class LecturerAppService {
 
     public List<ScheduleDto> selectSchedules(Long lecturerId) {
         return jooq.select()
-            .from(Tables.LECTURER_SCHEDULE)
-            .leftJoin(Tables.STUDENT).onKey()
-            .where(Tables.LECTURER_SCHEDULE.LECTURER_ID.eq(lecturerId)).fetch()
-            .map(record -> {
-                LecturerSchedule schedule = record.into(Tables.LECTURER_SCHEDULE).into(LecturerSchedule.class);
-                Student student = record.into(Tables.STUDENT).into(Student.class);
-                return new ScheduleDto(schedule, student);
-            });
+                .from(Tables.LECTURER_SCHEDULE)
+                .leftJoin(Tables.STUDENT).onKey()
+                .where(Tables.LECTURER_SCHEDULE.LECTURER_ID.eq(lecturerId)).fetch()
+                .map(record -> {
+                    LecturerSchedule schedule = record.into(Tables.LECTURER_SCHEDULE).into(LecturerSchedule.class);
+                    Student student = record.into(Tables.STUDENT).into(Student.class);
+                    return new ScheduleDto(schedule, student);
+                });
     }
 
     public LecturerRoomDto selectRooms(Long lecturerId) {

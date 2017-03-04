@@ -4,7 +4,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.web.auth.AuthRequestMapper;
+import org.carbon.authentication.AuthRequestMapper;
 
 /**
  * @author Shota Oda 2016/11/04.

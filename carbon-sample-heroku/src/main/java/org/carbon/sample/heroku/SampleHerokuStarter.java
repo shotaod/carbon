@@ -2,6 +2,7 @@ package org.carbon.sample.heroku;
 
 import java.util.Optional;
 
+import org.carbon.authentication.AuthenticationModuleConfigurer;
 import org.carbon.persistent.PersistentModuleConfigurer;
 import org.carbon.web.CarbonApplicationStarter;
 import org.slf4j.Logger;
@@ -15,7 +16,10 @@ public class SampleHerokuStarter {
     public static void main(String[] args) throws Exception {
         CarbonApplicationStarter starter = new CarbonApplicationStarter();
         starter.setConfig(getConf());
-        starter.setModuleConfigurers(PersistentModuleConfigurer.class);
+        starter.addModuleConfigurers(
+            PersistentModuleConfigurer.class,
+            AuthenticationModuleConfigurer.class
+        );
         starter.start(ScanBase.class);
     }
 

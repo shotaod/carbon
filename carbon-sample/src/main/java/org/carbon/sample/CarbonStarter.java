@@ -10,7 +10,7 @@ public class CarbonStarter {
     public static void main(String[] args) throws Exception {
         CarbonApplicationStarter starter = new CarbonApplicationStarter();
         starter.setConfig("config");
-        starter.setModuleConfigurers(PersistentModuleConfigurer.class);
+        starter.addModuleConfigurers(PersistentModuleConfigurer.class);
         starter.start(ScanBase.class);
     }
 }

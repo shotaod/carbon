@@ -1,22 +1,26 @@
 package org.carbon.sample.web.consumer;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.NonNull;
+import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Inject;
 import org.carbon.persistent.annotation.Transactional;
 import org.carbon.sample.ext.jooq.Tables;
 import org.carbon.sample.ext.jooq.tables.daos.LecturerApplyHistoryDao;
 import org.carbon.sample.ext.jooq.tables.daos.LecturerDao;
 import org.carbon.sample.ext.jooq.tables.daos.LecturerScheduleDao;
-import org.carbon.sample.ext.jooq.tables.pojos.*;
-import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.sample.ext.jooq.tables.pojos.Asset;
+import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
+import org.carbon.sample.ext.jooq.tables.pojos.LecturerApplyHistory;
+import org.carbon.sample.ext.jooq.tables.pojos.LecturerRoom;
+import org.carbon.sample.ext.jooq.tables.pojos.LecturerSchedule;
 import org.carbon.sample.web.consumer.dto.LectureRoomDto;
 import org.carbon.sample.web.consumer.dto.LecturerIndex;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Shota Oda 2016/11/27.
@@ -57,7 +61,7 @@ public class StudentAppService {
                 .fetch();
         Lecturer lecturer = records.into(Lecturer.class).get(0);
         List<LecturerRoom> rooms = records.into(LecturerRoom.class).stream()
-            .filter(room -> room.getId() != null).collect(Collectors.toList());
+                .filter(room -> room.getId() != null).collect(Collectors.toList());
         return new LectureRoomDto(lecturer, rooms);
     }
 

@@ -1,9 +1,9 @@
 package org.carbon.sample.web.business;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 import org.carbon.sample.ext.jooq.tables.pojos.LecturerSchedule;
-
-import java.time.LocalDateTime;
 
 /**
  * @author Shota Oda 2016/11/28.

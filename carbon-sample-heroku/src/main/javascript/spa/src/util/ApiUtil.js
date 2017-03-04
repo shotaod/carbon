@@ -1,7 +1,7 @@
 import config from '../config/config';
 
 const { host } = config;
-const baseUrl = `${host}/api/v1`;
+const baseUrl = `${host}/api`;
 
 const createUrlParam = (param) => {
   const toQuery = (k, v) => `${k}=${v}`;
@@ -21,10 +21,10 @@ const createUrlParam = (param) => {
 };
 
 const createOption = (method, authToken, body) => {
-  const { tokenType, token } = authToken;
+  const { token } = authToken;
   const headers = {};
   if (authToken) {
-    headers.Authorization = `${tokenType} ${token}`;
+    headers.Authorization = token;
   }
 
   if (method !== 'GET') {
@@ -63,6 +63,15 @@ const pageHandler = (json) => {
   });
 };
 
+export const handleError = (error) => {
+  const exception =  {
+    message: error.message,
+    detail: error.stack,
+  };
+
+  throw exception;
+};
+
 export const handleResponse = (data) => {
   const status = data.status;
   if (status === 200) {
@@ -71,25 +80,10 @@ export const handleResponse = (data) => {
   }
 
   return data.json()
-    .then((json) => {
-      const exception = {
-        status,
-        message: json.message,
-        errors: json.errors,
-      };
-      throw exception;
-    });
+    .then(handleError);
 };
 
-export const handleError = (error) => {
-  const exception = {
-    message: error.message,
-    detail: error.stack,
-  };
-  throw exception;
-};
-
-const getJson = (path, authToken = { tokenType: null, token: null }, param) => {
+export const getJson = (path, authToken = { token: null }, param) => {
   const op = createOption('GET', authToken);
   const urlParam = param ? createUrlParam(param) : '';
   return fetch(baseUrl + path + urlParam, op)
@@ -97,9 +91,9 @@ const getJson = (path, authToken = { tokenType: null, token: null }, param) => {
     .then(handleResponse);
 };
 
-const postJson = (
+export const postJson = (
   path,
-  authToken = { tokenType: null, token: null },
+  authToken = { token: null },
   body,
 ) => {
   const op = createOption('POST', authToken, body);
@@ -108,19 +102,13 @@ const postJson = (
     .then(handleResponse);
 };
 
-const putJson = (
+export const putJson = (
   path,
-  authToken = { tokenType: null, token: null },
+  authToken = { token: null },
   body,
 ) => {
   const op = createOption('PUT', authToken, body);
   return fetch(baseUrl + path, op)
     .catch(handleError)
     .then(handleResponse);
-};
-
-export default {
-  getJson,
-  postJson,
-  putJson,
 };

@@ -1,11 +1,11 @@
 package org.carbon.sample.auth.basic;
 
-import org.carbon.component.annotation.Component;
-import org.carbon.web.auth.AuthEventListener;
-import org.carbon.web.context.session.SessionContext;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.carbon.authentication.AuthEventListener;
+import org.carbon.component.annotation.Component;
+import org.carbon.web.context.session.SessionContext;
 
 /**
  * @author Shota Oda 2016/11/03.
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class BasicAuthEvent implements AuthEventListener {
     private static final String Header_Auth = "WWW-Authenticate";
+
     @Override
     public void onAuth(String username, SessionContext session) {
 

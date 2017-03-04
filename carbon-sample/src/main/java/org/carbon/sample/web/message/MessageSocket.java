@@ -1,15 +1,12 @@
 package org.carbon.sample.web.message;
 
-import org.carbon.component.annotation.Component;
 import org.carbon.web.annotation.Channeled;
 import org.carbon.web.annotation.OnClose;
 import org.carbon.web.annotation.OnOpen;
 import org.carbon.web.annotation.OnReceive;
 import org.carbon.web.annotation.PathVariable;
 import org.carbon.web.annotation.Socket;
-import org.carbon.web.ws.Channel;
 import org.carbon.web.ws.ChannelConfiguration;
-import org.carbon.web.ws.Identity;
 import org.carbon.web.ws.Message;
 
 /**

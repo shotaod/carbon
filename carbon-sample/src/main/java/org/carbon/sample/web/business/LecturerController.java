@@ -1,10 +1,12 @@
 package org.carbon.sample.web.business;
 
-import org.carbon.sample.auth.business.BusinessAuthIdentity;
-import org.carbon.sample.web.business.dto.ScheduleDto;
-import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
+import java.util.List;
+
 import org.carbon.component.annotation.Inject;
+import org.carbon.sample.auth.business.BusinessAuthIdentity;
+import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
 import org.carbon.sample.web.business.dto.LecturerRoomDto;
+import org.carbon.sample.web.business.dto.ScheduleDto;
 import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
 import org.carbon.web.annotation.RequestBody;
@@ -15,8 +17,6 @@ import org.carbon.web.core.response.HttpOperation;
 import org.carbon.web.core.response.RedirectOperation;
 import org.carbon.web.core.validation.SimpleValidationResult;
 import org.carbon.web.def.HttpMethod;
-
-import java.util.List;
 
 /**
  * @author Shota Oda 2016/11/23.
@@ -94,7 +94,7 @@ public class LecturerController {
     // -----------------------------------------------------
     //                                               profile
     //                                               -------
-    @Action(url="/business/profile", method = HttpMethod.GET)
+    @Action(url = "/business/profile", method = HttpMethod.GET)
     public HtmlResponse profileGet(@Session BusinessAuthIdentity authIdentity) {
         Lecturer lecturer = appService.selectLecturer(authIdentity.getUser().getId());
 
@@ -103,7 +103,7 @@ public class LecturerController {
         return response;
     }
 
-    @Action(url="/business/profile/edit", method = HttpMethod.GET)
+    @Action(url = "/business/profile/edit", method = HttpMethod.GET)
     public HtmlResponse profileEditGet(@Session BusinessAuthIdentity authIdentity) {
         Lecturer model = appService.selectLecturer(authIdentity.getUser().getId());
         HtmlResponse response = new HtmlResponse("/business/lecturer_profile_edit");
@@ -111,7 +111,7 @@ public class LecturerController {
         return response;
     }
 
-    @Action(url="/business/profile/edit", method = HttpMethod.POST)
+    @Action(url = "/business/profile/edit", method = HttpMethod.POST)
     public HtmlResponse profileEditPost(@Session BusinessAuthIdentity authIdentity,
                                         @RequestBody @Validate LecturerProfileForm form,
                                         SimpleValidationResult vr) {

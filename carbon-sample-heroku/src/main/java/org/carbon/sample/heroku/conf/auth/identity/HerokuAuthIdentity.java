@@ -1,7 +1,7 @@
 package org.carbon.sample.heroku.conf.auth.identity;
 
+import org.carbon.authentication.AuthIdentity;
 import org.carbon.sample.heroku.ext.jooq.tables.pojos.User;
-import org.carbon.web.auth.AuthIdentity;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**

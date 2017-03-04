@@ -1,11 +1,14 @@
 package org.carbon.sample.web.sample.index;
 
-import org.carbon.sample.ext.jooq.tables.pojos.Product;
-import org.carbon.sample.ext.jooq.tables.pojos.User;
+import java.util.Arrays;
+import java.util.List;
+
 import org.carbon.component.annotation.Inject;
 import org.carbon.component.construct.proxy.annotation.InOutLogging;
 import org.carbon.sample.domain.service.ProductService;
 import org.carbon.sample.domain.service.UserRoleService;
+import org.carbon.sample.ext.jooq.tables.pojos.Product;
+import org.carbon.sample.ext.jooq.tables.pojos.User;
 import org.carbon.sample.prop.RootProp;
 import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
@@ -15,9 +18,6 @@ import org.carbon.web.annotation.RequestCookie;
 import org.carbon.web.core.response.HtmlResponse;
 import org.carbon.web.def.HttpMethod;
 import org.carbon.web.def.Logo;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Shota Oda 2016/10/01
@@ -79,7 +79,7 @@ public class IndexController {
     //                                               -------
     @InOutLogging
     @Action(url = "/wiki/{target}/{target2}", method = HttpMethod.GET)
-    public String wikiGet (@PathVariable("target") String target, @PathVariable("target2") String target2) {
+    public String wikiGet(@PathVariable("target") String target, @PathVariable("target2") String target2) {
         switch (target.toLowerCase()) {
             case "java":
                 return aboutJava();

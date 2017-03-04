@@ -1,9 +1,9 @@
 package org.carbon.sample.heroku.conf.auth.identity;
 
+import org.carbon.authentication.AuthIdentifier;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.sample.heroku.web.sample.security.UserService;
-import org.carbon.web.auth.AuthIdentifier;
 import org.carbon.web.exception.UserIdentityNotFoundException;
 
 /**

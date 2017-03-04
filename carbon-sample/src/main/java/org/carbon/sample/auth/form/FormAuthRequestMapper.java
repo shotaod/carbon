@@ -1,16 +1,16 @@
 package org.carbon.sample.auth.form;
 
-import org.carbon.component.annotation.Component;
-import org.carbon.web.auth.AuthRequestMapper;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+
+import org.carbon.authentication.AuthRequestMapper;
+import org.carbon.component.annotation.Component;
 
 /**
  * @author Shota Oda 2016/11/04.
  */
 @Component
-public class FormAuthRequestMapper implements AuthRequestMapper{
+public class FormAuthRequestMapper implements AuthRequestMapper {
 
     @Override
     public Optional<AuthInfo> map(HttpServletRequest request) {

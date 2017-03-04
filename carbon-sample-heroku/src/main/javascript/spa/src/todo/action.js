@@ -1,40 +1,35 @@
 import { createActions } from 'redux-actions';
 import { keyValueIdentity } from '../util/ActionUtil';
+import { postJson } from '../util/ApiUtil'
 
 export const Action = {
-  REQUEST_FETCH_SAMPLE: 'REQUEST_FETCH_SAMPLE',
-  FINISH_FETCH_SAMPLE: 'FINISH_FETCH_SAMPLE',
+  REQUEST_ADD_TODO: 'REQUEST_ADD_TODO',
+  FINISH_ADD_TODO: 'FINISH_ADD_TODO',
 };
 
 const {
-  requestFetchSample,
-  finishFetchSample,
+  requestAddTodo,
+  finishAddTodo,
 } = createActions({
-  [Action.FINISH_FETCH_SAMPLE]: keyValueIdentity,
+  [Action.FINISH_ADD_TODO]: keyValueIdentity,
 },
-  Action.REQUEST_FETCH_SAMPLE,
+  Action.REQUEST_ADD_TODO,
 );
 
-function countApiMock() {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(), 500);
-  });
-}
-
-export function fetchSample() {
+export function addTodo(text) {
   return (dispatch, getStatus) => {
     const status = getStatus();
-    const { isFetching } = status.sample;
+    const { isFetching } = status.todo;
     if (isFetching) {
       return Promise.resolve();
     }
 
-    dispatch(requestFetchSample());
-    return countApiMock()
-      .then(() => dispatch(finishFetchSample('data', 'done')))
+    dispatch(requestAddTodo());
+    return postJson('/todos', { token: 'hogehgoe' }, { text })
+      .then(data => dispatch(finishAddTodo(data)))
       .catch((err) => {
         const { message } = err;
-        return dispatch(finishFetchSample(new Error(message)));
+        return dispatch(finishAddTodo(new Error(message)));
       });
   };
 }

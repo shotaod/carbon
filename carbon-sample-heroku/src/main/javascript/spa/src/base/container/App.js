@@ -1,50 +1,20 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import AppBarContainer from '../../common/appbar/index';
-import { logout } from '../../auth/action';
+import NavigationBar from '../navbar/index';
+import MainContent from '../maincontent/index';
 
-const defaultWrapperStyle = {
-  width: '100%',
-  height: '100%',
-};
-
-const mainStyle = {
-  backgroundColor: '#fff',
-  float: 'left',
-};
-
-class App extends Component {
+export default class App extends Component {
   static propTypes = {
     children: PropTypes.element,
-    auth: PropTypes.shape({
-      isLoggedIn: PropTypes.bool.isRequired,
-    }),
-    handleLogout: PropTypes.func.isRequired,
   };
 
   render() {
     return (
-      <div style={defaultWrapperStyle}>
-        <AppBarContainer />
-        <main style={mainStyle}>
+      <div>
+        <NavigationBar />
+        <MainContent>
           { this.props.children }
-        </main>
+        </MainContent>
       </div>
     );
   }
 }
-
-const mapStateToProps = (state) => {
-  const { auth } = state;
-  return { auth };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  const handleLogout = () => dispatch(logout());
-  return { handleLogout };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(App);

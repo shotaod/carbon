@@ -6,7 +6,7 @@ import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import MenuPopComponent from './MenuPopComponent';
 import { toggleMenuAction } from './action';
 
-class AppBarContainer extends Component {
+class NavigationBar extends Component {
 
   static propTypes = {
     appbar: PropTypes.shape({
@@ -64,4 +64,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AppBarContainer);
+)(NavigationBar);

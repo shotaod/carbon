@@ -2,8 +2,8 @@ package org.carbon.sample.auth.business;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.carbon.authentication.AuthIdentity;
 import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
-import org.carbon.web.auth.AuthIdentity;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -11,7 +11,7 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 @Data
 @AllArgsConstructor
-public class BusinessAuthIdentity implements AuthIdentity{
+public class BusinessAuthIdentity implements AuthIdentity {
 
     private Lecturer user;
 

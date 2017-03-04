@@ -1,14 +1,14 @@
 package org.carbon.sample.domain.service;
 
+import java.util.List;
+
+import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Inject;
 import org.carbon.persistent.annotation.Transactional;
 import org.carbon.sample.ext.jooq.tables.daos.LecturerDao;
 import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
 import org.carbon.sample.ext.jooq.tables.records.LecturerRecord;
-import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
 import org.jooq.DSLContext;
-
-import java.util.List;
 
 /**
  * @author Shota Oda 2016/11/13.

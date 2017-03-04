@@ -1,7 +1,7 @@
 package org.carbon.sample.auth.basic.identity;
 
+import org.carbon.authentication.AuthIdentity;
 import org.carbon.sample.ext.jooq.tables.pojos.User;
-import org.carbon.web.auth.AuthIdentity;
 
 /**
  * @author Shota Oda 2016/11/03.

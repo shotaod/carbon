@@ -1,9 +1,9 @@
 package org.carbon.sample.web.sample.index;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import lombok.Data;
 
 /**
  * @author Shota Oda 2016/10/12.

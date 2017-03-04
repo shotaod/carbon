@@ -1,10 +1,10 @@
 package org.carbon.sample.web.business;
 
+import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 import org.carbon.sample.ext.jooq.tables.pojos.LecturerRoom;
-
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 /**
  * @author Shota Oda 2016/11/28.

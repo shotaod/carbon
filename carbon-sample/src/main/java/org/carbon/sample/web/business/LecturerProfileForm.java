@@ -4,8 +4,6 @@ import lombok.Data;
 import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
 import org.hibernate.validator.constraints.Email;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * @author Shota Oda 2016/12/13.
  */

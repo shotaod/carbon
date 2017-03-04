@@ -1,5 +1,5 @@
 web:
-  port: 8080
+  port: 8927
   resource:
     directory: static
     outPath: static

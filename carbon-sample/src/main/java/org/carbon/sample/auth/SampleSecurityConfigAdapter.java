@@ -1,19 +1,19 @@
 package org.carbon.sample.auth;
 
-import org.carbon.sample.auth.business.BusinessAuthEvent;
-import org.carbon.sample.auth.form.FormAuthRequestMapper;
+import org.carbon.authentication.AuthConfigAdapter;
+import org.carbon.authentication.AuthDefinition;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.sample.auth.basic.BasicAuthEvent;
 import org.carbon.sample.auth.basic.BasicAuthRequestMapper;
 import org.carbon.sample.auth.basic.identity.SampleBasicAuthIdentifier;
+import org.carbon.sample.auth.business.BusinessAuthEvent;
 import org.carbon.sample.auth.business.BusinessAuthIdentifier;
 import org.carbon.sample.auth.consumer.ConsumerAuthEvent;
 import org.carbon.sample.auth.consumer.ConsumerAuthIdentifier;
 import org.carbon.sample.auth.form.FormAuthEvent;
+import org.carbon.sample.auth.form.FormAuthRequestMapper;
 import org.carbon.sample.auth.form.identity.FormAuthIdentifier;
-import org.carbon.web.auth.AuthConfigAdapter;
-import org.carbon.web.auth.AuthDefinition;
 import org.carbon.web.def.HttpMethod;
 
 /**
@@ -61,7 +61,7 @@ public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
     @Override
     public void configure(AuthDefinition config) {
         config
-            .define()
+                .define()
                 .identifier(basicIdentifier)
                 .base("/basic/")
                 .endPoint(HttpMethod.GET, "/basic/**")
@@ -69,8 +69,8 @@ public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
                 .redirect("/basic")
                 .requestMapper(basicMapper)
                 .finisher(basicFinisher)
-            .end()
-            .define()
+                .end()
+                .define()
                 .identifier(formIdentifier)
                 .base("/form/")
                 .endPoint(HttpMethod.POST, "/form/auth")
@@ -78,8 +78,8 @@ public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
                 .redirect("/form")
                 .requestMapper(formMapper)
                 .finisher(formFinisher)
-            .end()
-            .define()
+                .end()
+                .define()
                 .identifier(businessAuthIdentifier)
                 .base("/business/")
                 .endPoint(HttpMethod.POST, "/business/auth")
@@ -87,8 +87,8 @@ public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
                 .redirect("/business")
                 .requestMapper(formMapper)
                 .finisher(businessAuthEvent)
-            .end()
-            .define()
+                .end()
+                .define()
                 .identifier(consumerAuthIdentifier)
                 .base("/consumer/")
                 .endPoint(HttpMethod.POST, "/consumer/auth")
@@ -96,7 +96,7 @@ public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
                 .redirect("/consumer")
                 .requestMapper(formMapper)
                 .finisher(consumerAuthEvent)
-            .end()
-            ;
+                .end()
+        ;
     }
 }

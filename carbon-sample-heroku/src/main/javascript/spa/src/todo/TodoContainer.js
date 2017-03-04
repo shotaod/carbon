@@ -1,34 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import ActionNoteAdd from 'material-ui/svg-icons/action/note-add';
+import Title from '../common/title';
 import TodoCard from './TodoCard';
-import { fetchSample } from './action';
+import { addTodo } from './action';
 import { errorType } from '../util/PropUtil';
 
 class TodoContainer extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
-    count: PropTypes.number.isRequired,
+    todos: PropTypes.arrayOf(PropTypes.string.isRequired),
     error: errorType,
-  };
-  style = {
-    title: {
-      fontSize: '60px',
-    },
-    container: {
-      padding: '20px',
-    },
-    textarea: {
-      outline: 'none',
-      width: '100%',
-      border: 'none',
-      borderBottom: '2px solid #ddd',
-    },
-    addButton: {
-      padding: '10px 20px',
-      backgroundColor: '#64b5f6',
-      color: '#fff',
-      borderRadius: '5px',
-    }
   };
 
   renderError() {
@@ -39,25 +23,34 @@ class TodoContainer extends Component {
     }
   }
 
+  handleTextChange(event) {
+    this.text = event.target.value;
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-    const value = event.target['todoText'].value;
-    this.props.handleSubmit(value);
+    this.props.handleSubmit(this.text);
   }
 
   render() {
     return (
-      <div style={this.style.container}>
+      <div>
         {this.renderError()}
-        <h2 style={this.style.title}>
-          Todo Sample
-        </h2>
+        <Title title="TODO Sample"/>
         <br />
-        <form onSubmit={event => this.handleSubmit(event).bind(this)}>
-          <textarea style={this.style.textarea} id="todoText"/>
-          <button style={this.style.addButton}>add</button>
-        </form>
-        <br />
+        <TextField
+          hintText="add your todo"
+          multiLine={true}
+          rows={2}
+          rowsMax={4}
+          onChange={this.handleTextChange.bind(this)}
+        />
+        <RaisedButton
+          onTouchTap={this.handleSubmit.bind(this)}
+          label="add"
+          primary={true}
+          icon={<ActionNoteAdd />}
+        />
         <ul>
           <TodoCard text="hogehoge"/>
         </ul>
@@ -68,12 +61,12 @@ class TodoContainer extends Component {
 
 
 const mapStateToProps = (state) => {
-  const { data, error } = state.sample;
-  return { count: data.count, error };
+  const { data, error } = state.todo;
+  return { todos: data, error };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const handleSubmit = () => dispatch(fetchSample());
+  const handleSubmit = (text) => dispatch(addTodo(text));
   return { handleSubmit };
 };
 

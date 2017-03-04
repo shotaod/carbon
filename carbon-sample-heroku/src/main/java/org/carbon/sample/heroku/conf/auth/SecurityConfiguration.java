@@ -1,12 +1,11 @@
 package org.carbon.sample.heroku.conf.auth;
 
-import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
 import org.carbon.sample.heroku.conf.auth.identity.HerokuAuthFinisher;
 import org.carbon.sample.heroku.conf.auth.identity.HerokuAuthIdentifier;
-import org.carbon.web.auth.AuthConfigAdapter;
-import org.carbon.web.auth.AuthDefinition;
+import org.carbon.authentication.AuthConfigAdapter;
+import org.carbon.authentication.AuthDefinition;
 import org.carbon.web.def.HttpMethod;
 
 /**

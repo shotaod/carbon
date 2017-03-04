@@ -1,11 +1,11 @@
 package org.carbon.sample.domain.service;
 
-import org.carbon.sample.ext.jooq.tables.pojos.Product;
+import java.util.List;
+
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
+import org.carbon.sample.ext.jooq.tables.pojos.Product;
 import org.jooq.DSLContext;
-
-import java.util.List;
 
 /**
  * @author Shota Oda 2016/10/04.

@@ -2,13 +2,13 @@ import { Action } from './action';
 
 export default (state = {
   isFetching: false,
-  data: { count: 0 },
+  data: [],
 }, action) => {
   switch (action.type) {
-    case Action.REQUEST_FETCH_SAMPLE:
+    case Action.REQUEST_ADD_TODO:
       return Object.assign({}, state, { isFetching: true });
 
-    case Action.FINISH_FETCH_SAMPLE: {
+    case Action.FINISH_ADD_TODO: {
       const { payload, error } = action;
       if (error) {
         return Object.assign({}, state, {
@@ -18,10 +18,9 @@ export default (state = {
           },
         });
       }
-      const before = state.data.count;
       return Object.assign({}, state, {
         isFetching: false,
-        data: { count: before + 1 },
+        data: [...state.data, payload.text],
         error: null,
       });
     }

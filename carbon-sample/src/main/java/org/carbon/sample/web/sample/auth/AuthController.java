@@ -1,8 +1,8 @@
 package org.carbon.sample.web.sample.auth;
 
 import org.carbon.sample.auth.basic.identity.SampleBasicAuthIdentity;
-import org.carbon.sample.web.sample.index.UserInfoModel;
 import org.carbon.sample.auth.form.identity.FormAuthIdentity;
+import org.carbon.sample.web.sample.index.UserInfoModel;
 import org.carbon.sample.web.session.SessionInfo;
 import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
@@ -23,6 +23,7 @@ public class AuthController {
     public HtmlResponse getBasicIndex() {
         return new HtmlResponse("/basic/index");
     }
+
     @Action(url = "/basic/secret/{number}", method = HttpMethod.GET)
     public HtmlResponse requestBasicSecret(@PathVariable(value = "number") String number, @Session SampleBasicAuthIdentity userSession) {
         HtmlResponse response = new HtmlResponse("basic/secret");

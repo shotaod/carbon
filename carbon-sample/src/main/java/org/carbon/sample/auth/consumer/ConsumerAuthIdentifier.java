@@ -1,18 +1,19 @@
 package org.carbon.sample.auth.consumer;
 
-import org.carbon.sample.domain.service.StudentService;
+import org.carbon.authentication.AuthIdentifier;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-import org.carbon.web.auth.AuthIdentifier;
+import org.carbon.sample.domain.service.StudentService;
 import org.carbon.web.exception.UserIdentityNotFoundException;
 
 /**
  * @author Shota Oda 2016/11/23.
  */
 @Component
-public class ConsumerAuthIdentifier implements AuthIdentifier<ConsumerAuthIdentity>{
+public class ConsumerAuthIdentifier implements AuthIdentifier<ConsumerAuthIdentity> {
     @Inject
     private StudentService service;
+
     @Override
     public Class<ConsumerAuthIdentity> getType() {
         return ConsumerAuthIdentity.class;

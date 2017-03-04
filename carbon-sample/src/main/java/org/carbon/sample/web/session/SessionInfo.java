@@ -1,8 +1,8 @@
 package org.carbon.sample.web.session;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
+
+import lombok.Data;
 
 /**
  * @author Shota Oda 2016/10/01

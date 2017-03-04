@@ -1,5 +1,7 @@
 package org.carbon.sample.web.consumer;
 
+import java.util.List;
+
 import org.carbon.component.annotation.Inject;
 import org.carbon.sample.auth.consumer.ConsumerAuthIdentity;
 import org.carbon.sample.web.consumer.dto.LectureRoomDto;
@@ -12,8 +14,6 @@ import org.carbon.web.core.response.HtmlResponse;
 import org.carbon.web.core.response.HttpOperation;
 import org.carbon.web.core.response.RedirectOperation;
 import org.carbon.web.def.HttpMethod;
-
-import java.util.List;
 
 /**
  * @author Shota Oda 2016/11/23.
