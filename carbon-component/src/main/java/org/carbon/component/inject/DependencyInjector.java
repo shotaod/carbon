@@ -66,10 +66,12 @@ public class DependencyInjector {
                             if (!List.class.isAssignableFrom(fieldType)) {
                                 throwIllegalAssembleAnnotateException(object.getClass());
                             }
+
+                            logger.debug("[Assemble] target field '{}' in [{}]", field.getName(), field.getDeclaringClass().getCanonicalName());
                             if (generic.equals(Object.class)) {
                                 Assemble assembleAnnotation = field.getAnnotation(Assemble.class);
                                 Set<Class<? extends Annotation>> assembleTargetAnnotations = Stream.of(assembleAnnotation.value()).collect(Collectors.toSet());
-                                logger.debug("[Assemble] search dependencies by annotation{}", assembleTargetAnnotations);
+                                logger.debug("[Assemble] search dependencies by annotation {}", assembleTargetAnnotations);
 
                                 fieldValue = candidates.entrySet().stream()
                                         .filter(entry -> assembleTargetAnnotations.stream()
@@ -78,7 +80,7 @@ public class DependencyInjector {
                                         .map(Map.Entry::getValue)
                                         .collect(Collectors.toList());
                             } else {
-                                logger.debug("[Assemble] search dependencies by generic fieldType[{}] for field '{}' in [{}]", generic.getName(), field.getName(), field.getDeclaringClass());
+                                logger.debug("[Assemble] search dependencies by type{}", generic.getCanonicalName());
                                 fieldValue = candidates.entrySet().stream()
                                         .filter(entry -> generic.isAssignableFrom(entry.getKey()))
                                         .map(Map.Entry::getValue)
