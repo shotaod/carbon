@@ -5,7 +5,7 @@ import java.io.File;
 import com.mysql.jdbc.Driver;
 import lombok.Setter;
 import org.carbon.persistent.jooq.JooqGenerator;
-import org.carbon.util.mapper.ConfigHolder;
+import org.carbon.util.mapper.PropertyMapper;
 import org.jooq.SQLDialect;
 
 /**
@@ -22,8 +22,8 @@ public class DatabaseTool {
     }
 
     public static void main(String[] args) throws Exception {
-        ConfigHolder configHolder = new ConfigHolder("config.yml");
-        DBProp dbProp = configHolder.findOne("persistent.dataSource", DBProp.class).get();
+        PropertyMapper propertyMapper = new PropertyMapper("config.yml");
+        DBProp dbProp = propertyMapper.findOne("persistent.dataSource", DBProp.class).get();
         String url = String.format("jdbc:mysql://%s:%s/%s", dbProp.host, dbProp.port, dbProp.db);
 
         new JooqGenerator(

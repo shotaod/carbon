@@ -4,11 +4,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import lombok.Setter;
+import org.carbon.web.annotation.Property;
 
 /**
  * @author Shota Oda 2017/02/12.
  */
 @Setter
+@Property
 public class DatabaseProp {
     private String url;
     public URI getUri() {

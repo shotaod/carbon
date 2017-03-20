@@ -1,6 +1,6 @@
 package org.carbon.web.core.request
 
-import org.carbon.util.mapper.NameBasedObjectMapper
+import org.carbon.util.mapper.KeyValueMapper
 import spock.lang.Specification
 
 import javax.servlet.http.HttpServletRequest
@@ -65,7 +65,7 @@ class FormUrlEncodeRequestMapperSpec extends Specification {
         }] as HttpServletRequest
 
         def mapper = new FormUrlEncodeRequestMapper()
-        mapper.objectMapper = new NameBasedObjectMapper();
+        mapper.objectMapper = new KeyValueMapper();
         def mapped = mapper.map(request, Target.class)
         println mapped
     }

@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.util.mapper.NameBasedObjectMapper;
+import org.carbon.util.mapper.KeyValueMapper;
 
 /**
  * @author Shota Oda 2016/11/29.
@@ -35,7 +35,7 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
         }
     }
 
-    private NameBasedObjectMapper objectMapper = new NameBasedObjectMapper();
+    private KeyValueMapper keyValueMapper = new KeyValueMapper();
 
     @Override
     public <T> T map(HttpServletRequest request, Class<T> mapTo) {
@@ -52,7 +52,7 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
                 insertDeep(keys, value, result);
             });
 
-        return objectMapper.map(result, mapTo);
+        return keyValueMapper.mapAndConstruct(result, mapTo);
     }
 
     @SuppressWarnings("unchecked")

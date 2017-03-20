@@ -17,10 +17,9 @@ import org.carbon.persistent.hibernate.HibernateConfiguration;
 import org.carbon.persistent.jooq.JooqConfiguration;
 import org.carbon.persistent.prop.DataSourceProperty;
 import org.carbon.persistent.prop.PersistentImplementation;
-import org.carbon.persistent.proxy.TransactionInterceptor;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.util.format.StringLineBuilder;
-import org.carbon.util.mapper.ConfigHolder;
+import org.carbon.util.mapper.PropertyMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,19 +34,19 @@ public class PersistentModuleConfigurer implements ModuleConfigurer {
     private final String AutoDDLKey = "persistent.option.autoddl";
 
     @Override
-    public ModuleConfigurationResult configure(Class scanBase, ConfigHolder configHolder) {
-        PersistentImplementation persistentImplementation = getPersistentImplementation(configHolder);
+    public ModuleConfigurationResult configure(Class scanBase, PropertyMapper propertyMapper) {
+        PersistentImplementation persistentImplementation = getPersistentImplementation(propertyMapper);
         logger.debug("Persistent implementation is {}", persistentImplementation);
 
         // set up instances
         logger.debug("① Start set up instances managed by PersistentModule");
         Map<Class<?>, Object> instances = new HashMap<>();
         if (persistentImplementation == PersistentImplementation.Hibernate) {
-            AutoDDL autoDDL = configHolder.findPrimitive(AutoDDLKey, String.class).map(AutoDDL::actionOf).orElse(AutoDDL.None);
+            AutoDDL autoDDL = propertyMapper.findPrimitive(AutoDDLKey, String.class).map(AutoDDL::actionOf).orElse(AutoDDL.None);
             instances.put(AutoDDL.class, autoDDL);
         }
 
-        Optional<DataSourceProperty> optionalProperty = configHolder.findOne(DataSourceKey, DataSourceProperty.class);
+        Optional<DataSourceProperty> optionalProperty = propertyMapper.findOne(DataSourceKey, DataSourceProperty.class);
         if (optionalProperty.isPresent()) {
             logger.info("Detect Datasource property. Create and Inject Datasource");
             instances.put(DataSource.class, optionalProperty.get().toDataSource());
@@ -80,8 +79,8 @@ public class PersistentModuleConfigurer implements ModuleConfigurer {
         return new ModuleConfigurationResult(classes, instances, Collections.singleton(PersistentScanBase.class));
     }
 
-    private PersistentImplementation getPersistentImplementation(ConfigHolder configHolder) {
-        return configHolder
+    private PersistentImplementation getPersistentImplementation(PropertyMapper propertyMapper) {
+        return propertyMapper
             .findPrimitive(ImplKey, String.class)
             .map(PersistentImplementation::implOf)
             .orElse(PersistentImplementation.None);

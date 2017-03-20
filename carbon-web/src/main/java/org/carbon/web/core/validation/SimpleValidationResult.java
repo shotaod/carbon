@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolation;
  */
 public class SimpleValidationResult extends ValidationResult {
     private Map<String, String> simpleViolationResults;
+
     public SimpleValidationResult(Set<ConstraintViolation> constraintViolations) {
         super(constraintViolations);
         parseSimpleMap();
@@ -21,9 +22,9 @@ public class SimpleValidationResult extends ValidationResult {
 
     private void parseSimpleMap() {
         simpleViolationResults = this.constraintViolations.stream()
-            .collect(Collectors.toMap(
-                cv -> cv.getPropertyPath().toString(),
-                cv -> cv.getMessage()
-            ));
+                .collect(Collectors.toMap(
+                        cv -> cv.getPropertyPath().toString(),
+                        ConstraintViolation::getMessage
+                ));
     }
 }

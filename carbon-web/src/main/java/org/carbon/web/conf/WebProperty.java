@@ -1,7 +1,7 @@
 package org.carbon.web.conf;
 
 /**
- * Config mapper Property
+ * PropertyItem
  * @author Shota Oda 2016/12/10.
  */
 public class WebProperty {

@@ -4,17 +4,17 @@ import java.util.List;
 
 import org.carbon.component.ComponentManager;
 import org.carbon.modular.exception.ModuleConfigureException;
-import org.carbon.util.mapper.ConfigHolder;
+import org.carbon.util.mapper.PropertyMapper;
 
 /**
  * @author Shota Oda 2017/03/04.
  */
 public class ModuleConfigurerResolver {
-    public ModuleDependency resolve(List<Class<? extends ModuleConfigurer>> moduleConfigurerClasses, Class scanBase ,ConfigHolder configHolder) {
+    public ModuleDependency resolve(List<Class<? extends ModuleConfigurer>> moduleConfigurerClasses, Class scanBase ,PropertyMapper propertyMapper) {
         ComponentManager componentManager = new ComponentManager();
         ModuleConfigurationResult moduleConfigurationResult = moduleConfigurerClasses.stream()
                 .map(componentManager::constructClass)
-                .map(moduleConfigurer -> moduleConfigurer.configure(scanBase, configHolder))
+                .map(moduleConfigurer -> moduleConfigurer.configure(scanBase, propertyMapper))
                 .reduce(ModuleConfigurationResult::assign)
                 .orElseThrow(() -> new ModuleConfigureException("Fail to configurer module, Not found ModuleConfigurers"));
 

@@ -55,7 +55,6 @@ public class ClassConstructor {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public Map<Class, Object> generate(Set<Class> classes) {
 
         List<ProxyAdapter> proxyAdapters = classes.stream()

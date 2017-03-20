@@ -97,9 +97,9 @@ public class DependencyInjector {
                                         .collect(Collectors.toList());
                                 if (subClassCandidate.isEmpty()) {
                                     Inject injectAnnotation = field.getAnnotation(Inject.class);
-                                    logger.debug("[Inject  ]Fail to find dependency for field [{}] in class [{}]", fieldType, field.getDeclaringClass().getName());
+                                    logger.debug("[Inject  ] Fail to find dependency for field [{}] in class [{}]", fieldType, field.getDeclaringClass().getName());
                                     if (injectAnnotation.optional()) {
-                                        logger.debug("[Inject  ]Dismiss fail to find dependency, as @Inject(optional=true)");
+                                        logger.debug("[Inject  ] Dismiss fail to find dependency, as @Inject(optional=true)");
                                         return;
                                     }
                                     throwClassNotRegisteredException(object.getClass(), fieldType);

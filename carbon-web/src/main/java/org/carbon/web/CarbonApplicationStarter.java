@@ -7,15 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.carbon.component.ComponentManager;
-import org.carbon.modular.ModuleConfigurationResult;
 import org.carbon.modular.ModuleConfigurer;
 import org.carbon.modular.ModuleConfigurerResolver;
 import org.carbon.modular.ModuleDependency;
 import org.carbon.util.format.ChapterAttr;
-import org.carbon.util.mapper.ConfigHolder;
+import org.carbon.util.mapper.PropertyMapper;
 import org.carbon.web.conf.WebProperty;
 import org.carbon.web.context.InstanceContainer;
 import org.carbon.web.exception.ApplicationStartException;
@@ -91,15 +89,15 @@ public class CarbonApplicationStarter {
         Map<Class, Object> dependency = new HashMap<>();
 
         String configFileName = config + ".yml";
-        ConfigHolder configHolder = new ConfigHolder(configFileName);
-        dependency.put(ConfigHolder.class, configHolder);
+        PropertyMapper propertyMapper = new PropertyMapper(configFileName);
+        dependency.put(PropertyMapper.class, propertyMapper);
 
-        WebProperty webProperty = configHolder.findOne("web", WebProperty.class).orElseThrow(() ->
+        WebProperty webProperty = propertyMapper.findOne("web", WebProperty.class).orElseThrow(() ->
                 new IllegalStateException("Not Found Web Property at " + configFileName));
         dependency.put(WebProperty.class, webProperty);
 
         // resolve external module
-        ModuleDependency moduleDependency = resolveModuleConfigurer(scanBase, configHolder);
+        ModuleDependency moduleDependency = resolveModuleConfigurer(scanBase, propertyMapper);
 
         dependency.putAll(moduleDependency.getInstances());
         InstanceContainer appInstances = resolveDependency(scanBase, moduleDependency.getClasses(), dependency);
@@ -112,9 +110,9 @@ public class CarbonApplicationStarter {
     // ===================================================================================
     //                                                                             Private
     //                                                                             =======
-    private ModuleDependency resolveModuleConfigurer(Class scanBase, ConfigHolder configHolder) {
+    private ModuleDependency resolveModuleConfigurer(Class scanBase, PropertyMapper propertyMapper) {
         ModuleConfigurerResolver moduleConfigurerResolver = new ModuleConfigurerResolver();
-        return moduleConfigurerResolver.resolve(this.moduleConfigurers, scanBase, configHolder);
+        return moduleConfigurerResolver.resolve(this.moduleConfigurers, scanBase, propertyMapper);
     }
 
     private InstanceContainer resolveDependency(Class scanBase, Set<Class<?>> configurations, Map<Class, Object> dependency) throws Exception {

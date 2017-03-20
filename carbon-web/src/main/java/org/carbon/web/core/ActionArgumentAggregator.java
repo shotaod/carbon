@@ -16,7 +16,7 @@ import javax.validation.Validator;
 
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-import org.carbon.util.mapper.NameBasedObjectMapper;
+import org.carbon.util.mapper.KeyValueMapper;
 import org.carbon.web.annotation.PathVariable;
 import org.carbon.web.annotation.RequestBody;
 import org.carbon.web.annotation.RequestCookie;
@@ -49,7 +49,7 @@ public class ActionArgumentAggregator {
     private SessionContext sessionContext;
 
     private PathVariableValues pathVariableValues;
-    private NameBasedObjectMapper objectMapper = new NameBasedObjectMapper();
+    private KeyValueMapper objectMapper = new KeyValueMapper();
 
     public ActionArgumentAggregator with(PathVariableValues pathVariableValues) {
         this.pathVariableValues = pathVariableValues;
@@ -74,7 +74,7 @@ public class ActionArgumentAggregator {
 
         List<Parameter> parameters = Arrays.asList(method.getParameters());
 
-        // add another resolved to shouldResolves
+        // join another resolved to shouldResolves
         Set<ConstraintViolation> constraintViolations = new HashSet<>();
         Map<String, ArgumentMeta> resolvedArguments = new HashMap<>();
         parameters.forEach(parameter -> {
@@ -123,7 +123,7 @@ public class ActionArgumentAggregator {
     private <T> T mapCookie(HttpServletRequest request, Class<T> mapTo) {
         Map<String, Object> cookies = Arrays.stream(request.getCookies())
                 .collect(Collectors.toMap(Cookie::getName, Cookie::getValue));
-        return objectMapper.map(cookies, mapTo);
+        return objectMapper.mapAndConstruct(cookies, mapTo);
     }
 
     private <T> T mapRequestBody(HttpServletRequest request, Class<T> mapTo) {
