@@ -43,7 +43,7 @@ public class DependencyInjector {
                         instance = inject(key, entry.getValue(), candidate);
                         return Stream.of((Map.Entry<Class, Object>) new AbstractMap.SimpleEntry<>(key, instance));
                     } catch (ClassNotRegisteredException ignore) {
-                        logger.debug("Dismiss exception[{}],Try again after dependency is satisfied", ignore.getClass());
+                        logger.debug("Dismiss exception[{}],Try again after dependency is satisfied", ignore.getClass().getCanonicalName());
                         return Stream.empty();
                     }
                 })
@@ -142,7 +142,8 @@ public class DependencyInjector {
 
     private void throwIllegalAssembleAnnotateException(Class clazz) {
         throw new IllegalDependencyException(
-                String.format("Detect illegal annotation at %s.\n @Assemble is allowed only to 'List<Object>'", clazz.getName())
+                String.format("Detect illegal annotation at %s.\n @Assemble is allowed only to 'List<Object>'",
+                        clazz.getName())
         );
     }
 }

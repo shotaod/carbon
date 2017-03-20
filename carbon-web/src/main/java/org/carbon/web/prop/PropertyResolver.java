@@ -10,7 +10,7 @@ import org.carbon.util.mapper.PropertyMapper;
 import org.carbon.web.annotation.Property;
 
 /**
- * @author ubuntu 2017/03/06.
+ * @author Shota Oda 2017/03/06.
  */
 @Configuration
 public class PropertyResolver {

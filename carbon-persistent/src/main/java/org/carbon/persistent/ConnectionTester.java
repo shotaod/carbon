@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 import org.carbon.persistent.exception.ConnectionTestException;
 
 /**
- * @author ubuntu 2017/03/04.
+ * @author Shota Oda 2017/03/04.
  */
 public class ConnectionTester {
     public static void testConnection(DataSource dataSource) {

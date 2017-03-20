@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.carbon.util.exception.UndefinedValueException;
 
 /**
- * @author ubuntu 2017/03/08.
+ * @author Shota Oda 2017/03/08.
  */
 public class MapPath {
     private List<String> keyPath;

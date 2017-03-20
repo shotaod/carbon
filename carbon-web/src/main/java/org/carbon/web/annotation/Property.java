@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import org.carbon.component.annotation.Component;
 
 /**
- * @author ubuntu 2017/03/06.
+ * @author Shota Oda 2017/03/06.
  */
 @Component
 @Retention(RetentionPolicy.RUNTIME)
