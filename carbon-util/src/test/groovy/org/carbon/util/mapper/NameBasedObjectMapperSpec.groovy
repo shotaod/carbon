@@ -10,15 +10,15 @@ import java.time.format.DateTimeFormatter
  */
 class NameBasedObjectMapperSpec extends Specification {
     class Form {
-        class Inner {
-            class InnerInner {
+        class Inner1 {
+            class Inner2 {
                 Integer integer
                 Long longf
                 Character character
                 String string
                 LocalDateTime localDateTime = LocalDateTime.now()
             }
-            InnerInner innerInner
+            Inner2 inner2
             Pojo pojo
             Integer integer
             Long longf
@@ -26,7 +26,7 @@ class NameBasedObjectMapperSpec extends Specification {
             String string
             LocalDateTime localDateTime
         }
-        Inner inner
+        Inner1 inner
         Integer integer
         Long longf
         Character character
@@ -34,7 +34,7 @@ class NameBasedObjectMapperSpec extends Specification {
         LocalDateTime localDateTime
         List<Pojo> pojos
         List<String> strings
-        List<Inner> inners
+        List<Inner1> inners
     }
 
     class Pojo {
@@ -66,7 +66,7 @@ class NameBasedObjectMapperSpec extends Specification {
 
         def inner = createInner(nowString)
         inner.put('pojo', createPojo("inner pojo"))
-        inner.put('innerInner', createInner(nowString))
+        inner.put('inner2', createInner(nowString))
 
         def pojos = Arrays.asList(createPojo("hoge"), createPojo("fuga"), createPojo("piyo"))
         def strings = Arrays.asList("admin", "system", "power")
@@ -86,8 +86,8 @@ class NameBasedObjectMapperSpec extends Specification {
         // inner list
         map.put("inners", inners)
 
-        def mapper = new NameBasedObjectMapper()
-        def form = mapper.map(map, Form.class)
+        def mapper = new KeyValueMapper()
+        def form = mapper.mapAndConstruct(map, Form.class)
 
         expect:
         // top level field
@@ -114,7 +114,7 @@ class NameBasedObjectMapperSpec extends Specification {
         formInner.localDateTime == now
         formInner.pojo.string == 'inner pojo'
 
-        def fInIn = formInner.innerInner
+        def fInIn = formInner.inner2
         fInIn.integer == 1000
         fInIn.string == 'inner string'
         fInIn.longf == 987654321L

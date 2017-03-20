@@ -14,9 +14,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.carbon.util.SimpleKeyValue;
+import org.carbon.util.exception.DuplicateKeyException;
 import org.carbon.util.format.BoxedTitleMessage;
 import org.carbon.util.format.ChapterAttr;
-import org.carbon.util.exception.ConfigMappingException;
+import org.carbon.util.exception.PropertyMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -24,24 +25,25 @@ import org.yaml.snakeyaml.Yaml;
 /**
  * @author Shota Oda 2016/11/12.
  */
-public class ConfigHolder {
-    private Logger logger = LoggerFactory.getLogger(ConfigHolder.class);
+public class PropertyMapper {
+    private Logger logger = LoggerFactory.getLogger(PropertyMapper.class);
 
     private Yaml yaml;
+    private KeyValueMapper mapper;
     private String configFileName;
     private Map<String, Object> config;
-    private List<Config> flatConfig;
+    private List<PropertyItem> flatConfig;
     private Map<String, Optional> readCache;
 
-    public class Config {
+    public class PropertyItem {
         private String key;
         private Object value;
         private Throwable error;
 
-        public Config(Throwable error) {
+        public PropertyItem(Throwable error) {
             this.error = error;
         }
-        public Config(String key, Object value) {
+        public PropertyItem(String key, Object value) {
             this.key = key;
             this.value = value;
         }
@@ -65,9 +67,10 @@ public class ConfigHolder {
     }
 
     @SuppressWarnings("unchecked")
-    public ConfigHolder(String configFileName) {
-        this.configFileName = configFileName;
+    public PropertyMapper(String configFileName) {
         this.yaml = new Yaml();
+        this.mapper = new KeyValueMapper();
+        this.configFileName = configFileName;
         this.readCache = new HashMap<>();
 
         try (InputStream stream = getConfigStream()) {
@@ -77,23 +80,12 @@ public class ConfigHolder {
                     .orElse(new HashMap());
             this.flatConfig = deep(config, null);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
         if (logger.isInfoEnabled()) {
             logResult();
         }
-    }
-
-    public void logResult() {
-        List<SimpleKeyValue<String, ?>> kvs = flatConfig.stream().map(conf -> {
-            Object value;
-            if (conf.getError() != null) value = conf.getError();
-            else value = conf.getValue();
-            return new SimpleKeyValue<>(conf.getKey(), value);
-        }).sorted((kvs1,kvs2)->kvs1.getKey().compareTo(kvs2.getKey())).collect(Collectors.toList());
-        String boxedLines = BoxedTitleMessage.produceLeft(kvs);
-        String info = ChapterAttr.getBuilder("Configuration Result").appendLine(boxedLines).toString();
-        logger.info(info);
     }
 
     @SuppressWarnings("unchecked")
@@ -117,12 +109,27 @@ public class ConfigHolder {
             if (confs == null || confs.isEmpty()) {
                 return Optional.empty();
             }
+            if (confs.size() > 1) {
+                throw new DuplicateKeyException("Key ["+key+"] is duplicate");
+            }
             return Optional.of(confs.get(0));
         });
     }
 
     public <T> List<T> find(String key, Class<T> type) {
         return findDeep(config, Arrays.asList(key.split("\\.")), type).orElse(new ArrayList<>());
+    }
+
+    private void logResult() {
+        List<SimpleKeyValue<String, ?>> kvs = flatConfig.stream().map(conf -> {
+            Object value;
+            if (conf.getError() != null) value = conf.getError();
+            else value = conf.getValue();
+            return new SimpleKeyValue<>(conf.getKey(), value);
+        }).sorted((kvs1,kvs2)->kvs1.getKey().compareTo(kvs2.getKey())).collect(Collectors.toList());
+        String boxedLines = BoxedTitleMessage.produceLeft(kvs);
+        String info = ChapterAttr.getBuilder("Configuration Result").appendLine(boxedLines).toString();
+        logger.info(info);
     }
 
     @SuppressWarnings("unchecked")
@@ -142,7 +149,7 @@ public class ConfigHolder {
                                 prop = System.getProperty(propKey);
                             }
                             if (prop == null) {
-                                throw new ConfigMappingException(String.format("Not Found environment variable:[\"%s\"]", propKey));
+                                throw new PropertyMappingException(String.format("Not Found environment variable:[\"%s\"]", propKey));
                             }
                             return new AbstractMap.SimpleEntry<>(key, prop);
                         }
@@ -170,14 +177,13 @@ public class ConfigHolder {
             return sourceValue.map(d -> findDeep((Map)d, keys.subList(1, keys.size()), type).orElse(null));
         }
 
-        NameBasedObjectMapper mapper = new NameBasedObjectMapper(false);
         return sourceValue.map(value -> {
             if (value instanceof List) {
                 return (List<T>)((List) value).stream()
                         .filter(d -> d instanceof Map)
                         .map(d -> {
                             Map map = (Map) ((Map) d).get(keys.get(1));
-                            return mapper.map(map, type);
+                            return mapper.mapAndConstruct(map, type);
                         })
                         .collect(Collectors.toList());
             }
@@ -187,7 +193,7 @@ public class ConfigHolder {
             }
 
             if (value instanceof Map) {
-                return Collections.singletonList(mapper.map((Map)value, type));
+                return Collections.singletonList(mapper.mapAndConstruct((Map)value, type));
             }
 
             return new ArrayList<T>();
@@ -195,7 +201,7 @@ public class ConfigHolder {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Config> deep(Map<String, Object> map, String prefix) {
+    private List<PropertyItem> deep(Map<String, Object> map, String prefix) {
         return map.entrySet().stream()
                 .flatMap(entry -> {
                     String entryKey = entry.getKey();
@@ -206,20 +212,20 @@ public class ConfigHolder {
                             || value instanceof Integer
                             || value instanceof Boolean
                             || value instanceof Character) {
-                        return Collections.singleton(new Config(key, value)).stream();
+                        return Collections.singleton(new PropertyItem(key, value)).stream();
                     } else if (value instanceof Map) {
-                        return ((List<Config>) deep((Map) value, key)).stream();
+                        return ((List<PropertyItem>) deep((Map) value, key)).stream();
                     } else if (value instanceof List) {
-                        return (Stream<Config>) ((List) value).stream().flatMap(item -> {
+                        return (Stream<PropertyItem>) ((List) value).stream().flatMap(item -> {
                             if (item instanceof Map) {
-                                return (Stream<Config>) deep((Map) item, key).stream();
+                                return (Stream<PropertyItem>) deep((Map) item, key).stream();
                             }
-                            Config error = new Config(new IllegalArgumentException(item.getClass() + " is not allowed under list\n list can contain Map<K, V> only."));
+                            PropertyItem error = new PropertyItem(new IllegalArgumentException(item.getClass() + " is not allowed under list\n list can contain Map<K, V> only."));
                             return Collections.singleton(error).stream();
                         });
                     }
 
-                    Config error = new Config(new IllegalArgumentException(value.getClass().toString()));
+                    PropertyItem error = new PropertyItem(new IllegalArgumentException(value.getClass().toString()));
                     return Collections.singleton(error).stream();
                 })
                 .collect(Collectors.toList());
