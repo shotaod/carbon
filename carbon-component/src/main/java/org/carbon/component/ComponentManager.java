@@ -50,11 +50,12 @@ public class ComponentManager {
         Map<Class, Object> instances = generator.generate(classes);
         instances.putAll(dependency);
         /*
-        * 1. Inject Configuration <- OtherInstance
+        * 1. Inject instances to Configuration
         * 2. Generate Component by Configuration Method
         * 3. Inject each other
         */
-        // 1.
+
+        // extract configurations
         Map<Class, Object> configurations = instances.entrySet().stream()
                 .filter(entry -> entry.getKey().isAnnotationPresent(Configuration.class))
                 .collect(Collectors.toMap(
@@ -66,6 +67,7 @@ public class ComponentManager {
             loggingConfiguration(configurations);
         }
 
+        // handle configurations
         while (!configurations.isEmpty()) {
             Map<Class, Object> tmp = injector.injectOnlySatisfied(configurations, instances).entrySet().stream()
                     .peek(entry -> configurations.remove(entry.getKey()))
@@ -80,6 +82,7 @@ public class ComponentManager {
             Map<Class, Object> instancesSuppliedByConfiguration = generator.generateMethodComponent(tmp);
             instances.putAll(instancesSuppliedByConfiguration);
         }
+
 
         Map<Class, Object> injected = injector.injectEach(instances);
         if (logger.isDebugEnabled()) {
@@ -103,7 +106,7 @@ public class ComponentManager {
                     Stream.of(clazz.getDeclaredMethods())
                             .filter(method -> method.isAnnotationPresent(AfterInject.class))
                             .forEach(method -> {
-                                logger.debug("call @AfterInject {} at {}", method.getName(), clazz.getName());
+                                logger.debug("call @AfterInject Method {} at {}", method.getName(), clazz.getName());
                                 try {
                                     method.invoke(object);
                                 } catch (IllegalAccessException | InvocationTargetException e) {
