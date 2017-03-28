@@ -47,9 +47,10 @@ public class ActionArgumentAggregator {
     private RequestContext requestContext;
     @Inject
     private SessionContext sessionContext;
+    @Inject
+    private KeyValueMapper keyValueMapper;
 
     private PathVariableValues pathVariableValues;
-    private KeyValueMapper objectMapper = new KeyValueMapper();
 
     public ActionArgumentAggregator with(PathVariableValues pathVariableValues) {
         this.pathVariableValues = pathVariableValues;
@@ -84,7 +85,7 @@ public class ActionArgumentAggregator {
             // mapping
             if (parameter.isAnnotationPresent(PathVariable.class)) {
                 String varName = parameter.getDeclaredAnnotation(PathVariable.class).value();
-                resolved = mapPathVariable(pathVariableValues, varName);
+                resolved = mapPathVariable(pathVariableValues, varName, paramType);
             } else if (parameter.isAnnotationPresent(RequestCookie.class)) {
                 resolved = mapCookie(request, paramType);
             } else if (parameter.isAnnotationPresent(RequestBody.class)) {
@@ -116,14 +117,15 @@ public class ActionArgumentAggregator {
         return new ExecutableAction<>(method.getReturnType(), instance, method, resolvedArguments);
     }
 
-    private String mapPathVariable(PathVariableValues pathVariableValues, String varName) {
-        return pathVariableValues.getValue(varName);
+    private Object mapPathVariable(PathVariableValues pathVariableValues, String varName, Class<?> paramType) {
+        String value = pathVariableValues.getValue(varName);
+        return keyValueMapper.mapPrimitive(value, paramType);
     }
 
     private <T> T mapCookie(HttpServletRequest request, Class<T> mapTo) {
         Map<String, Object> cookies = Arrays.stream(request.getCookies())
                 .collect(Collectors.toMap(Cookie::getName, Cookie::getValue));
-        return objectMapper.mapAndConstruct(cookies, mapTo);
+        return keyValueMapper.mapAndConstruct(cookies, mapTo);
     }
 
     private <T> T mapRequestBody(HttpServletRequest request, Class<T> mapTo) {

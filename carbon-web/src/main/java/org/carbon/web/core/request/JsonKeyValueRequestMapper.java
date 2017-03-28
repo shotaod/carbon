@@ -14,12 +14,17 @@ import org.carbon.web.exception.RequestMappingException;
 @Component
 public class JsonKeyValueRequestMapper implements TypeSafeRequestMapper {
 
+    private ObjectMapper objectMapper;
+
+    public JsonKeyValueRequestMapper() {
+        objectMapper = new ObjectMapper();
+    }
+
     @Override
     public <T> T map(HttpServletRequest request, Class<T> mapTo) {
-        ObjectMapper mapper = new ObjectMapper();
 
         try {
-            return mapper.readValue(request.getReader(), new TypeReference<T>(){});
+            return objectMapper.readValue(request.getReader(), mapTo);
         } catch (IOException e) {
             throw new RequestMappingException("json mapping exception", e);
         }

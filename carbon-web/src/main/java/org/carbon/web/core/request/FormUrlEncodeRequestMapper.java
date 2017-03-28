@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Inject;
 import org.carbon.util.mapper.KeyValueMapper;
 
 /**
@@ -35,7 +36,8 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
         }
     }
 
-    private KeyValueMapper keyValueMapper = new KeyValueMapper();
+    @Inject
+    private KeyValueMapper keyValueMapper;
 
     @Override
     public <T> T map(HttpServletRequest request, Class<T> mapTo) {

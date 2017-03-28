@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
  */
 @Component
 public class CarbonCore {
-    private static Logger logger = LoggerFactory.getLogger(CarbonCore.class);
 
     @Inject
     private ActionFinder actionFinder;

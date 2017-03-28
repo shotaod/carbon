@@ -16,9 +16,9 @@ public class RequestMapper {
     private RequestMapperFactory factory;
 
     public <T> T map(HttpServletRequest request, Class<T> mapTo) {
-        String contentType = Optional.ofNullable(request.getHeader("content-type"))
-            .map(ct -> ct.toLowerCase())
-            .orElse(null);
+        ContentType contentType = Optional.ofNullable(request.getHeader("content-type"))
+                .map(ContentType::new)
+                .orElse(null);
         return factory.factorize(contentType)
             .map(mapper -> mapper.map(request, mapTo))
             .orElseThrow(() -> new RequestMappingException("content-type not supported: " + contentType));

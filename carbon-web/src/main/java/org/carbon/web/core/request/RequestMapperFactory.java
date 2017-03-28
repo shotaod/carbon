@@ -26,17 +26,17 @@ public class RequestMapperFactory {
     private FormUrlEncodeRequestMapper formUrlEncodeRequestMapper;
 
 
-    public Optional<TypeSafeRequestMapper> factorize(String contentType) {
-
-        if (APPLICATION_JSON.equals(contentType)) {
+    public Optional<TypeSafeRequestMapper> factorize(ContentType contentType) {
+        String media = contentType.getMediaType();
+        if (APPLICATION_JSON.equals(media)) {
             return Optional.of(jsonKeyValueRequestMapper);
         }
 
-        if (MULTIPART_FORM.equals(contentType)) {
+        if (MULTIPART_FORM.equals(media)) {
             return Optional.of(multipartFormKeyValueRequestMapper);
         }
 
-        if (X_WWW_FORM_URL_ENCODE.equals(contentType) || contentType == null) {
+        if (X_WWW_FORM_URL_ENCODE.equals(media) || media == null) {
             return Optional.of(formUrlEncodeRequestMapper);
         }
 
