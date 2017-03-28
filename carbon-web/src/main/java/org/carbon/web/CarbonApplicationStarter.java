@@ -92,10 +92,6 @@ public class CarbonApplicationStarter {
         PropertyMapper propertyMapper = new PropertyMapper(configFileName);
         dependency.put(PropertyMapper.class, propertyMapper);
 
-        WebProperty webProperty = propertyMapper.findOne("web", WebProperty.class).orElseThrow(() ->
-                new IllegalStateException("Not Found Web Property at " + configFileName));
-        dependency.put(WebProperty.class, webProperty);
-
         // resolve external module
         ModuleDependency moduleDependency = resolveModuleConfigurer(scanBase, propertyMapper);
 

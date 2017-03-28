@@ -33,7 +33,7 @@ public class ErrorWrapperChain extends HttpHandlerChain{
                     response.getWriter().println("<h1>Error</h1>");
                 } catch (IOException ignored) {}
             } else {
-                logger.warn("Handled Error: " + throwable.getMessage());
+                logger.error("Handled Error: " + throwable.getMessage(), throwable);
             }
         }
     }

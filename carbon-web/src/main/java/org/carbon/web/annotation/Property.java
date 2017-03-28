@@ -14,4 +14,5 @@ import org.carbon.component.annotation.Component;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Property {
+    String key() default "";
 }

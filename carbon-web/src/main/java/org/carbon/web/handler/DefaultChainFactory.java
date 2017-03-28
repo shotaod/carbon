@@ -24,6 +24,7 @@ public class DefaultChainFactory {
             LoggingScopeChain.class,
             SessionScopeChain.class,
             RequestScopeChain.class,
+            CrossOriginChain.class,
             CoreDispatchChain.class,
             XHttpHeaderChain.class
     ).collect(Collectors.toSet());
@@ -38,6 +39,8 @@ public class DefaultChainFactory {
     private SessionScopeChain sessionScopeChain;
     @Inject
     private RequestScopeChain requestScopeChain;
+    @Inject
+    private CrossOriginChain crossOriginChain;
     @Inject
     private CoreDispatchChain coreDispatchChain;
     @Inject
@@ -64,6 +67,7 @@ public class DefaultChainFactory {
                 .setChain(sessionScopeChain)
                 .setChain(requestScopeChain)
                 .setChain(errorWrapperChain)
+                .setChain(crossOriginChain)
                 .setChains(additionalHandlers)
                 .setChain(coreDispatchChain)
                 .setChain(xHeaderChain);
