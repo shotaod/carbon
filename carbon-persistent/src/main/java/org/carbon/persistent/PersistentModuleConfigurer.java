@@ -29,9 +29,9 @@ import org.slf4j.LoggerFactory;
 public class PersistentModuleConfigurer implements ModuleConfigurer {
     private Logger logger = LoggerFactory.getLogger(PersistentModuleConfigurer.class);
 
-    private final String ImplKey = "persistent.implementation";
-    private final String DataSourceKey = "persistent.dataSource";
-    private final String AutoDDLKey = "persistent.option.autoddl";
+    private static final String ImplKey = "persistent.implementation";
+    private static final String DataSourceKey = "persistent.dataSource";
+    private static final String AutoDDLKey = "persistent.option.autoddl";
 
     @Override
     public ModuleConfigurationResult configure(Class scanBase, PropertyMapper propertyMapper) {
@@ -46,7 +46,7 @@ public class PersistentModuleConfigurer implements ModuleConfigurer {
             instances.put(AutoDDL.class, autoDDL);
         }
 
-        Optional<DataSourceProperty> optionalProperty = propertyMapper.findOne(DataSourceKey, DataSourceProperty.class);
+        Optional<DataSourceProperty> optionalProperty = propertyMapper.findAndConstruct(DataSourceKey, DataSourceProperty.class);
         if (optionalProperty.isPresent()) {
             logger.info("Detect Datasource property. Create and Inject Datasource");
             instances.put(DataSource.class, optionalProperty.get().toDataSource());

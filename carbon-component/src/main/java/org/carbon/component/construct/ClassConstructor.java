@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,8 +63,15 @@ public class ClassConstructor {
                 .map(clazz -> (ProxyAdapter) constructClass(clazz))
                 .collect(Collectors.toList());
 
-        return classes.stream()
-                .filter(clazz -> !clazz.isInterface() && !clazz.isAnnotation())
+        Map<Class<? extends ProxyAdapter>, ProxyAdapter> adapters = proxyAdapters.stream().collect(Collectors.toMap(
+                ProxyAdapter::getClass,
+                Function.identity()
+        ));
+
+        Map<Class, Object> generateInstances = classes.stream()
+                .filter(clazz -> !clazz.isInterface()
+                        && !clazz.isAnnotation()
+                        && !adapters.keySet().contains(clazz))
                 .map(clazz -> {
                     if (proxyAdapters.isEmpty()) {
                         return new ClassAndObject(clazz, constructClass(clazz));
@@ -91,6 +99,9 @@ public class ClassConstructor {
                         ClassAndObject::getC,
                         ClassAndObject::getO
                 ));
+        generateInstances.putAll(adapters);
+
+        return generateInstances;
     }
 
     public Map<Class, Object> generateMethodComponent(Map<Class, Object> configurations) {
