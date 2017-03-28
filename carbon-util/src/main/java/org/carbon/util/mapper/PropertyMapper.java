@@ -103,7 +103,16 @@ public class PropertyMapper {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> findOne(String key, Class<T> type) {
+    public void findAndMapping(String key, Object object) {
+        Map copy = new HashMap<>(config);
+        for (String k : Arrays.asList(key.split("\\."))) {
+            copy = (Map)copy.get(k);
+        }
+        mapper.map(object, copy);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Optional<T> findAndConstruct(String key, Class<T> type) {
         return (Optional<T>) readCache.computeIfAbsent(key, k -> {
             List<T> confs = find(key, type);
             if (confs == null || confs.isEmpty()) {

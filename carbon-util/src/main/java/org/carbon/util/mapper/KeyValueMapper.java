@@ -36,6 +36,17 @@ import static org.carbon.util.mapper.cast.StringCaster.longCaster;
 import static org.carbon.util.mapper.cast.StringCaster.shortCaster;
 
 /**
+ * =======================
+ * check
+ * defined key or not
+ * (not)
+ * - iterate field
+ * (key defined)
+ * - same
+ * - list
+ * - handlable
+ * - pojo
+ * =======================
  * @author Shota Oda 2016/10/12.
  */
 public class KeyValueMapper {
@@ -62,33 +73,25 @@ public class KeyValueMapper {
         }
     }
 
-    protected boolean isDismissUndefined = true;
+    protected boolean isDismissUndefined;
     protected List<CasterStrategy<?>> rawTypeStrategies;
 
     public KeyValueMapper() {
-        rawTypeStrategies = defaultCasters();
+        this(true);
     }
     public KeyValueMapper(boolean isDismissUndefined) {
         this.isDismissUndefined = isDismissUndefined;
+        this.rawTypeStrategies = defaultCasters();
     }
-    public void setDismissUndefined(boolean dismissUndefined) {
-        isDismissUndefined = dismissUndefined;
+
+    public <T> T mapPrimitive(String source, Class<T> as) {
+        return findStrategy(as).map(strategy -> strategy.cast(source)).orElseThrow(() -> {
+            String message = String.format("Cannot cast to %s", as.getClass().getName());
+            return new UnsupportedOperationException(message);
+        });
     }
 
     public <T> T mapAndConstruct(Map<String, Object> sources, Class<T> as) {
-
-        /* =======================
-        * check
-        * defined key or not
-        * (not)
-        * - iterate field
-        * (key defined)
-        * - same
-        * - list
-        * - handlable
-        * - pojo
-        ======================= */
-
         T instance;
         try {
             instance = newInstance(as, null);
@@ -99,7 +102,7 @@ public class KeyValueMapper {
         return instance;
     }
 
-    public <T> void map(T instance, Map<String, Object> sources) {
+    public void map(Object instance, Map<String, Object> sources) {
         mapPojo(instance, MapPath.root(), sources);
     }
 
@@ -122,7 +125,7 @@ public class KeyValueMapper {
                 item = mapList(getGenericType(prop), targetSource, mapPath, target);
             } else {
                 // check raw type
-                Optional<CasterStrategy<?>> strategy = findStrategy(setterType);
+                Optional<? extends CasterStrategy<?>> strategy = findStrategy(setterType);
                 if (strategy.isPresent()) {
                     item = strategy.get().getCaster().cast(targetSource.toString());
                 }
@@ -152,7 +155,7 @@ public class KeyValueMapper {
                 if (genericType.isAssignableFrom(sourceElementClass)) {
                     return (T) sourceElement;
                 }
-                Optional<CasterStrategy<?>> strategy = findStrategy(genericType);
+                Optional<CasterStrategy<T>> strategy = findStrategy(genericType);
                 if (strategy.isPresent()) {
                     return (T) strategy.get().cast(sourceElement.toString());
                 }
@@ -248,16 +251,16 @@ public class KeyValueMapper {
         return Collection.class.isAssignableFrom(type);
     }
 
-    private Optional<CasterStrategy<?>> findStrategy(Class<?> type) {
+    @SuppressWarnings("unchecked")
+    private <T> Optional<CasterStrategy<T>> findStrategy(Class<T> type) {
         for (CasterStrategy<?> strategy : rawTypeStrategies) {
             if (strategy.getType().equals(type)) {
-                return Optional.of(strategy);
+                return Optional.of((CasterStrategy<T>) strategy);
             }
         }
 
         return Optional.empty();
     }
-
 
     private List<KeyValueMapper.CasterStrategy<?>> defaultCasters() {
         return Arrays.asList(
