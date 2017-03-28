@@ -69,7 +69,7 @@ public class ActionMappingConfiguration {
                 String url = definedAction.getComputed().toString();
                 if (url.isEmpty()) url = "/";
                 String info = definedAction.mappingResult();
-                String separator = Stream.generate(() -> " ").limit(5 - hMethod.length()).collect(Collectors.joining("", "", ": "));
+                String separator = Stream.generate(() -> " ").limit(6 - hMethod.length()).collect(Collectors.joining("", "", ": "));
                 return new SimpleKeyValue<>(hMethod + separator + url, info);
             });
         }).collect(Collectors.toList());
