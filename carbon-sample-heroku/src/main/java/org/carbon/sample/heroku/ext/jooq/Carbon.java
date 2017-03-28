@@ -12,6 +12,7 @@ import javax.annotation.Generated;
 
 import org.carbon.sample.heroku.ext.jooq.tables.Blog;
 import org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion;
+import org.carbon.sample.heroku.ext.jooq.tables.Todo;
 import org.carbon.sample.heroku.ext.jooq.tables.User;
 import org.jooq.Catalog;
 import org.jooq.Sequence;
@@ -32,7 +33,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Carbon extends SchemaImpl {
 
-    private static final long serialVersionUID = -67773662;
+    private static final long serialVersionUID = 1196396306;
 
     /**
      * The reference instance of <code>carbon</code>
@@ -48,6 +49,11 @@ public class Carbon extends SchemaImpl {
      * The table <code>carbon.schema_version</code>.
      */
     public final SchemaVersion SCHEMA_VERSION = org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion.SCHEMA_VERSION;
+
+    /**
+     * The table <code>carbon.todo</code>.
+     */
+    public final Todo TODO = org.carbon.sample.heroku.ext.jooq.tables.Todo.TODO;
 
     /**
      * The table <code>carbon.user</code>.
@@ -80,6 +86,7 @@ public class Carbon extends SchemaImpl {
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
             Sequences.BLOG_ID_SEQ,
+            Sequences.TODO_ID_SEQ,
             Sequences.USER_ID_SEQ);
     }
 
@@ -94,6 +101,7 @@ public class Carbon extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Blog.BLOG,
             SchemaVersion.SCHEMA_VERSION,
+            Todo.TODO,
             User.USER);
     }
 }

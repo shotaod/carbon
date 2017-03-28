@@ -5,15 +5,28 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ActionNoteAdd from 'material-ui/svg-icons/action/note-add';
 import Title from '../common/title';
 import TodoCard from './TodoCard';
-import { addTodo } from './action';
+import { fetchTodos, addTodo, dropTodo } from './action';
 import { errorType } from '../util/PropUtil';
 
 class TodoContainer extends Component {
   static propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
-    todos: PropTypes.arrayOf(PropTypes.string.isRequired),
+    dispatchFetchTodos: PropTypes.func.isRequired,
+    dispatchHandleSubmit: PropTypes.func.isRequired,
+    dispatchHandleDrop: PropTypes.func.isRequired,
+    todos: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      text: PropTypes.string.isRequired,
+    })),
     error: errorType,
   };
+
+  static defaultProps = {
+    todos: [],
+  };
+
+  componentDidMount() {
+    this.props.dispatchFetchTodos();
+  }
 
   renderError() {
     if (this.props.error) {
@@ -27,9 +40,19 @@ class TodoContainer extends Component {
     this.text = event.target.value;
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    this.props.handleSubmit(this.text);
+  handleSubmit() {
+    this.props.dispatchHandleSubmit(this.text);
+  }
+
+  renderTodos() {
+    return this.props.todos.map(todo => {
+      return (<TodoCard
+        key={todo.id}
+        text={todo.text}
+        handleToggle={() => console.log('toggle')}
+        handleDelete={() => this.props.dispatchHandleDrop(todo.id)}
+      />)
+    });
   }
 
   render() {
@@ -52,13 +75,12 @@ class TodoContainer extends Component {
           icon={<ActionNoteAdd />}
         />
         <ul>
-          <TodoCard text="hogehoge"/>
+          {this.renderTodos()}
         </ul>
       </div>
     );
   }
 }
-
 
 const mapStateToProps = (state) => {
   const { data, error } = state.todo;
@@ -66,8 +88,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  const handleSubmit = (text) => dispatch(addTodo(text));
-  return { handleSubmit };
+  const dispatchFetchTodos = () => dispatch(fetchTodos());
+  const dispatchHandleSubmit = text => dispatch(addTodo(text));
+  const dispatchHandleDrop = id => dispatch(dropTodo(id));
+  return { dispatchFetchTodos, dispatchHandleSubmit, dispatchHandleDrop };
 };
 
 export default connect(

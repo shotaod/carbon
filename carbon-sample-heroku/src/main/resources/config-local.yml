@@ -14,4 +14,4 @@ persistent:
 sample:
   heroku:
     db:
-      url: postgres://root:password@carbon.heroku.rdb:25432/d6vh9houtm9ttn
+      url: postgres://root:password@carbon.heroku.rdb:25432/carbon

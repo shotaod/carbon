@@ -11,7 +11,7 @@ import org.postgresql.Driver;
  */
 public class DatabaseTool {
     private static String host = "carbon.heroku.rdb";
-    private static String db = "d6vh9houtm9ttn";
+    private static String db = "carbon";
     private static String schema = "carbon";
     private static String user = "root";
     private static String password = "password";

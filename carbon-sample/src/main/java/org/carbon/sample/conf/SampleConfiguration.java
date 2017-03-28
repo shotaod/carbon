@@ -3,7 +3,6 @@ package org.carbon.sample.conf;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
-import org.carbon.util.mapper.PropertyMapper;
 import org.carbon.web.context.session.RedisSessionStore;
 import org.carbon.web.context.session.SessionStore;
 
@@ -13,11 +12,13 @@ import org.carbon.web.context.session.SessionStore;
 @Configuration
 public class SampleConfiguration {
     @Inject
-    private PropertyMapper config;
+    private RedisProperty redisProperty;
 
     @Component
     public SessionStore redisSession() {
-        RedisProperty redis = config.findOne("sample.redis", RedisProperty.class).get();
-        return new RedisSessionStore(redis.getHost(), redis.getPort());
+        return new RedisSessionStore(
+                redisProperty.getHost(),
+                redisProperty.getPort()
+        );
     }
 }

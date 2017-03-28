@@ -8,6 +8,7 @@ import javax.annotation.Generated;
 
 import org.carbon.sample.heroku.ext.jooq.tables.Blog;
 import org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion;
+import org.carbon.sample.heroku.ext.jooq.tables.Todo;
 import org.carbon.sample.heroku.ext.jooq.tables.User;
 
 
@@ -33,6 +34,11 @@ public class Tables {
      * The table <code>carbon.schema_version</code>.
      */
     public static final SchemaVersion SCHEMA_VERSION = org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion.SCHEMA_VERSION;
+
+    /**
+     * The table <code>carbon.todo</code>.
+     */
+    public static final Todo TODO = org.carbon.sample.heroku.ext.jooq.tables.Todo.TODO;
 
     /**
      * The table <code>carbon.user</code>.

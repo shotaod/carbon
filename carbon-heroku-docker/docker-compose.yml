@@ -5,6 +5,6 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: d6vh9houtm9ttn
+      POSTGRES_DB: carbon
     ports:
       - "25432:5432"

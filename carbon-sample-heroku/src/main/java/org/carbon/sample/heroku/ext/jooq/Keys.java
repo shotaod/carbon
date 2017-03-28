@@ -8,10 +8,13 @@ import javax.annotation.Generated;
 
 import org.carbon.sample.heroku.ext.jooq.tables.Blog;
 import org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion;
+import org.carbon.sample.heroku.ext.jooq.tables.Todo;
 import org.carbon.sample.heroku.ext.jooq.tables.User;
 import org.carbon.sample.heroku.ext.jooq.tables.records.BlogRecord;
 import org.carbon.sample.heroku.ext.jooq.tables.records.SchemaVersionRecord;
+import org.carbon.sample.heroku.ext.jooq.tables.records.TodoRecord;
 import org.carbon.sample.heroku.ext.jooq.tables.records.UserRecord;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
@@ -36,6 +39,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<BlogRecord, Integer> IDENTITY_BLOG = Identities0.IDENTITY_BLOG;
+    public static final Identity<TodoRecord, Long> IDENTITY_TODO = Identities0.IDENTITY_TODO;
     public static final Identity<UserRecord, Long> IDENTITY_USER = Identities0.IDENTITY_USER;
 
     // -------------------------------------------------------------------------
@@ -44,6 +48,7 @@ public class Keys {
 
     public static final UniqueKey<BlogRecord> BLOG_PKEY = UniqueKeys0.BLOG_PKEY;
     public static final UniqueKey<SchemaVersionRecord> SCHEMA_VERSION_PK = UniqueKeys0.SCHEMA_VERSION_PK;
+    public static final UniqueKey<TodoRecord> TODO_PKEY = UniqueKeys0.TODO_PKEY;
     public static final UniqueKey<UserRecord> USER_PKEY = UniqueKeys0.USER_PKEY;
     public static final UniqueKey<UserRecord> USER_EMAIL_KEY = UniqueKeys0.USER_EMAIL_KEY;
 
@@ -51,6 +56,7 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<TodoRecord, UserRecord> TODO__TODO_USER_ID_FKEY = ForeignKeys0.TODO__TODO_USER_ID_FKEY;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -58,13 +64,19 @@ public class Keys {
 
     private static class Identities0 extends AbstractKeys {
         public static Identity<BlogRecord, Integer> IDENTITY_BLOG = createIdentity(Blog.BLOG, Blog.BLOG.ID);
+        public static Identity<TodoRecord, Long> IDENTITY_TODO = createIdentity(Todo.TODO, Todo.TODO.ID);
         public static Identity<UserRecord, Long> IDENTITY_USER = createIdentity(User.USER, User.USER.ID);
     }
 
     private static class UniqueKeys0 extends AbstractKeys {
         public static final UniqueKey<BlogRecord> BLOG_PKEY = createUniqueKey(Blog.BLOG, "blog_pkey", Blog.BLOG.ID);
         public static final UniqueKey<SchemaVersionRecord> SCHEMA_VERSION_PK = createUniqueKey(SchemaVersion.SCHEMA_VERSION, "schema_version_pk", SchemaVersion.SCHEMA_VERSION.INSTALLED_RANK);
+        public static final UniqueKey<TodoRecord> TODO_PKEY = createUniqueKey(Todo.TODO, "todo_pkey", Todo.TODO.ID);
         public static final UniqueKey<UserRecord> USER_PKEY = createUniqueKey(User.USER, "user_pkey", User.USER.ID);
         public static final UniqueKey<UserRecord> USER_EMAIL_KEY = createUniqueKey(User.USER, "user_email_key", User.USER.EMAIL);
+    }
+
+    private static class ForeignKeys0 extends AbstractKeys {
+        public static final ForeignKey<TodoRecord, UserRecord> TODO__TODO_USER_ID_FKEY = createForeignKey(org.carbon.sample.heroku.ext.jooq.Keys.USER_PKEY, Todo.TODO, "todo__todo_user_id_fkey", Todo.TODO.USER_ID);
     }
 }

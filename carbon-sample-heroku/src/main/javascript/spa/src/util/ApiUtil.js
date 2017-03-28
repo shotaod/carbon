@@ -24,7 +24,7 @@ const createOption = (method, authToken, body) => {
   const { token } = authToken;
   const headers = {};
   if (authToken) {
-    headers.Authorization = token;
+    // headers.Authorization = token;
   }
 
   if (method !== 'GET') {
@@ -108,6 +108,17 @@ export const putJson = (
   body,
 ) => {
   const op = createOption('PUT', authToken, body);
+  return fetch(baseUrl + path, op)
+    .catch(handleError)
+    .then(handleResponse);
+};
+
+export const deleteJson = (
+  path,
+  authToken = { token: null },
+  body,
+) => {
+  const op = createOption('DELETE', authToken, body);
   return fetch(baseUrl + path, op)
     .catch(handleError)
     .then(handleResponse);

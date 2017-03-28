@@ -15,7 +15,7 @@ import org.carbon.web.util.ResponseUtil;
 public class HerokuAuthFinisher implements AuthEventListener {
     @Override
     public void onAuth(String username, SessionContext sessionContext) {
-
+        // noop
     }
 
     @Override

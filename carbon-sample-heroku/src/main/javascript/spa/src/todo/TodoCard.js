@@ -1,22 +1,30 @@
 import React, { Component, PropTypes } from 'react';
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
+import Checkbox from 'material-ui/Checkbox';
+import FlatButton from 'material-ui/FlatButton';
 
 export default class TodoCard extends Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
-  };
-
-  style = {
-    container: {
-      padding: '30px',
-      border: '0.5px solid #EEE',
-      borderRadius: '5px',
-      boxShadow: '3px 3px 5px 0px #ddd',
-    },
+    handleToggle: PropTypes.func.isRequired,
+    handleDelete: PropTypes.func.isRequired,
   };
 
   render() {
-    return (<div style={this.style.container}>
-      {this.props.text}
-    </div>);
+    return (<Card>
+      <CardTitle title="TODO" />
+      <CardText
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
+        <Checkbox
+          style={{ width: 'auto' }}
+        />
+        <span>{this.props.text}</span>
+      </CardText>
+      <CardActions>
+        <FlatButton label="Done" onTouchTap={this.props.handleToggle} />
+        <FlatButton label="Delete" onTouchTap={this.props.handleDelete} />
+      </CardActions>
+    </Card>);
   }
 }

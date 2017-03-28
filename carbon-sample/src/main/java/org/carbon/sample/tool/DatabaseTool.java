@@ -23,7 +23,7 @@ public class DatabaseTool {
 
     public static void main(String[] args) throws Exception {
         PropertyMapper propertyMapper = new PropertyMapper("config.yml");
-        DBProp dbProp = propertyMapper.findOne("persistent.dataSource", DBProp.class).get();
+        DBProp dbProp = propertyMapper.findAndConstruct("persistent.dataSource", DBProp.class).get();
         String url = String.format("jdbc:mysql://%s:%s/%s", dbProp.host, dbProp.port, dbProp.db);
 
         new JooqGenerator(

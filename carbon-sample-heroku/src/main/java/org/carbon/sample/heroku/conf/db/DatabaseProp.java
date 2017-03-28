@@ -10,7 +10,7 @@ import org.carbon.web.annotation.Property;
  * @author Shota Oda 2017/02/12.
  */
 @Setter
-@Property
+@Property(key = "sample.heroku.db")
 public class DatabaseProp {
     private String url;
     public URI getUri() {

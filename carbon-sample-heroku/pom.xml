@@ -132,7 +132,7 @@
                 <configuration>
                     <user>root</user>
                     <password>password</password>
-                    <url>jdbc:postgresql://carbon.heroku.rdb:25432/d6vh9houtm9ttn</url>
+                    <url>jdbc:postgresql://carbon.heroku.rdb:25432/carbon</url>
                     <schemas>
                         <schema>carbon</schema>
                     </schemas>

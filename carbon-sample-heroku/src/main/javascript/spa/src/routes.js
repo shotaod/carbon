@@ -17,6 +17,9 @@ class Redirect extends Component {
   componentWillUpdate() {
     this.transfer();
   }
+  render() {
+    return null;
+  }
 }
 
 export default <Route path="" component={App}>

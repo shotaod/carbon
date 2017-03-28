@@ -1,13 +1,14 @@
 web:
   port: 7927
-  resourceDirectory: static
-  resourceOutPath: static
+  resource:
+    directory: static
+    outPath: static
   maxHeaderSize: 512000 #500KB
   maxContentSize: 2097152 #2MB
 persistent:
   implementation: jooq # jooq or hibernate
   dataSource:
-    diarect: mysql # mysql or postgresql
+    dialect: mysql # mysql or postgresql
     host: 127.0.0.1
     db: carbondb
     user: root
