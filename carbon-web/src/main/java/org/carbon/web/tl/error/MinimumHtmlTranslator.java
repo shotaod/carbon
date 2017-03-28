@@ -73,8 +73,8 @@ public class MinimumHtmlTranslator extends AbstractHttpErrorTranslator{
     }
 
     private void writeCustom(int status, String path, HttpServletResponse response) {
-        setCommon(status, response);
         htmlProcessor.with(new HtmlResponse(path)).process(response);
+        setCommon(status, response);
     }
 
     private void setCommon(int status, HttpServletResponse response) {
