@@ -33,7 +33,7 @@ public class BlogController {
     @Action(url = "/blog/entry/{entryId}", method = HttpMethod.GET)
     public HtmlResponse blogEntryGet(@PathVariable("entryId") String entryId) {
         HtmlResponse htmlResponse = new HtmlResponse("/blog/entry");
-        Blog blog = service.findById(Integer.parseInt(entryId));
+        Blog blog = service.findById(Long.parseLong(entryId));
         htmlResponse.putData("data", blog);
         return htmlResponse;
     }

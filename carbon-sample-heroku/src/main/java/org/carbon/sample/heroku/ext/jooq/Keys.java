@@ -6,10 +6,12 @@ package org.carbon.sample.heroku.ext.jooq;
 
 import javax.annotation.Generated;
 
+import org.carbon.sample.heroku.ext.jooq.tables.AuthClient;
 import org.carbon.sample.heroku.ext.jooq.tables.Blog;
 import org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion;
 import org.carbon.sample.heroku.ext.jooq.tables.Todo;
 import org.carbon.sample.heroku.ext.jooq.tables.User;
+import org.carbon.sample.heroku.ext.jooq.tables.records.AuthClientRecord;
 import org.carbon.sample.heroku.ext.jooq.tables.records.BlogRecord;
 import org.carbon.sample.heroku.ext.jooq.tables.records.SchemaVersionRecord;
 import org.carbon.sample.heroku.ext.jooq.tables.records.TodoRecord;
@@ -38,7 +40,8 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
-    public static final Identity<BlogRecord, Integer> IDENTITY_BLOG = Identities0.IDENTITY_BLOG;
+    public static final Identity<AuthClientRecord, Long> IDENTITY_AUTH_CLIENT = Identities0.IDENTITY_AUTH_CLIENT;
+    public static final Identity<BlogRecord, Long> IDENTITY_BLOG = Identities0.IDENTITY_BLOG;
     public static final Identity<TodoRecord, Long> IDENTITY_TODO = Identities0.IDENTITY_TODO;
     public static final Identity<UserRecord, Long> IDENTITY_USER = Identities0.IDENTITY_USER;
 
@@ -46,6 +49,9 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_PKEY = UniqueKeys0.AUTH_CLIENT_PKEY;
+    public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_HOST_KEY = UniqueKeys0.AUTH_CLIENT_CLIENT_HOST_KEY;
+    public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_ID_KEY = UniqueKeys0.AUTH_CLIENT_CLIENT_ID_KEY;
     public static final UniqueKey<BlogRecord> BLOG_PKEY = UniqueKeys0.BLOG_PKEY;
     public static final UniqueKey<SchemaVersionRecord> SCHEMA_VERSION_PK = UniqueKeys0.SCHEMA_VERSION_PK;
     public static final UniqueKey<TodoRecord> TODO_PKEY = UniqueKeys0.TODO_PKEY;
@@ -63,12 +69,16 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class Identities0 extends AbstractKeys {
-        public static Identity<BlogRecord, Integer> IDENTITY_BLOG = createIdentity(Blog.BLOG, Blog.BLOG.ID);
+        public static Identity<AuthClientRecord, Long> IDENTITY_AUTH_CLIENT = createIdentity(AuthClient.AUTH_CLIENT, AuthClient.AUTH_CLIENT.ID);
+        public static Identity<BlogRecord, Long> IDENTITY_BLOG = createIdentity(Blog.BLOG, Blog.BLOG.ID);
         public static Identity<TodoRecord, Long> IDENTITY_TODO = createIdentity(Todo.TODO, Todo.TODO.ID);
         public static Identity<UserRecord, Long> IDENTITY_USER = createIdentity(User.USER, User.USER.ID);
     }
 
     private static class UniqueKeys0 extends AbstractKeys {
+        public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_PKEY = createUniqueKey(AuthClient.AUTH_CLIENT, "auth_client_pkey", AuthClient.AUTH_CLIENT.ID);
+        public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_HOST_KEY = createUniqueKey(AuthClient.AUTH_CLIENT, "auth_client_client_host_key", AuthClient.AUTH_CLIENT.CLIENT_HOST);
+        public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_ID_KEY = createUniqueKey(AuthClient.AUTH_CLIENT, "auth_client_client_id_key", AuthClient.AUTH_CLIENT.CLIENT_ID);
         public static final UniqueKey<BlogRecord> BLOG_PKEY = createUniqueKey(Blog.BLOG, "blog_pkey", Blog.BLOG.ID);
         public static final UniqueKey<SchemaVersionRecord> SCHEMA_VERSION_PK = createUniqueKey(SchemaVersion.SCHEMA_VERSION, "schema_version_pk", SchemaVersion.SCHEMA_VERSION.INSTALLED_RANK);
         public static final UniqueKey<TodoRecord> TODO_PKEY = createUniqueKey(Todo.TODO, "todo_pkey", Todo.TODO.ID);

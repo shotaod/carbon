@@ -25,12 +25,12 @@ public interface IBlog extends Serializable {
     /**
      * Setter for <code>carbon.blog.id</code>.
      */
-    public void setId(Integer value);
+    public void setId(Long value);
 
     /**
      * Getter for <code>carbon.blog.id</code>.
      */
-    public Integer getId();
+    public Long getId();
 
     /**
      * Setter for <code>carbon.blog.title</code>.

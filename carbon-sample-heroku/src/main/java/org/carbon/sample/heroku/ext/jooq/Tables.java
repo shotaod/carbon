@@ -6,6 +6,7 @@ package org.carbon.sample.heroku.ext.jooq;
 
 import javax.annotation.Generated;
 
+import org.carbon.sample.heroku.ext.jooq.tables.AuthClient;
 import org.carbon.sample.heroku.ext.jooq.tables.Blog;
 import org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion;
 import org.carbon.sample.heroku.ext.jooq.tables.Todo;
@@ -24,6 +25,11 @@ import org.carbon.sample.heroku.ext.jooq.tables.User;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>carbon.auth_client</code>.
+     */
+    public static final AuthClient AUTH_CLIENT = org.carbon.sample.heroku.ext.jooq.tables.AuthClient.AUTH_CLIENT;
 
     /**
      * The table <code>carbon.blog</code>.

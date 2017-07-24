@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en"
+      layout:decorate="~{/base/layout}">
+<head>
+	<meta charset="UTF-8">
+	<title>OAuth2</title>
+</head>
+<body>
+<section layout:fragment="content">
+	<div class="row">
+		<div class="col s12">
+			<!--/*@thymesVar id="clients" type="java.util.List<org.carbon.sample.heroku.web.auth.AuthClientDto>"*/-->
+			<ul class="collection" th:each="client : ${clients}">
+				<li class="collection-item">
+					<span th:text="${client.host}"></span> : <span th:text="${client.clientId}"></span>
+				</li>
+			</ul>
+		</div>
+		<form class="col s12" action="/auth/client/register" method="post">
+			<label for="client_id">host name</label>
+			<span
+							class="new badge red"
+							data-badge-caption=""
+							th:if="${errors and errors.containsKey('clientHost')}"
+							th:text="${errors.get('clientHost')}"
+			></span>
+			<input
+				id="client_id"
+				type="text"
+				name="clientHost"
+				placeholder="www.localhost.com"
+			  th:value="${form != null} ? ${form.clientHost}"
+			/>
+			<button type="submit">register</button>
+		</form>
+	</div>
+</section>
+</body>
+</html>

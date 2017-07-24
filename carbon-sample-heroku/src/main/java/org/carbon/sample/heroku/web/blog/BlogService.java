@@ -20,7 +20,7 @@ public class BlogService {
         return dao.findAll();
     }
 
-    public Blog findById(Integer blogId) {
+    public Blog findById(Long blogId) {
         return  dao.findById(blogId);
     }
 

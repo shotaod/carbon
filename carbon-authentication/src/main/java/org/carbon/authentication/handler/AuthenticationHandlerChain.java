@@ -6,13 +6,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.carbon.authentication.Authenticator;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-import org.carbon.web.handler.HttpHandlerChain;
+import org.carbon.web.handler.HandlerChain;
 
 /**
  * @author Shota Oda 2017/03/04.
  */
 @Component
-public class AuthenticationHandlerChain extends HttpHandlerChain {
+public class AuthenticationHandlerChain extends HandlerChain {
     @Inject
     private Authenticator authenticator;
 

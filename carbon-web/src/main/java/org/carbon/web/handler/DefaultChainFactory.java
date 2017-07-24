@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 @Component
 public class DefaultChainFactory {
     private Logger logger = LoggerFactory.getLogger(DefaultChainFactory.class);
-    private Set<Class<? extends HttpHandlerChain>> DefaultChains = Stream.of(
+    private Set<Class<? extends HandlerChain>> DefaultChains = Stream.of(
             CharacterEncodingChain.class,
             ErrorWrapperChain.class,
             LoggingScopeChain.class,
@@ -47,11 +47,11 @@ public class DefaultChainFactory {
     private XHttpHeaderChain xHeaderChain;
 
     @Assemble
-    private List<HttpHandlerChain> handlers;
+    private List<HandlerChain> handlers;
 
-    public HttpHandlerChain factorize() {
+    public HandlerChain factorize() {
         logger.debug("[chain] start initialize");
-        List<HttpHandlerChain> additionalHandlers = handlers.stream()
+        List<HandlerChain> additionalHandlers = handlers.stream()
                 .filter(handler -> !DefaultChains.stream().anyMatch(defaultChain -> defaultChain.isAssignableFrom(handler.getClass())))
                 .collect(Collectors.toList());
 
@@ -63,14 +63,14 @@ public class DefaultChainFactory {
         }
 
         encodingChain
-                .setChain(loggingScopeChain)
-                .setChain(sessionScopeChain)
-                .setChain(requestScopeChain)
-                .setChain(errorWrapperChain)
-                .setChain(crossOriginChain)
+                .withChain(loggingScopeChain)
+                .withChain(sessionScopeChain)
+                .withChain(requestScopeChain)
+                .withChain(errorWrapperChain)
+                .withChain(crossOriginChain)
                 .setChains(additionalHandlers)
-                .setChain(coreDispatchChain)
-                .setChain(xHeaderChain);
+                .withChain(coreDispatchChain)
+                .withChain(xHeaderChain);
         logger.debug("[chain] finish initialize");
 
         if (logger.isInfoEnabled()) {

@@ -34,7 +34,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Blog extends TableImpl<BlogRecord> {
 
-    private static final long serialVersionUID = 1134878899;
+    private static final long serialVersionUID = -666363405;
 
     /**
      * The reference instance of <code>carbon.blog</code>
@@ -52,7 +52,7 @@ public class Blog extends TableImpl<BlogRecord> {
     /**
      * The column <code>carbon.blog.id</code>.
      */
-    public final TableField<BlogRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('carbon.blog_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+    public final TableField<BlogRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('carbon.blog_id_seq'::regclass)", org.jooq.impl.SQLDataType.BIGINT)), this, "");
 
     /**
      * The column <code>carbon.blog.title</code>.
@@ -103,7 +103,7 @@ public class Blog extends TableImpl<BlogRecord> {
      * {@inheritDoc}
      */
     @Override
-    public Identity<BlogRecord, Integer> getIdentity() {
+    public Identity<BlogRecord, Long> getIdentity() {
         return Keys.IDENTITY_BLOG;
     }
 

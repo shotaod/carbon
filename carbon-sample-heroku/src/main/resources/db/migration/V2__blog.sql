@@ -25,7 +25,7 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE blog (
-    id integer NOT NULL,
+    id BIGINT NOT NULL,
     title text NOT NULL,
     summary text NOT NULL,
     content text NOT NULL

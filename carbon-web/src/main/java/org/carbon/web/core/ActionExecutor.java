@@ -13,7 +13,7 @@ import org.carbon.web.exception.ActionInvokeException;
 public class ActionExecutor {
 
     @Inject
-    private ActionArgumentAggregator aggregator;
+    private ActionArgumentAggregatorFactory aggregatorFactory;
 
     public ActionResult execute(RequestAssociatedAction action) {
         // execute Action
@@ -32,7 +32,7 @@ public class ActionExecutor {
     //                                                                      Execute Method
     //                                                                      ==============
     private Object executeAction(RequestAssociatedAction action) throws Exception{
-        return action.execute(aggregator);
+        return action.execute(aggregatorFactory);
     }
 
     private ActionInvokeException actionInvokeException (String mapping, Exception e) {

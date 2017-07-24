@@ -83,12 +83,17 @@ public class ComponentManager {
             instances.putAll(instancesSuppliedByConfiguration);
         }
 
-
         Map<Class, Object> injected = injector.injectEach(instances);
         if (logger.isDebugEnabled()) {
             loggingDependencies(injected);
         }
         return injected.entrySet().stream()
+                // call after inject without configuration
+                .peek(e -> {
+                    if (!e.getKey().isAnnotationPresent(Configuration.class)) {
+                        callAfterInject(e.getValue());
+                    }
+                })
                 // exclude dependency
                 .filter(e -> !dependency.containsKey(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -101,18 +106,20 @@ public class ComponentManager {
 
     private void afterInject(Map<Class, Object> configurations) {
         configurations.values()
-                .forEach(object -> {
-                    Class<?> clazz = object.getClass();
-                    Stream.of(clazz.getDeclaredMethods())
-                            .filter(method -> method.isAnnotationPresent(AfterInject.class))
-                            .forEach(method -> {
-                                logger.debug("call @AfterInject Method {} at {}", method.getName(), clazz.getName());
-                                try {
-                                    method.invoke(object);
-                                } catch (IllegalAccessException | InvocationTargetException e) {
-                                    throw new MethodInvocationException(e);
-                                }
-                            });
+                .forEach(this::callAfterInject);
+    }
+
+    private void callAfterInject(Object object) {
+        Class<?> clazz = object.getClass();
+        Stream.of(clazz.getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(AfterInject.class))
+                .forEach(method -> {
+                    logger.debug("call @AfterInject Method {} at {}", method.getName(), clazz.getName());
+                    try {
+                        method.invoke(object);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new MethodInvocationException(e);
+                    }
                 });
     }
 

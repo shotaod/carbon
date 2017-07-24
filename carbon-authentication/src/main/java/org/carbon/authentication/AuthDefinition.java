@@ -92,7 +92,7 @@ public class AuthDefinition {
             if (_requestMapper == null) sb.appendLine("- requestMapper");
             if (_identifier == null) sb.appendLine("- identifier");
             if (_finisher == null) sb.appendLine("- finisher");
-            if (!sb.toString().isEmpty()) throw new InsufficientSecurityConfigException("below config is not defind\n"+sb.toString());
+            if (!sb.toString().isEmpty()) throw new InsufficientSecurityConfigException("below config is not defined\n"+sb.toString());
 
             authDefinition.rules.add(this);
             return authDefinition;

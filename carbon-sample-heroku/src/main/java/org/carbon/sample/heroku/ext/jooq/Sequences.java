@@ -24,6 +24,11 @@ import org.jooq.impl.SequenceImpl;
 public class Sequences {
 
     /**
+     * The sequence <code>carbon.auth_client_id_seq</code>
+     */
+    public static final Sequence<Long> AUTH_CLIENT_ID_SEQ = new SequenceImpl<Long>("auth_client_id_seq", Carbon.CARBON, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
      * The sequence <code>carbon.blog_id_seq</code>
      */
     public static final Sequence<Long> BLOG_ID_SEQ = new SequenceImpl<Long>("blog_id_seq", Carbon.CARBON, org.jooq.impl.SQLDataType.BIGINT.nullable(false));

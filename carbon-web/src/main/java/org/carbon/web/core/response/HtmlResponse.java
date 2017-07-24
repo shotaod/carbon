@@ -24,6 +24,10 @@ public class HtmlResponse{
         this.data.put(key, value);
     }
 
+    public void putAll(Map<String, ?> values) {
+        this.data.putAll(values);
+    }
+
     public Map<String, Object> getData() {
         return data;
     }

@@ -19,21 +19,21 @@ import java.util.stream.Collectors;
 import org.carbon.util.exception.ConstructionException;
 import org.carbon.util.exception.ObjectMappingException;
 import org.carbon.util.exception.UndefinedValueException;
-import org.carbon.util.mapper.cast.StringCaster;
+import org.carbon.util.mapper.cast.StringAnyCaster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.carbon.util.mapper.cast.StringCaster.boolCaster;
-import static org.carbon.util.mapper.cast.StringCaster.byteCaster;
-import static org.carbon.util.mapper.cast.StringCaster.charCaster;
-import static org.carbon.util.mapper.cast.StringCaster.doubleCaster;
-import static org.carbon.util.mapper.cast.StringCaster.floatCaster;
-import static org.carbon.util.mapper.cast.StringCaster.identity;
-import static org.carbon.util.mapper.cast.StringCaster.intCaster;
-import static org.carbon.util.mapper.cast.StringCaster.localDateCaster;
-import static org.carbon.util.mapper.cast.StringCaster.localDateTimeCaster;
-import static org.carbon.util.mapper.cast.StringCaster.longCaster;
-import static org.carbon.util.mapper.cast.StringCaster.shortCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.boolCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.byteCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.charCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.doubleCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.floatCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.identity;
+import static org.carbon.util.mapper.cast.StringAnyCaster.intCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.localDateCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.localDateTimeCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.longCaster;
+import static org.carbon.util.mapper.cast.StringAnyCaster.shortCaster;
 
 /**
  * =======================
@@ -53,23 +53,19 @@ public class KeyValueMapper {
     private Logger logger = LoggerFactory.getLogger(KeyValueMapper.class);
     protected class CasterStrategy<T> {
         private Class<T> type;
-        private StringCaster<T> caster;
+        private StringAnyCaster<T> caster;
 
-        public CasterStrategy(Class<T> type, StringCaster<T> caster) {
+        public CasterStrategy(Class<T> type, StringAnyCaster<T> caster) {
             this.type = type;
             this.caster = caster;
         }
 
-        public Class<T> getType() {
-            return type;
+        public boolean equalType(Class<?> other) {
+            return type.equals(other);
         }
 
-        public StringCaster<T> getCaster() {
-            return caster;
-        }
-
-        public T cast(String source) {
-            return caster.cast(source);
+        public T cast(Object source) {
+            return caster.cast(source.toString());
         }
     }
 
@@ -106,7 +102,7 @@ public class KeyValueMapper {
         mapPojo(instance, MapPath.root(), sources);
     }
 
-    private Object mapPojo(Object target, MapPath mapPath, Map<String, Object> baseSource) {
+    private <T> T mapPojo(T target, MapPath mapPath, Map<String, Object> baseSource) {
         List<PropertyDescriptor> props = getSettersHasWriterOnly(target.getClass());
 
         for (PropertyDescriptor prop : props) {
@@ -127,7 +123,7 @@ public class KeyValueMapper {
                 // check raw type
                 Optional<? extends CasterStrategy<?>> strategy = findStrategy(setterType);
                 if (strategy.isPresent()) {
-                    item = strategy.get().getCaster().cast(targetSource.toString());
+                    item = strategy.get().cast(targetSource);
                 }
                 // assert pojo
                 else {
@@ -157,7 +153,7 @@ public class KeyValueMapper {
                 }
                 Optional<CasterStrategy<T>> strategy = findStrategy(genericType);
                 if (strategy.isPresent()) {
-                    return (T) strategy.get().cast(sourceElement.toString());
+                    return strategy.get().cast(sourceElement);
                 }
                 if (sourceElement instanceof Map) {
                     T genericPojo = null;
@@ -166,7 +162,7 @@ public class KeyValueMapper {
                     } catch (ConstructionException e) {
                         throw new ObjectMappingException(e);
                     }
-                    return (T) mapPojo(genericPojo, MapPath.root(), (Map) sourceElement);
+                    return mapPojo(genericPojo, MapPath.root(), (Map) sourceElement);
                 }
                 return null;
             }).collect(Collectors.toList());
@@ -254,7 +250,7 @@ public class KeyValueMapper {
     @SuppressWarnings("unchecked")
     private <T> Optional<CasterStrategy<T>> findStrategy(Class<T> type) {
         for (CasterStrategy<?> strategy : rawTypeStrategies) {
-            if (strategy.getType().equals(type)) {
+            if (strategy.equalType(type)) {
                 return Optional.of((CasterStrategy<T>) strategy);
             }
         }

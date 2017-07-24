@@ -55,9 +55,13 @@ public class ActionMappingConfiguration {
                     Collectors.toList()
                 ));
 
+
+
         if (logger.isInfoEnabled()) {
             loggingResult(collect);
         }
+
+
 
         return new ActionMappingContext(collect);
     }

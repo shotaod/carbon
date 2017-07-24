@@ -22,12 +22,12 @@ import org.carbon.sample.heroku.ext.jooq.tables.interfaces.IBlog;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Blog implements IBlog {
 
-    private static final long serialVersionUID = 277762741;
+    private static final long serialVersionUID = 1156552085;
 
-    private Integer id;
-    private String  title;
-    private String  summary;
-    private String  content;
+    private Long   id;
+    private String title;
+    private String summary;
+    private String content;
 
     public Blog() {}
 
@@ -39,10 +39,10 @@ public class Blog implements IBlog {
     }
 
     public Blog(
-        Integer id,
-        String  title,
-        String  summary,
-        String  content
+        Long   id,
+        String title,
+        String summary,
+        String content
     ) {
         this.id = id;
         this.title = title;
@@ -51,12 +51,12 @@ public class Blog implements IBlog {
     }
 
     @Override
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
     @Override
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

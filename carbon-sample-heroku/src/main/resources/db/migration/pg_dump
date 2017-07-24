@@ -1,0 +1,9 @@
+pg_dump \
+-t carbon.auth_client \
+-h localhost \
+-p 25432 \
+-U root \
+-O -x \
+-s \
+carbon \
+> ./carbon-sample-heroku/src/main/resources/db/migration/V4__auth_client.sql

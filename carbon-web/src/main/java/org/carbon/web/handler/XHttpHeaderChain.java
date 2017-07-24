@@ -11,7 +11,7 @@ import org.carbon.web.header.HttpHeaderRegistry;
  * @author Shota Oda 2017/02/17.
  */
 @Component
-public class XHttpHeaderChain extends HttpHandlerChain {
+public class XHttpHeaderChain extends HandlerChain {
     @Inject
     private HttpHeaderRegistry headerRegistry;
 

@@ -9,7 +9,7 @@ import org.carbon.component.annotation.Component;
  * @author Shota Oda 2016/10/22.
  */
 @Component
-public class CharacterEncodingChain extends HttpHandlerChain {
+public class CharacterEncodingChain extends HandlerChain {
 
     private static final String encode = "utf-8";
 

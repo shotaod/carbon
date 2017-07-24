@@ -21,42 +21,53 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: todo_id_seq; Type: SEQUENCE; Schema: carbon; Owner: root
---
-
-CREATE SEQUENCE todo_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
-
-
-ALTER TABLE todo_id_seq OWNER TO root;
-
---
--- Name: todo; Type: TABLE; Schema: carbon; Owner: root
+-- Name: todo; Type: TABLE; Schema: carbon; Owner: -
 --
 
 CREATE TABLE todo (
-    id bigint DEFAULT nextval('todo_id_seq'::regclass) NOT NULL,
+    id BIGINT NOT NULL,
     text text NOT NULL,
     user_id bigint NOT NULL,
     available boolean DEFAULT true NOT NULL
 );
 
 
-ALTER TABLE todo OWNER TO root;
+--
+-- Name: todo_id_seq; Type: SEQUENCE; Schema: carbon; Owner: -
+--
+
+CREATE SEQUENCE todo_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 
 --
--- Name: todo todo_pkey; Type: CONSTRAINT; Schema: carbon; Owner: root
+-- Name: todo_id_seq; Type: SEQUENCE OWNED BY; Schema: carbon; Owner: -
+--
+
+ALTER SEQUENCE todo_id_seq OWNED BY todo.id;
+
+
+--
+-- Name: todo id; Type: DEFAULT; Schema: carbon; Owner: -
+--
+
+ALTER TABLE ONLY todo ALTER COLUMN id SET DEFAULT nextval('todo_id_seq'::regclass);
+
+
+--
+-- Name: todo todo_pkey; Type: CONSTRAINT; Schema: carbon; Owner: -
 --
 
 ALTER TABLE ONLY todo
     ADD CONSTRAINT todo_pkey PRIMARY KEY (id);
 
+
 --
--- Name: todo todo_user_id_fkey; Type: FK CONSTRAINT; Schema: carbon; Owner: root
+-- Name: todo todo_user_id_fkey; Type: FK CONSTRAINT; Schema: carbon; Owner: -
 --
 
 ALTER TABLE ONLY todo

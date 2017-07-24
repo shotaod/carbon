@@ -1,6 +1,6 @@
 package org.carbon.web.container;
 
-import org.carbon.web.core.ActionArgumentAggregator;
+import org.carbon.web.core.ActionArgumentAggregatorFactory;
 import org.carbon.web.mapping.ActionDefinition;
 
 /**
@@ -15,8 +15,8 @@ public class RequestAssociatedAction {
         this.pathVariableValues = pathVariableValues;
     }
 
-    public Object execute(ActionArgumentAggregator aggregator) throws Exception {
-        return actionDefinition.execute(aggregator.with(pathVariableValues));
+    public Object execute(ActionArgumentAggregatorFactory factory) throws Exception {
+        return actionDefinition.execute(factory.newAggregator(pathVariableValues));
     }
 
     public ActionDefinition getActionDefinition() {

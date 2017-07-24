@@ -2,7 +2,7 @@ web:
   port: 8927
   resource:
     directory: static
-    outPath: static
+    outPath: /static
   maxHeaderSize: 512000 #500KB
   maxContentSize: 2097152 #2MB
   customError:

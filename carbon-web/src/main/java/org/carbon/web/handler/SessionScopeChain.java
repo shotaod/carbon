@@ -15,7 +15,7 @@ import org.carbon.web.context.session.SessionContext;
  * @author Shota Oda 2016/10/17.
  */
 @Component
-public class SessionScopeChain extends HttpScopeChain{
+public class SessionScopeChain extends ScopeChain {
 
     private String cookieName = "CRBS";
     private static ThreadLocal<Optional<String>> tmpSessionKey = new ThreadLocal<Optional<String>>() {

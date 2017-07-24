@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.annotation.Channeled;
@@ -21,7 +20,7 @@ import org.carbon.web.annotation.OnReceive;
 import org.carbon.web.annotation.Socket;
 import org.carbon.web.container.ActionResult;
 import org.carbon.web.container.ComputedUrl;
-import org.carbon.web.core.ActionArgumentAggregator;
+import org.carbon.web.core.ActionArgumentAggregatorFactory;
 import org.carbon.web.core.InstanceSource;
 import org.carbon.web.core.PathVariableResolver;
 import org.carbon.web.def.HttpMethod;
@@ -39,7 +38,7 @@ public class WebSocketActionFactory {
 
     private static class AdapterAction extends ActionDefinition {
         private Class controller;
-        private Function<ActionArgumentAggregator, WebSocket> socketImplDelegate;
+        private Function<ActionArgumentAggregatorFactory.ActionArgumentAggregator, WebSocket> socketImplDelegate;
 
         public AdapterAction(HttpMethod httpMethod, ComputedUrl computed, Class clazz) {
             super(httpMethod, computed);
@@ -47,7 +46,7 @@ public class WebSocketActionFactory {
         }
 
         @Override
-        public Object execute(ActionArgumentAggregator aggregator) throws Exception {
+        public Object execute(ActionArgumentAggregatorFactory.ActionArgumentAggregator aggregator) throws Exception {
             HttpServletRequest request = aggregator.find(HttpServletRequest.class, InstanceSource.Request);
             HttpServletResponse response = aggregator.find(HttpServletResponse.class, InstanceSource.Request);
             WebSocket webSocket = socketImplDelegate.apply(aggregator);

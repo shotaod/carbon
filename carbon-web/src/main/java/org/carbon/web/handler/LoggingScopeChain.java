@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author Shota Oda 2016/10/17.
  */
 @Component
-public class LoggingScopeChain extends HttpScopeChain {
+public class LoggingScopeChain extends ScopeChain {
 
     private static Logger logger = LoggerFactory.getLogger(LoggingScopeChain.class);
 

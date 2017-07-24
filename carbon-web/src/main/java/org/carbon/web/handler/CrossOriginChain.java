@@ -15,7 +15,7 @@ import org.carbon.web.def.HttpMethod;
  * @author Shota Oda 2016/10/17.
  */
 @Component
-public class CrossOriginChain extends HttpHandlerChain {
+public class CrossOriginChain extends HandlerChain {
     private static final String Access_Control_Request_Method = "Access-Control-Request-Method";
     private static final String Access_Control_Request_Headers = "Access-Control-Request-Headers";
     private static final String Access_Control_Allow_Origin = "Access-Control-Allow-Origin";

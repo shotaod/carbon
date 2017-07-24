@@ -6,13 +6,12 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
 import org.carbon.web.container.ComputedUrl;
-import org.carbon.web.core.ActionArgumentAggregator;
+import org.carbon.web.core.ActionArgumentAggregatorFactory;
 import org.carbon.web.core.PathVariableResolver;
 import org.carbon.web.def.HttpMethod;
 
@@ -34,7 +33,7 @@ public class ControllerActionFactory {
         }
 
         @Override
-        public Object execute(ActionArgumentAggregator aggregator) throws Exception {
+        public Object execute(ActionArgumentAggregatorFactory.ActionArgumentAggregator aggregator) throws Exception {
             return aggregator.resolve(action, controller).execute();
         }
 

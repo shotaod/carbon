@@ -11,7 +11,7 @@ import org.carbon.web.context.request.RequestContext;
  * @author Shota Oda 2016/10/17.
  */
 @Component
-public class RequestScopeChain extends HttpScopeChain {
+public class RequestScopeChain extends ScopeChain {
 
     @Inject
     private RequestContext requestContext;

@@ -11,7 +11,7 @@ import org.carbon.web.core.CarbonCore;
  * @author Shota Oda 2016/10/17.
  */
 @Component
-public class CoreDispatchChain extends HttpHandlerChain {
+public class CoreDispatchChain extends HandlerChain {
     @Inject
     private CarbonCore core;
 

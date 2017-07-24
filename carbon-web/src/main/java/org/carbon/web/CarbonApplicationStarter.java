@@ -16,6 +16,7 @@ import org.carbon.util.format.ChapterAttr;
 import org.carbon.util.mapper.PropertyMapper;
 import org.carbon.web.conf.WebProperty;
 import org.carbon.web.context.InstanceContainer;
+import org.carbon.web.def.Favicon;
 import org.carbon.web.exception.ApplicationStartException;
 import org.carbon.web.context.app.ApplicationContext;
 import org.carbon.web.def.Logo;
@@ -53,6 +54,7 @@ public class CarbonApplicationStarter {
     //                                                                              Public
     //                                                                              ======
     public void start(Class scanBase) throws Exception {
+        Favicon favicon = new Favicon();
         start(scanBase,
                 () -> logger.info(ChapterAttr.get("Carbon Initialize Finished")),
                 () -> logger.info(ChapterAttr.get("Carbon Start Running")));

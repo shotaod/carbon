@@ -1,7 +1,7 @@
 package org.carbon.web.mapping;
 
 import org.carbon.web.container.ComputedUrl;
-import org.carbon.web.core.ActionArgumentAggregator;
+import org.carbon.web.core.ActionArgumentAggregatorFactory;
 import org.carbon.web.def.HttpMethod;
 
 /**
@@ -19,7 +19,7 @@ public abstract class ActionDefinition {
         return computed;
     }
 
-    abstract public Object execute(ActionArgumentAggregator aggregator) throws Exception;
+    abstract public Object execute(ActionArgumentAggregatorFactory.ActionArgumentAggregator aggregator) throws Exception;
     abstract public String mappingResult();
 
     public ActionDefinition(HttpMethod httpMethod,

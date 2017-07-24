@@ -38,7 +38,7 @@ public class TransactionInterceptor implements ProxyAdapter {
                 result = methodProxy.invokeSuper(obj, args);
             } catch (Exception e) {
                 conn.rollback();
-                return null;
+                throw e;
             }
             conn.commit();
             return result;
