@@ -1,4 +1,5 @@
-package org.carbon.sample.heroku.web.auth;
+package org.carbon.sample.heroku.web.oauth.client;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,43 +7,41 @@ import java.util.Map;
 
 import org.carbon.component.annotation.Inject;
 import org.carbon.sample.heroku.exception.DuplicateEntityException;
+import org.carbon.sample.heroku.web.oauth.AuthClientDto;
+import org.carbon.sample.heroku.web.oauth.OAuth2Service;
 import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
 import org.carbon.web.annotation.RequestBody;
-import org.carbon.web.annotation.RequestHeader;
-import org.carbon.web.annotation.RequestParam;
 import org.carbon.web.annotation.Validate;
 import org.carbon.web.core.response.HtmlResponse;
 import org.carbon.web.core.response.HttpOperation;
 import org.carbon.web.core.response.RedirectOperation;
 import org.carbon.web.core.validation.SimpleValidationResult;
 import org.carbon.web.def.HttpMethod;
-import org.carbon.web.util.ResponseUtil;
 
 /**
- * @author garden 2017/07/16.
+ * @author garden 2017/07/29.
  */
-@Controller("/auth")
-public class OAuth2Controller {
-
+@Controller("/oauth/client")
+public class OauthClientController {
     @Inject
     private OAuth2Service service;
 
-    @Action(url = "/client/register", method = HttpMethod.GET)
-    public HttpOperation getClientRegister() {
-        return RedirectOperation.to("/auth/client/console");
-    }
-
-    @Action(url = "/client/console", method = HttpMethod.GET)
+    @Action(url = "/console", method = HttpMethod.GET)
     public HtmlResponse get() {
 
         List<AuthClientDto> clients = service.fetchAllClient();
-        HtmlResponse htmlResponse = new HtmlResponse("/auth/client/console");
+        HtmlResponse htmlResponse = new HtmlResponse("/oauth/client/console");
         htmlResponse.putData("clients", clients);
         return htmlResponse;
     }
 
-    @Action(url = "/client/register", method = HttpMethod.POST)
+    @Action(url = "/register", method = HttpMethod.GET)
+    public HttpOperation getClientRegister() {
+        return RedirectOperation.to("/oauth/client/console");
+    }
+
+    @Action(url = "/register", method = HttpMethod.POST)
     public HtmlResponse postClientId(
             @Validate @RequestBody OAuth2ClientRegisterForm form,
             SimpleValidationResult vr
@@ -70,19 +69,4 @@ public class OAuth2Controller {
         return htmlResponse;
     }
 
-    @Action(url = "authorize", method = HttpMethod.GET)
-    public HtmlResponse getAuthorize(
-            @RequestHeader("host") String host,
-            @Validate @RequestParam OAuth2Param param,
-            SimpleValidationResult vr
-    ) {
-        if (vr.existError() || !service.validateClient(host, param.getClient_id())) {
-            return new HtmlResponse("error/403");
-        }
-
-        HtmlResponse htmlResponse = new HtmlResponse("/auth/authorize");
-        htmlResponse.putData("host", host);
-        htmlResponse.putData("scopes", param.getScopes());
-        return htmlResponse;
-    }
 }

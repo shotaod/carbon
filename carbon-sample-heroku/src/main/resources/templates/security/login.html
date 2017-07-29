@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       lang="en"
-      layout:decorate="~{/sample/security/layout}">
+      layout:decorate="~{/security/layout}">
 <head>
 	<meta charset="UTF-8">
 	<title>Login</title>
@@ -11,7 +11,7 @@
 <body>
 <section layout:fragment="content">
 	<div class="row">
-		<form method="post" action="/sample/security/login" class="col s8 offset-s2 card-panel">
+		<form method="post" action="/security/login" class="col s8 offset-s2 card-panel">
 			<div class="row">
 				<div class="input-field col s12">
 					<input id="email" type="email" name="email">
@@ -27,14 +27,14 @@
 
 			<div class="row">
 				<div class="col s12">
-					<button class="btn waves-effect waves-light" type="submit" name="action">Sign in
+					<button class="col s3 btn waves-effect waves-light" type="submit" name="action">Sign in
 						<i class="material-icons right">send</i>
 					</button>
-					<a class="btn waves-effect waves-light" type="button" href="/sample/security/signup">
+					<a class="col s3 btn waves-effect waves-light" type="button" href="/security/signup">
 						Sign up
 						<i class="material-icons right">send</i>
 					</a>
-					<a class="btn waves-effect waves-light right" type="button" href="/sample/security/secret">
+					<a class="col s3 btn waves-effect waves-light right" type="button" href="/security/secret">
 						Secret
 						<i class="material-icons right">lock</i>
 					</a>

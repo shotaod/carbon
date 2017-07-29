@@ -16,7 +16,7 @@
 			<p><span th:text="${host}"></span> is requesting authentication(s) below.</p>
 		</div>
 		<div class="col s12">
-			<!--/*@thymesVar id="scopes" type="java.util.List<org.carbon.sample.heroku.web.auth.AuthScope>"*/-->
+			<!--/*@thymesVar id="scopes" type="java.util.List<org.carbon.sample.heroku.web.oauth.AuthScope>"*/-->
 			<ul class="collection" th:each="scope : ${scopes}" th:switch="${scope.code}">
 				<li class="collection-item" th:case="read_profile">read profile</li>
 				<li class="collection-item" th:case="update_profile">update profile</li>
@@ -40,11 +40,11 @@
 				<div class="row">
 					<div class="col s12">
 						<button class="btn waves-effect waves-light" type="submit" name="action">
-							Sign in
+							permit
 							<i class="material-icons right">send</i>
 						</button>
-						<a class="btn waves-effect waves-light" type="button" href="/sample/security/signup">
-							Sign up
+						<a class="btn waves-effect waves-light right" type="button" href="/security/signup">
+							sign up
 							<i class="material-icons right">send</i>
 						</a>
 					</div>

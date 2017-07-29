@@ -23,12 +23,12 @@ public class SecurityConfiguration implements AuthConfigAdapter {
     @Override
     public void configure(AuthDefinition config) {
         config.define()
-            .base("/sample/security")
-            .redirect("/sample/security/login")
-            .endPoint(HttpMethod.POST, "/sample/security/login")
-            .logout("/sample/security/logout")
-            .permitGetAll("/sample/security/login", "/sample/security/signup", "/static/**")
-            .permit(HttpMethod.POST, "/sample/security/signup")
+            .base("/security")
+            .redirect("/security/login")
+            .endPoint(HttpMethod.POST, "/security/login")
+            .logout("/security/logout")
+            .permitGetAll("/security/login", "/security/signup", "/static/**")
+            .permit(HttpMethod.POST, "/security/signup")
             .requestMapper(requestMapper)
             .identifier(authIdentifier)
             .finisher(authFinisher)

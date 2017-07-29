@@ -1,4 +1,4 @@
-package org.carbon.sample.heroku.web.auth;
+package org.carbon.sample.heroku.web.oauth;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package org.carbon.sample.heroku.web.sample.security;
+package org.carbon.sample.heroku.web.security;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,29 +17,29 @@ import org.carbon.web.def.HttpMethod;
 /**
  * @author Shota Oda 2017/02/13.
  */
-@Controller("/sample/security")
+@Controller("/security")
 public class SecurityController {
     @Inject
     private UserService service;
 
     @Action(url = "/login", method = HttpMethod.GET)
     public HtmlResponse loginGet() {
-        return new HtmlResponse("/sample/security/login");
+        return new HtmlResponse("/security/login");
     }
 
     @Action(url = "/login", method = HttpMethod.POST)
     public HttpOperation loginSuccess() {
-        return RedirectOperation.to("/sample/security/secret");
+        return RedirectOperation.to("/security/secret");
     }
 
     @Action(url = "/signup", method = HttpMethod.GET)
     public HtmlResponse signupGet() {
-        return new HtmlResponse("/sample/security/signup");
+        return new HtmlResponse("/security/signup");
     }
 
     @Action(url = "/signup", method = HttpMethod.POST)
     public HtmlResponse signupPost(@Validate @RequestBody UserSignUpForm form, SimpleValidationResult vr) {
-        HtmlResponse retry = new HtmlResponse("/sample/security/signup");
+        HtmlResponse retry = new HtmlResponse("/security/signup");
         if (vr.existError()) {
             retry.putData("error", vr.getViolationResults());
             return retry;
@@ -52,13 +52,13 @@ public class SecurityController {
 
         service.registerUser(form);
 
-        HtmlResponse success = new HtmlResponse("/sample/security/signup_success");
+        HtmlResponse success = new HtmlResponse("/security/signup_success");
         success.putData("data", form);
         return success;
     }
 
     @Action(url = "/secret", method = HttpMethod.GET)
     public HtmlResponse secretGet() {
-        return new HtmlResponse("/sample/security/secret");
+        return new HtmlResponse("/security/secret");
     }
 }

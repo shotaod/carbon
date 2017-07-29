@@ -1,4 +1,4 @@
-package org.carbon.sample.heroku.web.sample.security;
+package org.carbon.sample.heroku.web.security;
 
 import java.util.Optional;
 

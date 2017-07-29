@@ -35,7 +35,7 @@ public class DefaultConfiguration {
         resolver.setCacheable(false);
         templateEngine.setTemplateResolver(resolver);
 
-        // manually initialize to prevent run initialize when calling process
+        // manually initialize to prevent lazy loading
         loadForced(templateEngine);
 
         return templateEngine;

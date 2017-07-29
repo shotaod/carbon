@@ -20,6 +20,6 @@ public class HerokuAuthFinisher implements AuthEventListener {
 
     @Override
     public void onFail(HttpServletRequest request, HttpServletResponse response) {
-        ResponseUtil.redirect(response, "/sample/security/login");
+        ResponseUtil.redirect(response, "/security/login");
     }
 }

@@ -1,4 +1,4 @@
-package org.carbon.sample.heroku.web.auth;
+package org.carbon.sample.heroku.web.oauth;
 
 import lombok.Getter;
 import lombok.Setter;
