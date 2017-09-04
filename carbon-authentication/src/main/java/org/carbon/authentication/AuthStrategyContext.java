@@ -7,9 +7,9 @@ import java.util.List;
  */
 public class AuthStrategyContext {
 
-    private List<AuthStrategy<? extends AuthIdentity>> strategies;
+    private List<AuthStrategy<AuthIdentity>> strategies;
 
-    public AuthStrategyContext(List<AuthStrategy<? extends AuthIdentity>> strategies) {
+    public AuthStrategyContext(List<AuthStrategy<AuthIdentity>> strategies) {
         this.strategies = strategies;
     }
 
@@ -17,7 +17,7 @@ public class AuthStrategyContext {
         return strategies != null && !strategies.isEmpty();
     }
 
-    public List<AuthStrategy<? extends AuthIdentity>> getStrategies() {
+    public List<AuthStrategy<AuthIdentity>> getStrategies() {
         return strategies;
     }
 }

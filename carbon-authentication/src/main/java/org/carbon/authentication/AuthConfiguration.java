@@ -26,7 +26,7 @@ public class AuthConfiguration {
     public AuthStrategyContext map() {
         AuthDefinition definition = new AuthDefinition();
         configAdapter.configure(definition);
-        List<AuthStrategy<? extends AuthIdentity>> strategies = definition.getStrategies();
+        List<AuthStrategy<AuthIdentity>> strategies = definition.getStrategies();
         if (logger.isInfoEnabled()) {
             String resultInfo = ChapterAttr.getBuilder("Authentication Configuration Result")
                     .appendLine(strategies
