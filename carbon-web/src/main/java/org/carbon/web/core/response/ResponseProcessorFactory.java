@@ -23,12 +23,12 @@ public class ResponseProcessorFactory {
         Object result = actionResult.getResult();
         if (result instanceof HtmlResponse) {
             HtmlResponse response = (HtmlResponse) result;
-            return htmlProcessor.with(response);
+            return htmlProcessor.init(response);
         } else if (result instanceof HttpOperation) {
             HttpOperation response = (HttpOperation) result;
-            return httpOperationProcessor.with(response);
+            return httpOperationProcessor.init(response);
         }
 
-        return jsonProcessor.with(result);
+        return jsonProcessor.init(result);
     }
 }

@@ -11,13 +11,15 @@ import org.carbon.web.util.ResponseUtil;
  * @author Shota Oda 2016/11/28.
  */
 @Component
-public class HttpOperationProcessor extends AbstractResponseProcessor {
+public class HttpOperationProcessor extends AbstractResponseProcessor<HttpOperationProcessor, HttpOperation> {
 
     private HttpOperation httpOperation;
 
-    public HttpOperationProcessor with(HttpOperation httpOperation) {
-        this.httpOperation = httpOperation;
-        return this;
+    @Override
+    public HttpOperationProcessor doInit(HttpOperation httpOperation) {
+        HttpOperationProcessor self = new HttpOperationProcessor();
+        self.httpOperation = httpOperation;
+        return self;
     }
 
     @Override

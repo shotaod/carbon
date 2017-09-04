@@ -1,5 +1,7 @@
 package org.carbon.web.core;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
@@ -115,13 +117,16 @@ public class ActionArgumentAggregatorFactory {
             } else if (parameter.isAnnotationPresent(Session.class)) {
                 resolved = sessionContext.getByType(paramType).orElse(null);
             } else if (ValidationResult.class.isAssignableFrom(paramType)) {
-                ValidationResult vr;
-                if (paramType.equals(SimpleValidationResult.class)) {
-                    vr = new SimpleValidationResult(constraintViolations);
-                } else {
-                    vr = new ValidationResult(constraintViolations);
+                try {
+                    @SuppressWarnings("unchecked")
+                    Constructor<ValidationResult> constructor = (Constructor<ValidationResult>) paramType.getConstructor(Set.class);
+                    HashSet<Object> arg = new HashSet<>();
+                    arg.addAll(constraintViolations);
+                    resolved = constructor.newInstance(arg);
+                    arg.clear();
+                } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException ignore) {
+                    resolved = null;
                 }
-                resolved = vr;
             } else {
                 resolved = applicationContext.getByType(paramType);
             }

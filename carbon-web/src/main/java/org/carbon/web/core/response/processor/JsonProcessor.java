@@ -10,13 +10,15 @@ import org.carbon.web.core.response.AbstractResponseProcessor;
  * @author Shota Oda 2016/10/14.
  */
 @Component
-public class JsonProcessor extends AbstractResponseProcessor {
+public class JsonProcessor extends AbstractResponseProcessor<JsonProcessor, Object> {
     private ObjectMapper mapper = new ObjectMapper();
     private Object object;
 
-    public JsonProcessor with(Object object) {
-        this.object = object;
-        return this;
+    @Override
+    protected JsonProcessor doInit(Object o) {
+        JsonProcessor self = new JsonProcessor();
+        self.object = o;
+        return self;
     }
 
     @Override

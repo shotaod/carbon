@@ -12,16 +12,19 @@ import org.carbon.web.core.response.template.TemplateEngineWrapper;
  * @author Shota Oda 2016/10/14.
  */
 @Component
-public class HtmlProcessor extends AbstractResponseProcessor {
+public class HtmlProcessor extends AbstractResponseProcessor<HtmlProcessor, HtmlResponse> {
 
     @Inject
     private TemplateEngineWrapper templateEngine;
 
     private HtmlResponse htmlResponse;
 
-    public HtmlProcessor with(HtmlResponse htmlResponse) {
-        this.htmlResponse = htmlResponse;
-        return this;
+    @Override
+    protected HtmlProcessor doInit(HtmlResponse htmlResponse) {
+        HtmlProcessor self = new HtmlProcessor();
+        self.templateEngine = templateEngine;
+        self.htmlResponse = htmlResponse;
+        return self;
     }
 
     @Override
