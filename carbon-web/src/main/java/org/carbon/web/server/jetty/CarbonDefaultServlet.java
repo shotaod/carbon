@@ -3,7 +3,7 @@ package org.carbon.web.server.jetty;
 import org.eclipse.jetty.servlet.DefaultServlet;
 
 /**
- * @author garden 2017/07/22.
+ * @author Shota Oda 2017/07/22.
  */
-public class CarbonDefaultServlet extends DefaultServlet{
+public class CarbonDefaultServlet extends DefaultServlet {
 }

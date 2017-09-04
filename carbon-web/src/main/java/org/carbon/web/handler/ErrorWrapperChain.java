@@ -4,9 +4,11 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.carbon.component.annotation.AfterInject;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.tl.error.HttpErrorTranslator;
+import org.carbon.web.tl.error.TranslatorConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +20,18 @@ public class ErrorWrapperChain extends HandlerChain {
 
     private Logger logger = LoggerFactory.getLogger(ErrorWrapperChain.class);
 
-    @Inject
+    @Inject(optional = true)
     private HttpErrorTranslator errorHandleRule;
+
+    @Inject
+    private TranslatorConfiguration translatorConfiguration;
+
+    @AfterInject
+    public void afterInject() {
+        if (errorHandleRule == null) {
+            this.errorHandleRule = translatorConfiguration.translator();
+        }
+    }
 
     @Override
     protected void chain(HttpServletRequest request, HttpServletResponse response) {

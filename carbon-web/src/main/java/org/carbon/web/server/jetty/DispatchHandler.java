@@ -14,7 +14,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ContextHandler;
 
 /**
- * @author garden 2017/07/22.
+ * @author Shota Oda 2017/07/22.
  */
 @Component
 public class DispatchHandler extends ContextHandler {

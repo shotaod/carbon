@@ -16,6 +16,10 @@ public class SimpleValidationResult extends ValidationResult {
         parseSimpleMap();
     }
 
+    public boolean existErrorFor(String key) {
+        return simpleViolationResults.containsKey(key);
+    }
+
     public Map<String, String> getViolationResults() {
         return simpleViolationResults;
     }

@@ -1,7 +1,5 @@
 package org.carbon.web.core.request;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,15 +44,13 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
 
         Map<String, Object> result = new HashMap<>();
         Map<String, String[]> parameterMap = request.getParameterMap();
-        parameterMap.entrySet().stream()
-            .sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
-            .forEach(entry -> {
-                String key = entry.getKey();
-                String[] value = entry.getValue();
-                LinkedList<String> keys = new LinkedList<>();
-                keys.addAll(Arrays.asList(key.split("\\.")));
-                insertDeep(keys, value, result);
-            });
+        parameterMap.entrySet().forEach(entry -> {
+            String key = entry.getKey();
+            String[] value = entry.getValue();
+            LinkedList<String> keys = new LinkedList<>();
+            keys.addAll(Arrays.asList(key.split("\\.")));
+            insertDeep(keys, value, result);
+        });
 
         return keyValueMapper.mapAndConstruct(result, mapTo);
     }
@@ -63,7 +59,7 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
     private Object insertDeep(LinkedList<String> keys, String[] value, Map<String, Object> source) {
         KeyAndIndex keyAndIndex = keyAndIndex(keys.poll());
         String key = keyAndIndex.getKey();
-        boolean isList = keyAndIndex.isIndexed();
+        boolean isList = keyAndIndex.isIndexed() || value.length > 1;
 
         if (keys.isEmpty()) {
             if (!isList) {

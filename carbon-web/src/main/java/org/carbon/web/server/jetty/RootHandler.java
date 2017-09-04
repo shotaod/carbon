@@ -14,7 +14,7 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerWrapper;
 
 /**
- * @author garden 2017/07/22.
+ * @author Shota Oda 2017/07/22.
  */
 @Component
 public class RootHandler extends HandlerWrapper {

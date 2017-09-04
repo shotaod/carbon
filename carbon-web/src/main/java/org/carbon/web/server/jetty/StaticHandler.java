@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author garden 2017/07/22.
+ * @author Shota Oda 2017/07/22.
  */
 @Component
 public class StaticHandler extends ServletContextHandler {
