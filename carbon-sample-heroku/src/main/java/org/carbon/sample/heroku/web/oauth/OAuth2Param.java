@@ -5,19 +5,28 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.carbon.sample.heroku.util.OneOf;
+import org.carbon.sample.heroku.web.oauth.def.AuthScope;
+import org.carbon.sample.heroku.web.oauth.def.ResponseType;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * @author garden 2017/07/17.
+ * @author Shota Oda 2017/07/17.
  */
 @Setter
 @Getter
 public class OAuth2Param {
+
+    @NotBlank
+    @OneOf(ResponseType.class)
+    private String response_type;
     @NotBlank
     @Length(min = 50, max = 50)
     private String client_id;
     private String scope = AuthScope.read_profile.getCode();
+    @NotBlank
+    private String redirect_uri;
 
     public Set<AuthScope> getScopes() {
         return AuthScope.codesOf(Arrays.asList(scope.split(" ")));

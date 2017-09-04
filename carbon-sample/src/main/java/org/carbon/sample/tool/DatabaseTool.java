@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.mysql.jdbc.Driver;
 import lombok.Setter;
-import org.carbon.persistent.jooq.JooqGenerator;
+import org.carbon.persistent.jooq.JooqCodeGenerator;
 import org.carbon.util.mapper.PropertyMapper;
 import org.jooq.SQLDialect;
 
@@ -26,7 +26,7 @@ public class DatabaseTool {
         DBProp dbProp = propertyMapper.findAndConstruct("persistent.dataSource", DBProp.class).get();
         String url = String.format("jdbc:mysql://%s:%s/%s", dbProp.host, dbProp.port, dbProp.db);
 
-        new JooqGenerator(
+        new JooqCodeGenerator(
                 url,
                 dbProp.user,
                 dbProp.password,

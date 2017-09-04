@@ -2,10 +2,11 @@ package org.carbon.sample.heroku.conf.auth;
 
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
-import org.carbon.sample.heroku.conf.auth.identity.HerokuAuthFinisher;
+import org.carbon.sample.heroku.conf.auth.identity.HerokuAuthEventListener;
 import org.carbon.sample.heroku.conf.auth.identity.HerokuAuthIdentifier;
 import org.carbon.authentication.AuthConfigAdapter;
 import org.carbon.authentication.AuthDefinition;
+import org.carbon.sample.heroku.conf.auth.identity.HerokuAuthIdentity;
 import org.carbon.web.def.HttpMethod;
 
 /**
@@ -16,22 +17,23 @@ public class SecurityConfiguration implements AuthConfigAdapter {
     @Inject
     private HerokuAuthIdentifier authIdentifier;
     @Inject
-    private HetorkuAuthRequestMapper requestMapper;
+    private HerokuAuthRequestMapper requestMapper;
     @Inject
-    private HerokuAuthFinisher authFinisher;
+    private HerokuAuthEventListener authEvent;
 
     @Override
     public void configure(AuthDefinition config) {
-        config.define()
-            .base("/security")
-            .redirect("/security/login")
-            .endPoint(HttpMethod.POST, "/security/login")
-            .logout("/security/logout")
-            .permitGetAll("/security/login", "/security/signup", "/static/**")
-            .permit(HttpMethod.POST, "/security/signup")
-            .requestMapper(requestMapper)
-            .identifier(authIdentifier)
-            .finisher(authFinisher)
+        config
+            .<HerokuAuthIdentity>define()
+                .base("/user", "/task")
+                .redirect("/user/login")
+                .endPoint(HttpMethod.POST, "/user/login")
+                .logout("/user/logout")
+                .permitGetAll("/user/login", "/user/signup",  "/task/about", "/static/**")
+                .permit(HttpMethod.POST, "/user/signup")
+                .requestMapper(requestMapper)
+                .identifier(authIdentifier)
+                .eventListener(authEvent)
             .end()
         ;
     }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en"
+      layout:decorate="~{/user/layout}">
+<head>
+	<meta charset="UTF-8">
+	<title>Login</title>
+</head>
+<body>
+<section layout:fragment="content">
+	<div class="row">
+		<form method="post" action="/user/login" class="col s8 offset-s2 card-panel">
+			<div class="row">
+				<div class="input-field col s12">
+					<input id="email" type="email" name="email">
+					<label for="email">email</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<input id="password" type="password" name="password">
+					<label for="password">password</label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col s12">
+					<button class="col s3 btn waves-effect waves-light" type="submit" name="action">Sign in
+						<i class="material-icons right">send</i>
+					</button>
+					<a class="col s3 btn waves-effect waves-light" type="button" href="/user/signup">
+						Sign up
+						<i class="material-icons right">send</i>
+					</a>
+					<a class="col s3 btn waves-effect waves-light right" type="button" href="/user/secret">
+						Secret
+						<i class="material-icons right">lock</i>
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</section>
+</body>
+</html>

@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.carbon.sample.heroku.ext.jooq.tables.pojos.AuthClient;
 
 /**
- * @author garden 2017/07/21.
+ * @author Shota Oda 2017/07/21.
  */
 @Getter
 @Setter

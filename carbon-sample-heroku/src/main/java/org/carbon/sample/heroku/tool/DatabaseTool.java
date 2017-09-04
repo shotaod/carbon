@@ -2,7 +2,8 @@ package org.carbon.sample.heroku.tool;
 
 import java.io.File;
 
-import org.carbon.persistent.jooq.JooqGenerator;
+import org.carbon.persistent.jooq.JooqCodeGenerator;
+import org.carbon.sample.heroku.ext.jooq.Carbon;
 import org.jooq.SQLDialect;
 import org.postgresql.Driver;
 
@@ -20,14 +21,14 @@ public class DatabaseTool {
     public static void main(String[] args) throws Exception {
         String url = String.format("jdbc:postgresql://%s:%s/%s", host, port, db);
         String dist = "carbon-sample-heroku/src/main/java/";
-        new JooqGenerator(
+        new JooqCodeGenerator(
                 url,
                 user,
                 password,
                 Driver.class,
                 SQLDialect.POSTGRES,
                 schema,
-                "org.carbon.sample.heroku.ext.jooq",
+                Carbon.class.getPackage().getName(),
                 new File(dist)
         ).generate();
     }

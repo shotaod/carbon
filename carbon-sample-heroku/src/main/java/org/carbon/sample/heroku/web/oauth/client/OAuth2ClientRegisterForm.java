@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * @author garden 2017/07/21.
+ * @author Shota Oda 2017/07/21.
  */
 @Getter
 @Setter

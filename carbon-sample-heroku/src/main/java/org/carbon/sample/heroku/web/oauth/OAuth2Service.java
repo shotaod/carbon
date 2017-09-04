@@ -1,61 +1,45 @@
 package org.carbon.sample.heroku.web.oauth;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import lombok.NonNull;
 import org.apache.commons.text.RandomStringGenerator;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
-import org.carbon.persistent.annotation.Transactional;
-import org.carbon.sample.heroku.exception.DuplicateEntityException;
 import org.carbon.sample.heroku.ext.jooq.tables.daos.AuthClientDao;
 import org.carbon.sample.heroku.ext.jooq.tables.pojos.AuthClient;
-
-import static org.apache.commons.text.CharacterPredicates.DIGITS;
-import static org.apache.commons.text.CharacterPredicates.LETTERS;
+import org.carbon.sample.heroku.util.OptionalStream;
+import org.carbon.sample.heroku.web.oauth.def.AuthScope;
+import org.carbon.sample.heroku.web.oauth.repository.AccessCode;
+import org.carbon.sample.heroku.web.oauth.repository.AccessCodeRepository;
+import org.carbon.sample.heroku.web.oauth.repository.AccessToken;
+import org.carbon.sample.heroku.web.oauth.repository.AccessTokenRepository;
+import org.carbon.sample.heroku.web.oauth.repository.Expiration;
+import org.carbon.sample.heroku.web.user.UserService;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
- * @author garden 2017/07/17.
+ * @author Shota Oda 2017/07/17.
  */
 @Component
 public class OAuth2Service {
 
     @Inject
-    private AuthClientDao dao;
-
     private RandomStringGenerator stringGenerator;
+    @Inject
+    private UserService userService;
+    @Inject
+    private AuthClientDao dao;
+    @Inject
+    private AccessCodeRepository codeRepository;
+    @Inject
+    private AccessTokenRepository tokenRepository;
 
-    public OAuth2Service() {
-        stringGenerator = new RandomStringGenerator.Builder()
-                .withinRange('0', 'Z')
-                .filteredBy(LETTERS, DIGITS)
-                .build();
-    }
-
-    public List<AuthClientDto> fetchAllClient() {
-        return dao.findAll().stream()
-                .map(AuthClientDto::new)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public String registerClientHost(@NonNull String host) throws DuplicateEntityException {
-        if (dao.fetchOneByClientHost(host) != null) {
-            throw new DuplicateEntityException();
-        }
-        String clientId = generateClientId();
-        AuthClient client = new AuthClient(null, host, clientId);
-        dao.insert(client);
-        return clientId;
-    }
-
-    private String generateClientId() {
-        return UUID.randomUUID().toString()
-                .replace("-", "")
-                .concat(stringGenerator.generate(18));
+    public boolean checkUser(@NonNull OAuth2PermitForm form) {
+        return userService.findByEmail(form.getEmail())
+                .map(user -> BCrypt.checkpw(form.getPassword(), user.getPassword()))
+                .orElse(false);
     }
 
     public boolean validateClient(@NonNull String host, @NonNull String clientId) {
@@ -64,5 +48,38 @@ public class OAuth2Service {
                 .map(AuthClient::getClientId)
                 .map(clientId::equals)
                 .orElse(false);
+    }
+
+    public String publishAuthorizationCode(@NonNull OAuth2PermitForm form) {
+        String code = stringGenerator.generate(10);
+
+        AccessCode accessCode = new AccessCode(form.getHost(), code, form.getScopes());
+
+        codeRepository.save(accessCode);
+
+        return code;
+    }
+
+    public AccessToken publishAccessToken(@NonNull OAuth2TokenForm form) throws OAuth2Exception {
+
+        return OptionalStream
+                .of(dao.fetchOneByClientId(form.getClient_id()))
+                    .whenEmptyThrow(OAuth2Exception::invalidClient)
+                .map(authClient -> codeRepository.find(authClient.getClientHost(), form.getCode()))
+                .filter(Expiration::isValid)
+                    .whenEmptyThrow(OAuth2Exception::unauthorizedClient)
+                .map(accessCode -> {
+                    String host = accessCode.getHost();
+                    String accessToken = stringGenerator.generate(10);
+                    String refreshToken = stringGenerator.generate(10);
+                    Set<AuthScope> authScopes = accessCode.getAuthScopes();
+                    return new AccessToken(accessToken, refreshToken, host, authScopes);
+                })
+                .peek(accessToken -> tokenRepository.save(accessToken))
+                .orElseThrow(OAuth2Exception::invalidClient);
+    }
+
+    public AccessToken refreshAccessToken(@NonNull OAuth2TokenForm form) {
+        return null;
     }
 }

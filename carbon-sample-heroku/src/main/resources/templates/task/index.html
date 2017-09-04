@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    lang="en"
+    layout:decorate="~{/task/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="row">
+			<form method="post" action="/task">
+				<div id="new_task" class="card col s3">
+						<div class="card-content">
+							<div class="input-field">
+								<input id="title" type="text" name="title">
+								<label for="title">Title</label>
+							</div>
+							<div class="input-field">
+								<textarea id="description" class="materialize-textarea" name="description"></textarea>
+								<label for="description">description</label>
+							</div>
+							<div class="input-field">
+								<select id="point" name="point">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+								<label for="point">story point</label>
+							</div>
+						</div>
+						<div class="card-action center-align">
+							<button style="display: inline-block;" class="btn-flat" type="submit">create</button>
+						</div>
+				</div>
+			</form>
+		</div>
+		<!--/*@thymesVar id="data" type="java.util.List<org.carbon.sample.heroku.web.task.TaskDto>"*/-->
+		<div class="row">
+			<div class="col s3" th:each="task : ${data}">
+				<div class="card">
+					<div class="card-content">
+						<div class="valign-wrapper">
+							<span class="card-title truncate" style="width: 75%; display: inline-block" th:text="${task.title}"/>
+							<div class="chip blue white-text right" th:text="${task.point}"/>
+						</div>
+						<p style="height: 100px; width: 100%; overflow: auto;" th:text="${task.description}"/>
+					</div>
+					<div class="card-action">
+						<form method="post" th:action="'/task/'+${task.id}+'/drop'">
+							<button class="btn-flat blue-text"><i class="material-icons">delete</i></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

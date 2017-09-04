@@ -9,12 +9,12 @@ import javax.annotation.Generated;
 import org.carbon.sample.heroku.ext.jooq.tables.AuthClient;
 import org.carbon.sample.heroku.ext.jooq.tables.Blog;
 import org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion;
-import org.carbon.sample.heroku.ext.jooq.tables.Todo;
+import org.carbon.sample.heroku.ext.jooq.tables.Task;
 import org.carbon.sample.heroku.ext.jooq.tables.User;
 import org.carbon.sample.heroku.ext.jooq.tables.records.AuthClientRecord;
 import org.carbon.sample.heroku.ext.jooq.tables.records.BlogRecord;
 import org.carbon.sample.heroku.ext.jooq.tables.records.SchemaVersionRecord;
-import org.carbon.sample.heroku.ext.jooq.tables.records.TodoRecord;
+import org.carbon.sample.heroku.ext.jooq.tables.records.TaskRecord;
 import org.carbon.sample.heroku.ext.jooq.tables.records.UserRecord;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
@@ -42,7 +42,7 @@ public class Keys {
 
     public static final Identity<AuthClientRecord, Long> IDENTITY_AUTH_CLIENT = Identities0.IDENTITY_AUTH_CLIENT;
     public static final Identity<BlogRecord, Long> IDENTITY_BLOG = Identities0.IDENTITY_BLOG;
-    public static final Identity<TodoRecord, Long> IDENTITY_TODO = Identities0.IDENTITY_TODO;
+    public static final Identity<TaskRecord, Long> IDENTITY_TASK = Identities0.IDENTITY_TASK;
     public static final Identity<UserRecord, Long> IDENTITY_USER = Identities0.IDENTITY_USER;
 
     // -------------------------------------------------------------------------
@@ -54,7 +54,7 @@ public class Keys {
     public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_ID_KEY = UniqueKeys0.AUTH_CLIENT_CLIENT_ID_KEY;
     public static final UniqueKey<BlogRecord> BLOG_PKEY = UniqueKeys0.BLOG_PKEY;
     public static final UniqueKey<SchemaVersionRecord> SCHEMA_VERSION_PK = UniqueKeys0.SCHEMA_VERSION_PK;
-    public static final UniqueKey<TodoRecord> TODO_PKEY = UniqueKeys0.TODO_PKEY;
+    public static final UniqueKey<TaskRecord> TASK_PKEY = UniqueKeys0.TASK_PKEY;
     public static final UniqueKey<UserRecord> USER_PKEY = UniqueKeys0.USER_PKEY;
     public static final UniqueKey<UserRecord> USER_EMAIL_KEY = UniqueKeys0.USER_EMAIL_KEY;
 
@@ -62,7 +62,7 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<TodoRecord, UserRecord> TODO__TODO_USER_ID_FKEY = ForeignKeys0.TODO__TODO_USER_ID_FKEY;
+    public static final ForeignKey<TaskRecord, UserRecord> TASK__TASK_USER_ID_FKEY = ForeignKeys0.TASK__TASK_USER_ID_FKEY;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -71,7 +71,7 @@ public class Keys {
     private static class Identities0 extends AbstractKeys {
         public static Identity<AuthClientRecord, Long> IDENTITY_AUTH_CLIENT = createIdentity(AuthClient.AUTH_CLIENT, AuthClient.AUTH_CLIENT.ID);
         public static Identity<BlogRecord, Long> IDENTITY_BLOG = createIdentity(Blog.BLOG, Blog.BLOG.ID);
-        public static Identity<TodoRecord, Long> IDENTITY_TODO = createIdentity(Todo.TODO, Todo.TODO.ID);
+        public static Identity<TaskRecord, Long> IDENTITY_TASK = createIdentity(Task.TASK, Task.TASK.ID);
         public static Identity<UserRecord, Long> IDENTITY_USER = createIdentity(User.USER, User.USER.ID);
     }
 
@@ -81,12 +81,12 @@ public class Keys {
         public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_ID_KEY = createUniqueKey(AuthClient.AUTH_CLIENT, "auth_client_client_id_key", AuthClient.AUTH_CLIENT.CLIENT_ID);
         public static final UniqueKey<BlogRecord> BLOG_PKEY = createUniqueKey(Blog.BLOG, "blog_pkey", Blog.BLOG.ID);
         public static final UniqueKey<SchemaVersionRecord> SCHEMA_VERSION_PK = createUniqueKey(SchemaVersion.SCHEMA_VERSION, "schema_version_pk", SchemaVersion.SCHEMA_VERSION.INSTALLED_RANK);
-        public static final UniqueKey<TodoRecord> TODO_PKEY = createUniqueKey(Todo.TODO, "todo_pkey", Todo.TODO.ID);
+        public static final UniqueKey<TaskRecord> TASK_PKEY = createUniqueKey(Task.TASK, "task_pkey", Task.TASK.ID);
         public static final UniqueKey<UserRecord> USER_PKEY = createUniqueKey(User.USER, "user_pkey", User.USER.ID);
         public static final UniqueKey<UserRecord> USER_EMAIL_KEY = createUniqueKey(User.USER, "user_email_key", User.USER.EMAIL);
     }
 
     private static class ForeignKeys0 extends AbstractKeys {
-        public static final ForeignKey<TodoRecord, UserRecord> TODO__TODO_USER_ID_FKEY = createForeignKey(org.carbon.sample.heroku.ext.jooq.Keys.USER_PKEY, Todo.TODO, "todo__todo_user_id_fkey", Todo.TODO.USER_ID);
+        public static final ForeignKey<TaskRecord, UserRecord> TASK__TASK_USER_ID_FKEY = createForeignKey(org.carbon.sample.heroku.ext.jooq.Keys.USER_PKEY, Task.TASK, "task__task_user_id_fkey", Task.TASK.USER_ID);
     }
 }

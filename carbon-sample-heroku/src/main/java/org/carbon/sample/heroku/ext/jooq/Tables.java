@@ -9,7 +9,7 @@ import javax.annotation.Generated;
 import org.carbon.sample.heroku.ext.jooq.tables.AuthClient;
 import org.carbon.sample.heroku.ext.jooq.tables.Blog;
 import org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion;
-import org.carbon.sample.heroku.ext.jooq.tables.Todo;
+import org.carbon.sample.heroku.ext.jooq.tables.Task;
 import org.carbon.sample.heroku.ext.jooq.tables.User;
 
 
@@ -42,9 +42,9 @@ public class Tables {
     public static final SchemaVersion SCHEMA_VERSION = org.carbon.sample.heroku.ext.jooq.tables.SchemaVersion.SCHEMA_VERSION;
 
     /**
-     * The table <code>carbon.todo</code>.
+     * The table <code>carbon.task</code>.
      */
-    public static final Todo TODO = org.carbon.sample.heroku.ext.jooq.tables.Todo.TODO;
+    public static final Task TASK = org.carbon.sample.heroku.ext.jooq.tables.Task.TASK;
 
     /**
      * The table <code>carbon.user</code>.

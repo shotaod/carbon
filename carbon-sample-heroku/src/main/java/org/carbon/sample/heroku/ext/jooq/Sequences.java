@@ -34,9 +34,9 @@ public class Sequences {
     public static final Sequence<Long> BLOG_ID_SEQ = new SequenceImpl<Long>("blog_id_seq", Carbon.CARBON, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 
     /**
-     * The sequence <code>carbon.todo_id_seq</code>
+     * The sequence <code>carbon.task_id_seq</code>
      */
-    public static final Sequence<Long> TODO_ID_SEQ = new SequenceImpl<Long>("todo_id_seq", Carbon.CARBON, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+    public static final Sequence<Long> TASK_ID_SEQ = new SequenceImpl<Long>("task_id_seq", Carbon.CARBON, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 
     /**
      * The sequence <code>carbon.user_id_seq</code>

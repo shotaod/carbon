@@ -3,13 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@kadira/storybook": "^2.21.0",
+    "material-design-icons": "^3.0.1",
+    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.10"
+    "react-dragula": "^1.1.17",
+    "react-scripts": "1.0.10",
+    "react-tap-event-plugin": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "storybook": "start-storybook -p 8930 -s ./public",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
