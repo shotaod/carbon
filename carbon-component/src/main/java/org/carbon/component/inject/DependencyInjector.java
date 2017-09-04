@@ -80,7 +80,7 @@ public class DependencyInjector {
                                         .map(Map.Entry::getValue)
                                         .collect(Collectors.toList());
                             } else {
-                                logger.debug("[Assemble] search by type{}", generic.getCanonicalName());
+                                logger.debug("[Assemble] search by type {}", generic.getCanonicalName());
                                 fieldValue = candidates.entrySet().stream()
                                         .filter(entry -> generic.isAssignableFrom(entry.getKey()))
                                         .map(Map.Entry::getValue)

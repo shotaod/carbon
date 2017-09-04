@@ -161,7 +161,7 @@ public class ComponentManager {
         String notLast = "├─ ";
         if (!isClosedList.isEmpty()) {
             if (isClosedList.size() > 1) {
-                String row = isClosedList.subList(0, isClosedList.size() - 1).stream().map(isClosed -> isClosed ? closed : notClosed).collect(Collectors.joining());
+                String row = isClosedList.stream().limit(isClosedList.size() - 1).map(isClosed -> isClosed ? closed : notClosed).collect(Collectors.joining());
                 sb.append(row);
             }
             sb.append(isClosedList.get(isClosedList.size() - 1) ? last : notLast);
