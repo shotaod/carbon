@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.carbon.util.exception.ConstructionException;
@@ -102,6 +104,7 @@ public class KeyValueMapper {
         mapPojo(instance, MapPath.root(), sources);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T mapPojo(T target, MapPath mapPath, Map<String, Object> baseSource) {
         List<PropertyDescriptor> props = getSettersHasWriterOnly(target.getClass());
 
@@ -118,7 +121,8 @@ public class KeyValueMapper {
             Object item;
             // check list
             if (isCollection(setterType)) {
-                item = mapList(getGenericType(prop), targetSource, mapPath, target);
+                Class<?> genericType = getGenericType(prop);
+                item = mapCollection((Class<Collection<?>>)setterType, genericType, targetSource, mapPath, target);
             } else {
                 // check raw type
                 Optional<? extends CasterStrategy<?>> strategy = findStrategy(setterType);
@@ -142,11 +146,19 @@ public class KeyValueMapper {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> List<T> mapList(Class<T> genericType, Object source, MapPath mapPath, Object parent) {
+    private <T, C extends Collection> C mapCollection(Class<C> collectionType, Class<T> genericType, Object source, MapPath mapPath, Object parent) {
         Class<?> parentClass = genericType.getEnclosingClass();
 
-        if (source instanceof List) {
-            return (List<T>) ((List<?>) source).stream().map(sourceElement -> {
+        if (source instanceof Collection) {
+            Collector terminator;
+            if (Set.class.isAssignableFrom(collectionType)) {
+                terminator = Collectors.toSet();
+            } else if (List.class.isAssignableFrom(collectionType)) {
+                terminator = Collectors.toList();
+            } else {
+                throw new ObjectMappingException(String.format("Fail to map [%s] to [%s<%s>]\nCollection Type[%s] must be one of [Set, List]", source.getClass(), collectionType, genericType, collectionType));
+            }
+            return (C) ((Collection<?>) source).stream().map(sourceElement -> {
                 Class<?> sourceElementClass = sourceElement.getClass();
                 if (genericType.isAssignableFrom(sourceElementClass)) {
                     return (T) sourceElement;
@@ -165,7 +177,7 @@ public class KeyValueMapper {
                     return mapPojo(genericPojo, MapPath.root(), (Map) sourceElement);
                 }
                 return null;
-            }).collect(Collectors.toList());
+            }).collect(terminator);
         }
 
         Object instance;
@@ -181,12 +193,12 @@ public class KeyValueMapper {
 
         // source is not list
         if (source instanceof Map) {
-            return (List<T>) Collections.singletonList(mapPojo(instance, mapPath, (Map) source));
+            return (C) Collections.singletonList(mapPojo(instance, mapPath, (Map) source));
         } else if (genericType.isAssignableFrom(source.getClass())) {
-            return (List<T>) Collections.singletonList(source);
+            return (C) Collections.singletonList(source);
         }
 
-        throw new ObjectMappingException(String.format("Fail to map [%s] to [List<%s>]", source.getClass(), genericType));
+        throw new ObjectMappingException(String.format("Fail to map [%s] to [%s<%s>]", source.getClass(), collectionType, genericType));
     }
 
     private List<PropertyDescriptor> getSettersHasWriterOnly(Class mapTo) {
