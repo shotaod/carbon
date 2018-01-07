@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.stream.Collectors;
@@ -62,8 +63,7 @@ public class TargetBaseScanner {
         logger.debug("Start scan at package [{}]", scanBasePackage);
         logger.debug("Escape annotations are {}", Annotations_Escape);
         return walkPackage(scanBasePackage).stream()
-                .map(this::getClassNullable)
-                .filter(clazz -> clazz != null)
+                .flatMap(this::getClassStream)
                 .filter(clazz -> isScanTarget(clazz, scanTargets))
                 .collect(Collectors.toSet());
     }
@@ -148,11 +148,11 @@ public class TargetBaseScanner {
         return classFQN;
     }
 
-    private Class<?> getClassNullable(String className) {
+    private Stream<Class<?>> getClassStream(String className) {
         try {
             Class<?> clazz = classLoader.loadClass(className);
-            if (clazz.isAnnotation() || clazz.isInterface()) return null;
-            return clazz;
+            if (clazz.isAnnotation() || clazz.isInterface()) return Stream.empty();
+            return Stream.of(clazz);
         } catch (ClassNotFoundException impossible) {
             logger.error("Not found Class:[%s]", className);
             throw new RuntimeException(impossible);

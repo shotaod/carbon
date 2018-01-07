@@ -9,7 +9,6 @@ import org.carbon.web.CarbonApplicationStarter;
 public class CarbonStarter {
     public static void main(String[] args) throws Exception {
         CarbonApplicationStarter starter = new CarbonApplicationStarter();
-        starter.setConfig("config");
         starter.addModuleConfigurers(PersistentModuleConfigurer.class);
         starter.start(ScanBase.class);
     }

@@ -34,7 +34,6 @@ import org.carbon.web.context.app.ApplicationContext;
 import org.carbon.web.context.request.RequestContext;
 import org.carbon.web.context.session.SessionContext;
 import org.carbon.web.core.request.RequestBodyMapper;
-import org.carbon.web.core.validation.SimpleValidationResult;
 import org.carbon.web.core.validation.ValidationResult;
 
 /**
@@ -120,10 +119,8 @@ public class ActionArgumentAggregatorFactory {
                 try {
                     @SuppressWarnings("unchecked")
                     Constructor<ValidationResult> constructor = (Constructor<ValidationResult>) paramType.getConstructor(Set.class);
-                    HashSet<Object> arg = new HashSet<>();
-                    arg.addAll(constraintViolations);
+                    HashSet<Object> arg = new HashSet<>(constraintViolations);
                     resolved = constructor.newInstance(arg);
-                    arg.clear();
                 } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException ignore) {
                     resolved = null;
                 }

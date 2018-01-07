@@ -1,9 +1,17 @@
 package org.carbon.util.mapper;
 
+import org.carbon.util.constructor.NoArgsConstructorUtil;
+import org.carbon.util.exception.ConstructionException;
+import org.carbon.util.exception.ObjectMappingException;
+import org.carbon.util.exception.UndefinedValueException;
+import org.carbon.util.fn.Fn;
+import org.carbon.util.mapper.cast.StringAnyCaster;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.time.LocalDate;
@@ -17,13 +25,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-
-import org.carbon.util.exception.ConstructionException;
-import org.carbon.util.exception.ObjectMappingException;
-import org.carbon.util.exception.UndefinedValueException;
-import org.carbon.util.mapper.cast.StringAnyCaster;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.carbon.util.mapper.cast.StringAnyCaster.boolCaster;
 import static org.carbon.util.mapper.cast.StringAnyCaster.byteCaster;
@@ -49,10 +50,12 @@ import static org.carbon.util.mapper.cast.StringAnyCaster.shortCaster;
  * - handlable
  * - pojo
  * =======================
+ *
  * @author Shota Oda 2016/10/12.
  */
 public class KeyValueMapper {
     private Logger logger = LoggerFactory.getLogger(KeyValueMapper.class);
+
     protected class CasterStrategy<T> {
         private Class<T> type;
         private StringAnyCaster<T> caster;
@@ -71,14 +74,15 @@ public class KeyValueMapper {
         }
     }
 
-    protected boolean isDismissUndefined;
+    protected boolean dismissUndefined;
     protected List<CasterStrategy<?>> rawTypeStrategies;
 
     public KeyValueMapper() {
         this(true);
     }
-    public KeyValueMapper(boolean isDismissUndefined) {
-        this.isDismissUndefined = isDismissUndefined;
+
+    public KeyValueMapper(boolean dismissUndefined) {
+        this.dismissUndefined = dismissUndefined;
         this.rawTypeStrategies = defaultCasters();
     }
 
@@ -92,7 +96,7 @@ public class KeyValueMapper {
     public <T> T mapAndConstruct(Map<String, Object> sources, Class<T> as) {
         T instance;
         try {
-            instance = newInstance(as, null);
+            instance = construct(as, null);
         } catch (ConstructionException e) {
             throw new ObjectMappingException(e);
         }
@@ -114,7 +118,7 @@ public class KeyValueMapper {
             Object targetSource = searchMap(baseSource, nestPath);
 
             if (targetSource == null) {
-                logger.debug("Skip Mapping => target[{}], path{}, source[{}]", target.getClass().getCanonicalName(), nestPath, baseSource);
+                logger.debug("Skip Mapping => target[{}], path[{}], source[{}]", target.getClass().getCanonicalName(), nestPath, baseSource);
                 continue;
             }
 
@@ -122,21 +126,23 @@ public class KeyValueMapper {
             // check list
             if (isCollection(setterType)) {
                 Class<?> genericType = getGenericType(prop);
-                item = mapCollection((Class<Collection<?>>)setterType, genericType, targetSource, mapPath, target);
+                item = mapCollection((Class<Collection<?>>) setterType, genericType, targetSource, mapPath, target);
             } else {
-                // check raw type
-                Optional<? extends CasterStrategy<?>> strategy = findStrategy(setterType);
-                if (strategy.isPresent()) {
-                    item = strategy.get().cast(targetSource);
-                }
-                // assert pojo
-                else {
-                    try {
-                        Object pojo = newInstance(setterType, target);
-                        item = mapPojo(pojo, nestPath, baseSource);
-                    } catch (ConstructionException ignore) {
-                        item = null;
-                    }
+                if (Map.class.isAssignableFrom(setterType) && setterType.isAssignableFrom(targetSource.getClass())) {
+                    // check map to map assign
+                    item = targetSource;
+                } else {
+                    // check raw type
+                    Optional<? extends CasterStrategy<?>> strategy = findStrategy(setterType);
+                    item = strategy
+                            .map(s -> (Object) s.cast(targetSource))
+                            .orElseGet(() -> {
+                                try {
+                                    return mapPojo(construct(setterType, target), nestPath, baseSource);
+                                } catch (ConstructionException e) {
+                                    return null;
+                                }
+                            });
                 }
             }
             invokeSetter(target, prop, item);
@@ -147,8 +153,6 @@ public class KeyValueMapper {
 
     @SuppressWarnings("unchecked")
     private <T, C extends Collection> C mapCollection(Class<C> collectionType, Class<T> genericType, Object source, MapPath mapPath, Object parent) {
-        Class<?> parentClass = genericType.getEnclosingClass();
-
         if (source instanceof Collection) {
             Collector terminator;
             if (Set.class.isAssignableFrom(collectionType)) {
@@ -156,7 +160,7 @@ public class KeyValueMapper {
             } else if (List.class.isAssignableFrom(collectionType)) {
                 terminator = Collectors.toList();
             } else {
-                throw new ObjectMappingException(String.format("Fail to map [%s] to [%s<%s>]\nCollection Type[%s] must be one of [Set, List]", source.getClass(), collectionType, genericType, collectionType));
+                throw new ObjectMappingException(String.format("Fail to apply [%s] to [%s<%s>]\nCollection Type[%s] must be one of [Set, List]", source.getClass(), collectionType, genericType, collectionType));
             }
             return (C) ((Collection<?>) source).stream().map(sourceElement -> {
                 Class<?> sourceElementClass = sourceElement.getClass();
@@ -168,9 +172,9 @@ public class KeyValueMapper {
                     return strategy.get().cast(sourceElement);
                 }
                 if (sourceElement instanceof Map) {
-                    T genericPojo = null;
+                    T genericPojo;
                     try {
-                        genericPojo = newInstance(genericType, parent);
+                        genericPojo = construct(genericType, parent);
                     } catch (ConstructionException e) {
                         throw new ObjectMappingException(e);
                     }
@@ -182,11 +186,7 @@ public class KeyValueMapper {
 
         Object instance;
         try {
-            if (parentClass != null && parentClass.equals(parent.getClass())) {
-                instance = newInstance(genericType, parent);
-            } else {
-                instance = newInstance(genericType, null);
-            }
+            instance = construct(genericType, parent);
         } catch (ConstructionException e) {
             throw new ObjectMappingException(e);
         }
@@ -195,10 +195,16 @@ public class KeyValueMapper {
         if (source instanceof Map) {
             return (C) Collections.singletonList(mapPojo(instance, mapPath, (Map) source));
         } else if (genericType.isAssignableFrom(source.getClass())) {
-            return (C) Collections.singletonList(source);
+            if (Set.class.isAssignableFrom(collectionType)) {
+                return (C) Collections.singleton(source);
+            } else if (List.class.isAssignableFrom(collectionType)) {
+                return (C) Collections.singletonList(source);
+            } else {
+                throw new ObjectMappingException(String.format("Fail to apply [%s] to [%s<%s>]\nCollection Type[%s] must be one of [Set, List]", source.getClass(), collectionType, genericType, collectionType));
+            }
         }
 
-        throw new ObjectMappingException(String.format("Fail to map [%s] to [%s<%s>]", source.getClass(), collectionType, genericType));
+        throw new ObjectMappingException(String.format("Fail to apply [%s] to [%s<%s>]", source.getClass(), collectionType, genericType));
     }
 
     private List<PropertyDescriptor> getSettersHasWriterOnly(Class mapTo) {
@@ -211,27 +217,12 @@ public class KeyValueMapper {
         }
     }
 
-    private <T> T newInstance(Class<T> type, Object parentIfAny) throws ConstructionException {
-        boolean isInnerClass = type.isMemberClass();
-        if (isInnerClass) {
-            try {
-                if (parentIfAny == null || !parentIfAny.getClass().equals(type.getEnclosingClass())) {
-                    parentIfAny = type.getEnclosingClass().newInstance();
-                }
-                Constructor<T> constructor = type.getDeclaredConstructor(parentIfAny.getClass());
-                return constructor.newInstance(parentIfAny);
-            } catch (NoSuchMethodException ignore) {
-                // it is possible when type is 'static inner class'
-                // try type.newInstance()
-            } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                throw new ObjectMappingException(e);
-            }
+    private <T> T construct(Class<T> type, Object parentIfAny) throws ConstructionException {
+        if (NoArgsConstructorUtil.isInnerNoStaticClass(type)) {
+            return NoArgsConstructorUtil.construct(type, parentIfAny);
         }
-        try {
-            return type.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new ConstructionException(e);
-        }
+        return Fn.Try(() -> NoArgsConstructorUtil.construct(type))
+                .CatchThrow(e -> new ConstructionException(type, e));
     }
 
     private void invokeSetter(Object instance, PropertyDescriptor prop, Object item) {
@@ -246,7 +237,7 @@ public class KeyValueMapper {
         try {
             return path.find(map);
         } catch (UndefinedValueException e) {
-            if (isDismissUndefined) return null;
+            if (dismissUndefined) return null;
             else throw new ObjectMappingException(e);
         }
     }

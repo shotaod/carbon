@@ -6,7 +6,7 @@
 // Check for jQuery.
 if (typeof(jQuery) === 'undefined') {
   var jQuery;
-  // Check if require is a defined function.
+  // Check if require is a defined fn.
   if (typeof(require) === 'function') {
     jQuery = $ = require('jquery');
   // Else use the dollar sign alias.
@@ -592,7 +592,7 @@ if (jQuery) {
       origin.after(activates);
 
       /*
-        Helper function to position and resize dropdown.
+        Helper fn to position and resize dropdown.
         Used in hover and click handler.
       */
       function placeDropdown(eventType) {
@@ -1156,7 +1156,7 @@ if (jQuery) {
       });
 
 
-      // This function returns the modaled image to the original spot
+      // This fn returns the modaled image to the original spot
       function returnToOriginal() {
 
           doneAnimating = false;
@@ -2661,8 +2661,8 @@ $(document).ready(function(){
 	});
 
 	/**
-	 * Returns a function, that, when invoked, will only be triggered at most once
-	 * during a given window of time. Normally, the throttled function will run
+	 * Returns a fn, that, when invoked, will only be triggered at most once
+	 * during a given window of time. Normally, the throttled fn will run
 	 * as much as it can, without ever going more than once per `wait` duration;
 	 * but if you'd like to disable the execution on the leading edge, pass
 	 * `{leading: false}`. To disable execution on the trailing edge, ditto.
@@ -3546,7 +3546,7 @@ $(document).ready(function(){
           }
         }
 
-        // This function will transition the slide to any index of the next slide
+        // This fn will transition the slide to any index of the next slide
         function moveToSlide(index) {
           // Wrap around indices.
           if (index >= $slides.length) index = 0;
@@ -4481,7 +4481,7 @@ $(document).ready(function(){
 
 }( jQuery ));
 ;(function ($) {
-  // Image transition function
+  // Image transition fn
   Materialize.fadeInImage =  function(selectorOrEl) {
     var element;
     if (typeof(selectorOrEl) === 'string') {
@@ -4546,7 +4546,7 @@ $(document).ready(function(){
   $(document).ready(function() {
     // Hardcoded .staggered-list scrollFire
     // var staggeredListOptions = [];
-    // $('ul.staggered-list').each(function (i) {
+    // $('ul.staggered-list').each(fn (i) {
 
     //   var label = 'scrollFire-' + i;
     //   $(this).addClass(label);
@@ -4631,7 +4631,7 @@ $(document).ready(function(){
     //     { translateY: "100px"},
     //     { duration: 0 });
 
-    // $('ul.staggered-list.vertical li').each(function() {
+    // $('ul.staggered-list.vertical li').each(fn() {
     //   $(this).velocity(
     //     { opacity: "1", translateY: "0"},
     //     { duration: 800, delay: time, easing: [60, 25] });
@@ -4642,7 +4642,7 @@ $(document).ready(function(){
     // $('.fade-in.scale').velocity(
     //     { scaleX: .4, scaleY: .4, translateX: -600},
     //     { duration: 0});
-    // $('.fade-in').each(function() {
+    // $('.fade-in').each(fn() {
     //   $(this).velocity(
     //     { opacity: "1", scaleX: 1, scaleY: 1, translateX: 0},
     //     { duration: 800, easing: [60, 10] });
@@ -5650,7 +5650,7 @@ PickerConstructor._ = {
         // Loop from the `min` to `max`, incrementing by `i`
         for ( ; counter <= PickerConstructor._.trigger( groupObject.max, groupObject, [ counter ] ); counter += groupObject.i ) {
 
-            // Trigger the `item` function within scope of the object
+            // Trigger the `item` fn within scope of the object
             loopObjectScope = PickerConstructor._.trigger( groupObject.item, groupObject, [ counter ] )
 
             // Splice the subgroup and create nodes out of the sub nodes
@@ -5698,7 +5698,7 @@ PickerConstructor._ = {
 
 
     /**
-     * Trigger a function otherwise return the value.
+     * Trigger a fn otherwise return the value.
      */
     trigger: function( callback, scope, args ) {
         return typeof callback == 'function' ? callback.apply( scope, args || [] ) : callback
@@ -6434,7 +6434,7 @@ DatePicker.prototype.parse = function( type, value, options ) {
             // Grab the formatting label.
             formattingLabel = calendar.formats[ label ],
 
-            // The format length is from the formatting label function or the
+            // The format length is from the formatting label fn or the
             // label length without the escaping exclamation (!) mark.
             formatLength = formattingLabel ? _.trigger( formattingLabel, calendar, [ value, parsingObject ] ) : label.replace( /^!/, '' ).length
 

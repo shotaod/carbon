@@ -7,19 +7,22 @@ import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
-import org.carbon.component.annotation.Transparent;
-import org.carbon.persistent.DialectResolver;
+import org.carbon.component.annotation.Switch;
+import org.carbon.persistent.ConnectionTester;
+import org.carbon.persistent.conf.PersistentSwitcher;
+import org.carbon.persistent.dialect.ClasspathDialectResolver;
+import org.carbon.persistent.dialect.Dialect;
+import org.carbon.persistent.exception.DialectResolveException;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DAOImpl;
+import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultDSLContext;
-
-import static org.carbon.persistent.ConnectionTester.testConnection;
 
 /**
  * @author Shota Oda 2016/11/26.
  */
-@Transparent /* managed by PersistentModuleConfigurer */
+@Switch(PersistentSwitcher.class)
 @Configuration
 public class JooqConfiguration {
     @Inject
@@ -28,9 +31,9 @@ public class JooqConfiguration {
     private List<DAOImpl> daoImpls;
 
     @Component
-    public DSLContext dslContext() {
-        testConnection(dataSource);
-        DialectResolver.Dialect dialect = DialectResolver.resolve();
+    public DSLContext dslContext() throws DialectResolveException {
+        ConnectionTester.testConnection(dataSource);
+        Dialect dialect = ClasspathDialectResolver.resolve();
         DSLContext context;
         switch (dialect) {
             case MySql:
@@ -45,9 +48,7 @@ public class JooqConfiguration {
 
         // side effect
         if (daoImpls != null) {
-            for (DAOImpl daoImpl : daoImpls) {
-                daoImpl.setConfiguration(context.configuration());
-            }
+            daoImpls.forEach(impl -> impl.setConfiguration(context.configuration()));
         }
 
         return context;

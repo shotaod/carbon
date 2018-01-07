@@ -7,4 +7,7 @@ public class PropertyMappingException extends RuntimeException{
     public PropertyMappingException(String message) {
         super(message);
     }
+    public PropertyMappingException(Throwable cause) {
+        super(cause);
+    }
 }

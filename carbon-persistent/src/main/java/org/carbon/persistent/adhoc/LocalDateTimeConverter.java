@@ -1,9 +1,9 @@
 package org.carbon.persistent.adhoc;
 
-import org.jooq.Converter;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+
+import org.jooq.Converter;
 
 /**
  * @author Shota Oda 2016/12/11.

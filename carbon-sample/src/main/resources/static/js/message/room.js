@@ -2,7 +2,7 @@
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
-/******/ 	// The require function
+/******/ 	// The require fn
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
@@ -16,7 +16,7 @@
 /******/ 			loaded: false
 /******/ 		};
 /******/
-/******/ 		// Execute the module function
+/******/ 		// Execute the module fn
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded

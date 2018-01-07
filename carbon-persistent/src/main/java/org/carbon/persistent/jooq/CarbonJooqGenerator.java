@@ -6,7 +6,7 @@ import org.jooq.util.JavaWriter;
 import org.jooq.util.TableDefinition;
 
 /**
- * @author garden 2017/08/19.
+ * @author Shota Oda 2017/08/19.
  */
 public class CarbonJooqGenerator extends JavaGenerator {
     @Override

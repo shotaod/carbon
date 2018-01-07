@@ -15,7 +15,11 @@ import java.lang.annotation.Target;
  * (using with {@link Configuration} annotation)
  * Produce Component by invoking annotated method
  * @author Shota Oda 2016/10/02
+ *
+ * @see Inject
+ * @see Configuration
  */
 @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Component {}
+public @interface Component {
+}

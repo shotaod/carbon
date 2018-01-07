@@ -4,11 +4,9 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.carbon.authentication.request.SimpleRequest;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.context.session.SessionContext;
-import org.carbon.web.def.HttpMethod;
 import org.carbon.web.exception.UserIdentityNotFoundException;
 import org.carbon.web.util.ResponseUtil;
 import org.slf4j.Logger;

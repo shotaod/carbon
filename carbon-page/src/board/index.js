@@ -5,9 +5,10 @@ import PropTypes from 'prop-types';
 /*other*/
 import Dragula from 'react-dragula';
 import 'react-dragula/dist/dragula.min.css';
+import _ from 'lodash';
 
 /*component*/
-import Card from '../task/Card';
+import Card, { propTypes as cardProp} from '../task/Card';
 
 import './index.css';
 
@@ -32,6 +33,7 @@ const styles = {
   }
 };
 
+
 const boxWidth = 250;
 const boxMinMargin = 10;
 const arrangement = 100;
@@ -43,9 +45,6 @@ class StoryStatusBox extends Component {
     </div>);
   }
 }
-StoryStatusBox.propTypes = {
-  className: PropTypes.string,
-};
 
 class Story extends Component {
   static counter = 0;
@@ -63,16 +62,21 @@ class Story extends Component {
   };
   uniqueName = Story.getClassName();
   renderContent() {
-    return this.props.statusList
-      .map((status, i) => (<StoryStatusBox className={this.uniqueName}>
-        <Card title={`number_${i}`} text="hogehoge" point={10}/>
-      </StoryStatusBox>));
+    const { statuses, tasks } = this.props;
+    return statuses
+      .map(status => {
+        const targetTasks = tasks.filter(task => task.status === status.number);
+        const cards = targetTasks.map(task => <Card {...task} />);
+        return (<StoryStatusBox className={this.uniqueName}>
+          {cards}
+        </StoryStatusBox>);
+      });
   }
 
   render() {
-    const minWidth = getMinWidth(this.props.statusList.length);
+    const minWidth = getMinWidth(this.props.statuses.length);
     return (<div className="row card-panel" style={{ minWidth }}>
-      <span>Marketing Search</span>
+      <span>{this.props.title}</span>
       <div style={styles.storyRow} ref={this.dragDecorator.bind(this)}>
         {this.renderContent()}
       </div>
@@ -80,53 +84,74 @@ class Story extends Component {
   }
 }
 
-Story.propTypes = {
-  statusList: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-};
+class NewStoryForm extends Component {
 
-export default class Board extends Component {
+  state = {
+    display: 'none',
+  };
 
-  renderHeader() {
-    const minWidth = getMinWidth(this.props.statusList.length);
-    return (<div className="row card-panel" style={{ minWidth }}>
-      <div style={styles.statusRow}>
-        {this.props.statusList.map(status => (<div className="card-panel" style={{ minWidth: boxWidth }}>{status}</div>))}
-      </div>
-    </div>)
-  }
+  handleClickOpenButton = e => {
+    e.preventDefault();
+    const display = this.state.display === 'block' ? 'none': 'block';
+    this.setState({ display });
+  };
 
-  renderCreateStoryForm() {
+  render() {
     return (<div className="row">
-      <button className="waves-effect waves-light btn">
-        <i className="material-icons left">cloud</i>
+      <button className="waves-effect waves-light btn" onClick={this.handleClickOpenButton.bind(this)}>
+        <i className="material-icons left">lightbulb_outline</i>
         new story
       </button>
-      <div className="card-panel" style={{ width: boxWidth }}>
-        <div className="row">
-          <div className="input-field col s12">
-            <input placeholder="Placeholder" id="first_name" type="text" />
+      <div className="card-panel" style={{ width: '300px', display: this.state.display }}>
+        <div className="row valign-wrapper">
+          <div className="input-field col s8">
+            <input placeholder="story name..." id="first_name" type="text" />
           </div>
-          <div className="input-field col s12">
-            <input placeholder="Placeholder" id="first_name" type="text" />
-          </div>
+          <button className="waves-effect waves-light btn col s4">
+            <i className="material-icons">edit</i>
+          </button>
         </div>
       </div>
     </div>);
   }
+}
+
+export default class Board extends Component {
+
+  renderHeader() {
+    return (
+      <div style={styles.statusRow}>
+        {this.props.statuses.map(({ title }) => (<div className="card-panel" style={{ minWidth: boxWidth }}>{title}</div>))}
+      </div>
+    );
+  }
 
   renderStory() {
-    return (<Story {...this.props}  />);
+    const { statuses } = this.props;
+    return this.props.stories.map(story => <Story {...Object.assign(story, { statuses })}/>);
   }
 
   render() {
     return (<div style={{ display: 'table', padding: '20px' }}>
       {this.renderHeader()}
-      {this.renderCreateStoryForm()}
+      <NewStoryForm />
       {this.renderStory()}
     </div>);
   }
 }
 
-Board.propTypes = {
-  statusList: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+const statusesProp = PropTypes.arrayOf(PropTypes.shape({
+  title: PropTypes.string,
+  number: PropTypes.number,
+}));
+
+Story.propTypes = {
+  title: PropTypes.string,
+  statuses: statusesProp,
+  tasks: PropTypes.arrayOf(cardProp),
+};
+
+Board.propTypes =  {
+  statuses: statusesProp,
+  stories: PropTypes.arrayOf(PropTypes.shape(Story.propTypes)),
 };

@@ -6,28 +6,27 @@ import './Card.css';
 export default class Card extends Component {
   render() {
     return (<div className="card">
-      <div className="card-content">
-        <div className="valign-wrapper">
-          <span className="card-title truncate" style={{width: '75%', display: 'inline-block'}}>
-            {this.props.title}
-          </span>
+      <div className="card-content" style={{ padding: '10px' }}>
+        <span className="card-title truncate" style={{ fontSize: '12px', textDecorationLine: 'underline' }}>
+          {this.props.title}
+        </span>
+        <p style={{ width: '100%', overflow: 'auto' }}>
+          {this.props.text}
+        </p>
+        <div className="row" style={{ margin: '0' }}>
           <div className="chip blue white-text right">
             {this.props.point}
           </div>
         </div>
-        <p style={{height: '100px', width: '100%', overflow: 'auto'}}>
-          {this.props.text}
-        </p>
-      </div>
-      <div className="card-action">
-        <button className="btn-flat blue-text"><i className="material-icons">delete</i></button>
       </div>
     </div>);
   }
 }
 
-Card.propTypes = {
+export const propTypes = Card.propTypes = {
+  status: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   point: PropTypes.number.isRequired,
 };
+

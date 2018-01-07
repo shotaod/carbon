@@ -25,7 +25,7 @@ public class JettyServerBridge implements EmbedServer {
     }
 
     @Override
-    public void run(Class base) throws Exception {
+    public void run() throws Exception {
 
         SelectChannelConnector connector = new SelectChannelConnector();
         connector.setPort(config.getPort());

@@ -1,4 +1,4 @@
-import { createElement, removeChildrens } from '../commons/DomUtil';
+import {createElement, removeChildrens} from '../commons/DomUtil';
 
 // === dom element ==========
 const messageMain = document.getElementById('message_main');

@@ -1,0 +1,13 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: carbondb
+      MYSQL_USER: carbon
+      MYSQL_PASSWORD: carbonpw
+    ports:
+      - "43306:3306"
+    volumes:
+      - ./mysql_conf:/etc/mysql/conf.d

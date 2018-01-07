@@ -59,7 +59,7 @@ public class ActionFinder {
         // classify by HttpMethod
         List<ActionDefinition> actionDefinitions = filterByHttpMethod(request);
 
-        // map Action by Url
+        // apply Action by Url
         return findAction(request, actionDefinitions);
     }
 
@@ -114,7 +114,7 @@ public class ActionFinder {
     private ActionNotFoundException actionNotFoundException(HttpServletRequest request) {
         return new ActionNotFoundException(
                 String.format(
-                    "[request] %s is not found in application action map",
+                    "[request] %s is not found in application action apply",
                     request.getRequestURI()
                 )
         );

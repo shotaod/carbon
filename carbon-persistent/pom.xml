@@ -5,7 +5,6 @@
     <groupId>carbon</groupId>
     <artifactId>carbon-persistant</artifactId>
     <version>0.1.0-BETA</version>
-
     <name>Carbon Persistent</name>
 
     <properties>

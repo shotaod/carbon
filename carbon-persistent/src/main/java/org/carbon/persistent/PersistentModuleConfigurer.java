@@ -1,25 +1,7 @@
 package org.carbon.persistent;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.sql.DataSource;
-
 import org.carbon.modular.ModuleConfigurationResult;
 import org.carbon.modular.ModuleConfigurer;
-import org.carbon.persistent.hibernate.AutoDDL;
-import org.carbon.persistent.hibernate.HibernateConfiguration;
-import org.carbon.persistent.jooq.JooqConfiguration;
-import org.carbon.persistent.prop.DataSourceProperty;
-import org.carbon.persistent.prop.PersistentImplementation;
-import org.carbon.util.format.ChapterAttr;
-import org.carbon.util.format.StringLineBuilder;
-import org.carbon.util.mapper.PropertyMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,60 +11,10 @@ import org.slf4j.LoggerFactory;
 public class PersistentModuleConfigurer implements ModuleConfigurer {
     private Logger logger = LoggerFactory.getLogger(PersistentModuleConfigurer.class);
 
-    private static final String ImplKey = "persistent.implementation";
-    private static final String DataSourceKey = "persistent.dataSource";
-    private static final String AutoDDLKey = "persistent.option.autoddl";
-
     @Override
-    public ModuleConfigurationResult configure(Class scanBase, PropertyMapper propertyMapper) {
-        PersistentImplementation persistentImplementation = getPersistentImplementation(propertyMapper);
-        logger.debug("Persistent implementation is {}", persistentImplementation);
-
-        // set up instances
-        logger.debug("① Start set up instances managed by PersistentModule");
-        Map<Class<?>, Object> instances = new HashMap<>();
-        if (persistentImplementation == PersistentImplementation.Hibernate) {
-            AutoDDL autoDDL = propertyMapper.findPrimitive(AutoDDLKey, String.class).map(AutoDDL::actionOf).orElse(AutoDDL.None);
-            instances.put(AutoDDL.class, autoDDL);
-        }
-
-        Optional<DataSourceProperty> optionalProperty = propertyMapper.findAndConstruct(DataSourceKey, DataSourceProperty.class);
-        if (optionalProperty.isPresent()) {
-            logger.info("Detect Datasource property. Create and Inject Datasource");
-            instances.put(DataSource.class, optionalProperty.get().toDataSource());
-        } else {
-            logger.info("Cannot Detect Datasource property. Expect to be loaded custom Datasource.");
-        }
-
-        // set up classes
-        logger.debug("② Start set up classes by PersistentModule");
-        Set<Class<?>> classes = new HashSet<>();
-        switch (persistentImplementation) {
-            case Hibernate:
-                classes.add(HibernateConfiguration.class);
-                break;
-            case Jooq:
-                classes.add(JooqConfiguration.class);
-                break;
-            // noop
-            // case None:
-            // default:
-        }
-
-        if (logger.isInfoEnabled()) {
-            Stream<String> instancesStream = instances.keySet().stream().map(clazz -> "- " + clazz.getName());
-            Stream<String> configStream = classes.stream().map(clazz -> "- " + clazz.getName());
-            String dependencies = Stream.concat(instancesStream, configStream).collect(Collectors.joining("\n"));
-            StringLineBuilder resultInfo = ChapterAttr.getBuilder("Persistent Configure Result").appendLine(dependencies);
-            logger.info(resultInfo.toString());
-        }
-        return new ModuleConfigurationResult(classes, instances, Collections.singleton(PersistentScanBase.class));
-    }
-
-    private PersistentImplementation getPersistentImplementation(PropertyMapper propertyMapper) {
-        return propertyMapper
-            .findPrimitive(ImplKey, String.class)
-            .map(PersistentImplementation::implOf)
-            .orElse(PersistentImplementation.None);
+    public ModuleConfigurationResult configure() {
+        Class<PersistentScanBase> scanBaseClass = PersistentScanBase.class;
+        logger.debug("add scan target class [{}]", scanBaseClass);
+        return new ModuleConfigurationResult(scanBaseClass);
     }
 }

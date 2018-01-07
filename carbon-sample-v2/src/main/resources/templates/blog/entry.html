@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en"
+      layout:decorate="~{/base/layout}">
+<head>
+	<meta charset="UTF-8">
+	<title>Entry</title>
+	<link type="text/css" rel="stylesheet" th:href="@{/static/css/markdown.css}">
+</head>
+<body>
+<!--/*@thymesVar id="data" type="org.carbon.sample.v2.ext.jooq.tables.pojos.Blog"*/-->
+<section layout:fragment="content">
+	<div class="row">
+		<div class="col s12">
+			<h5 th:text="${data.title}"></h5>
+		</div>
+		<div class="col s12">
+			<p th:text="${data.summary}"></p>
+		</div>
+		<div class="col s12">
+			<section th:utext="${data.content}"></section>
+		</div>
+	</div>
+</section>
+</body>
+</html>

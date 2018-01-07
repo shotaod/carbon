@@ -2,11 +2,10 @@ package org.carbon.sample.tool;
 
 import java.io.File;
 
-import com.mysql.jdbc.Driver;
 import lombok.Setter;
+import org.carbon.persistent.dialect.Dialect;
 import org.carbon.persistent.jooq.JooqCodeGenerator;
-import org.carbon.util.mapper.PropertyMapper;
-import org.jooq.SQLDialect;
+import org.carbon.util.mapper.YamlObjectMapper;
 
 /**
  * @author Shota Oda 2017/02/12.
@@ -22,19 +21,19 @@ public class DatabaseTool {
     }
 
     public static void main(String[] args) throws Exception {
-        PropertyMapper propertyMapper = new PropertyMapper("config.yml");
-        DBProp dbProp = propertyMapper.findAndConstruct("persistent.dataSource", DBProp.class).get();
-        String url = String.format("jdbc:mysql://%s:%s/%s", dbProp.host, dbProp.port, dbProp.db);
+        YamlObjectMapper propertyMapper = new YamlObjectMapper("config.yml");
+        DBProp p = propertyMapper.map("persistent.dataSource", DBProp.class);
 
-        new JooqCodeGenerator(
-                url,
-                dbProp.user,
-                dbProp.password,
-                Driver.class,
-                SQLDialect.MYSQL,
-                dbProp.db,
-                "org.carbon.sample.ext.jooq",
-                new File("carbon-sample/src/main/java")
-        ).generate();
+        JooqCodeGenerator
+                .configure(
+                        p.host,
+                        p.port,
+                        p.user,
+                        p.password,
+                        p.db,
+                        Dialect.MySql,
+                        "org.carbon.sample.ext.jooq",
+                        new File("carbon-sample/src/main/java")
+                ).generate();
     }
 }

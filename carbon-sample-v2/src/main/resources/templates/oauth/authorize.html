@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en"
+      layout:decorate="~{/base/layout}">
+<head>
+	<meta charset="UTF-8">
+	<title>OAuth2</title>
+</head>
+<body>
+<!--/*@thymesVar id="data" type="org.carbon.sample.v2.web.oauth.OAuth2AuthorizeResourceOwnerDto"*/-->
+<!--/*@thymesVar id="errors" type="java.util.Map<java.lang.String, java.lang.Object>"*/-->
+<section layout:fragment="content">
+	<div class="row">
+		<div class="col s12">
+			<p><span th:text="${data.host}"></span> is requesting authentication(s) below.</p>
+		</div>
+		<div class="col s12">
+			<ul class="collection" th:each="scope : ${data.scopes}" th:switch="${scope.code}">
+				<li class="collection-item" th:case="read_profile">read profile</li>
+				<li class="collection-item" th:case="update_profile">update profile</li>
+			</ul>
+		</div>
+		<div class="col s12">
+			<form method="post" action="/oauth/authorize" class="col s8 offset-s2 card-panel">
+				<p th:if="${errors && errors.containsKey('auth')}" th:text="${errors.get('auth')}" />
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="email" type="email" name="email" th:value="${data.email}">
+						<label for="email">email</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="password" type="password" name="password">
+						<label for="password">password</label>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s12">
+						<button class="btn waves-effect waves-light" type="submit" name="action">
+							permit
+							<i class="material-icons right">send</i>
+						</button>
+						<a class="btn waves-effect waves-light right" type="button" href="/security/signup">
+							sign up
+							<i class="material-icons right">send</i>
+						</a>
+					</div>
+				</div>
+				<input type="hidden" name="host" th:value="${data.host}" />
+				<input type="hidden" name="response_type" th:value="${data.response_type}" />
+				<input type="hidden" name="client_id" th:value="${data.client_id}" />
+				<input type="hidden" name="redirect_uri" th:value="${data.redirect_uri}" />
+				<th:block th:each="scope : ${data.scopes}">
+					<input type="hidden" name="scope" th:value="${scope}" />
+				</th:block>
+			</form>
+		</div>
+	</div>
+</section>
+</body>
+</html>

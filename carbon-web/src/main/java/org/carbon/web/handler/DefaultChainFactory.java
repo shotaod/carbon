@@ -1,16 +1,16 @@
 package org.carbon.web.handler;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.util.format.ChapterAttr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Shota Oda 2016/10/17.
@@ -52,14 +52,13 @@ public class DefaultChainFactory {
     public HandlerChain factorize() {
         logger.debug("[chain] start initialize");
         List<HandlerChain> additionalHandlers = handlers.stream()
-                .filter(handler -> !DefaultChains.stream().anyMatch(defaultChain -> defaultChain.isAssignableFrom(handler.getClass())))
+                .filter(handler -> DefaultChains.stream().noneMatch(defaultChain -> defaultChain.isAssignableFrom(handler.getClass())))
                 .collect(Collectors.toList());
 
         if (logger.isDebugEnabled()) {
-            additionalHandlers.forEach(handler -> logger.debug("Detect additional handler {}", handler.getClass()));
             if (additionalHandlers.isEmpty()) {
                 logger.debug("No additional handler is found");
-            }
+            } else additionalHandlers.forEach(handler -> logger.debug("Detect additional handler {}", handler.getClass()));
         }
 
         encodingChain

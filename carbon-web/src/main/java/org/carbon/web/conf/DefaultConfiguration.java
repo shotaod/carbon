@@ -7,6 +7,7 @@ import javax.validation.ValidatorFactory;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
+import org.carbon.modular.env.EnvironmentMapper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;

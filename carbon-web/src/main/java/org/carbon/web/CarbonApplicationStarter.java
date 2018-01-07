@@ -1,79 +1,65 @@
 package org.carbon.web;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.carbon.component.ComponentManager;
+import org.carbon.component.ComponentFactory;
+import org.carbon.component.meta.ComponentMeta;
+import org.carbon.component.meta.ComponentMetaSet;
 import org.carbon.modular.ModuleConfigurer;
 import org.carbon.modular.ModuleConfigurerResolver;
-import org.carbon.modular.ModuleDependency;
+import org.carbon.modular.env.EnvironmentMapper;
+import org.carbon.util.fn.Fn;
 import org.carbon.util.format.ChapterAttr;
-import org.carbon.util.mapper.PropertyMapper;
-import org.carbon.web.conf.WebProperty;
 import org.carbon.web.context.InstanceContainer;
-import org.carbon.web.def.Favicon;
-import org.carbon.web.exception.ApplicationStartException;
 import org.carbon.web.context.app.ApplicationContext;
 import org.carbon.web.def.Logo;
+import org.carbon.web.exception.ApplicationStartException;
 import org.carbon.web.server.EmbedServer;
 import org.carbon.web.server.jetty.JettyServerBridge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * @author Shota Oda 2016/10/06.
  */
 public class CarbonApplicationStarter {
-
-    // ===================================================================================
-    //                                                                          Logger
-    //                                                                          ==========
     private Logger logger = LoggerFactory.getLogger(CarbonApplicationStarter.class);
+
 
     // ===================================================================================
     //                                                                          Field
     //                                                                          ==========
-    private String config = "config";
-    private List<Class<? extends ModuleConfigurer>> moduleConfigurers = new ArrayList<>();
-
-    public void setConfig(String config) {
-        this.config = config;
-    }
+    private Set<Class<? extends ModuleConfigurer>> moduleConfigurers = new HashSet<>();
 
     @SafeVarargs
     public final void addModuleConfigurers(Class<? extends ModuleConfigurer>... moduleConfigurers) {
-        this.moduleConfigurers = Arrays.asList(moduleConfigurers);
+        this.moduleConfigurers = Stream.of(moduleConfigurers).collect(Collectors.toSet());
     }
 
     // ===================================================================================
     //                                                                              Public
     //                                                                              ======
     public void start(Class scanBase) throws Exception {
-        Favicon favicon = new Favicon();
         start(scanBase,
                 () -> logger.info(ChapterAttr.get("Carbon Initialize Finished")),
                 () -> logger.info(ChapterAttr.get("Carbon Start Running")));
     }
 
     public void start(Class scanBase, Runnable onPrepare, Runnable onStart) throws Exception {
-        EmbedServer embedServer;
         // prepare
-        try {
-            embedServer = prepare(scanBase);
-        } catch (Exception e) {
-            throw new ApplicationStartException("Application StartUp Error", e);
-        }
+        EmbedServer embedServer = Fn
+                .Try(() -> prepare(scanBase))
+                .CatchThrow(e -> new ApplicationStartException("Application Start up Error", e));
 
         onPrepare.run();
 
         // run
         try {
-            embedServer.run(scanBase);
+            embedServer.run();
         } catch (Exception e) {
             throw new ApplicationStartException("Application Start running Error", e);
         }
@@ -84,23 +70,17 @@ public class CarbonApplicationStarter {
         embedServer.await();
     }
 
-    private EmbedServer prepare(Class scanBase) throws Exception {
+    private EmbedServer prepare(Class scanBase) {
         logger.info(new Logo().logo);
         logger.info(ChapterAttr.get("Carbon Initialize Started"));
 
-        Map<Class, Object> dependency = new HashMap<>();
-
-        String configFileName = config + ".yml";
-        PropertyMapper propertyMapper = new PropertyMapper(configFileName);
-        dependency.put(PropertyMapper.class, propertyMapper);
 
         // resolve external module
-        ModuleDependency moduleDependency = resolveModuleConfigurer(scanBase, propertyMapper);
+        Set<ComponentMeta> metas = resolveModuleConfigurer();
 
-        dependency.putAll(moduleDependency.getInstances());
-        InstanceContainer appInstances = resolveDependency(scanBase, moduleDependency.getClasses(), dependency);
+        InstanceContainer appInstances = createInstanceContainer(scanBase, metas);
 
-        ApplicationContext.init(appInstances);
+        ApplicationContext.initialize(appInstances);
 
         return appInstances.getByType(JettyServerBridge.class);
     }
@@ -108,23 +88,22 @@ public class CarbonApplicationStarter {
     // ===================================================================================
     //                                                                             Private
     //                                                                             =======
-    private ModuleDependency resolveModuleConfigurer(Class scanBase, PropertyMapper propertyMapper) {
+    private Set<ComponentMeta> resolveModuleConfigurer() {
         ModuleConfigurerResolver moduleConfigurerResolver = new ModuleConfigurerResolver();
-        return moduleConfigurerResolver.resolve(this.moduleConfigurers, scanBase, propertyMapper);
+        return moduleConfigurerResolver.resolve(this.moduleConfigurers);
     }
 
-    private InstanceContainer resolveDependency(Class scanBase, Set<Class<?>> configurations, Map<Class, Object> dependency) throws Exception {
-        ComponentManager componentManager = new ComponentManager();
+    private InstanceContainer createInstanceContainer(Class scanBase, Set<ComponentMeta> metas) {
+        ComponentFactory componentFactory = new ComponentFactory();
         // load component -> create component
-        Set<Class<?>> frameworkManaged = componentManager.scanComponent(ConfigurationBase.class);
-        Set<Class<?>> clientManaged = componentManager.scanComponent(scanBase);
+        Set<ComponentMeta> carbonWebMetas = componentFactory.scanComponent(CarbonWebScanBase.class).stream().map(ComponentMeta::noImpl).collect(Collectors.toSet());
+        Set<ComponentMeta> clientMetas = componentFactory.scanComponent(scanBase).stream().map(ComponentMeta::noImpl).collect(Collectors.toSet());
 
-        Set<Class> allManaged = new HashSet<>();
-        allManaged.addAll(frameworkManaged);
-        allManaged.addAll(clientManaged);
-        allManaged.addAll(configurations);
+        ComponentMetaSet baseMetas = new ComponentMetaSet(metas);
+        baseMetas.addAll(carbonWebMetas);
+        baseMetas.addAll(clientMetas);
 
-        Map<Class, Object> instances = componentManager.generate(allManaged, dependency);
-        return new InstanceContainer(instances);
+        ComponentMetaSet resolvedMetas = componentFactory.resolve(baseMetas);
+        return new InstanceContainer(resolvedMetas.stream().collect(Collectors.toMap(ComponentMeta::getType, ComponentMeta::getInstance)));
     }
 }

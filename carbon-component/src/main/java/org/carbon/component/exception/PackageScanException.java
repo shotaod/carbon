@@ -5,6 +5,6 @@ package org.carbon.component.exception;
  */
 public class PackageScanException extends RuntimeException {
     public PackageScanException(String protocol, Throwable cause) {
-        super("Fail to scan files. Using protocol is ["+protocol+"]", cause);
+        super("Fail to scan class file. protocol[" + protocol + "] is not supported ", cause);
     }
 }

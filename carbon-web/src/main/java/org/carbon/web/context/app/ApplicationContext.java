@@ -6,7 +6,7 @@ import org.carbon.web.context.InstanceContainer;
 /**
  * @author Shota Oda 2017/02/25.
  */
-public class ApplicationContext implements Context{
+public class ApplicationContext implements Context {
     // -----------------------------------------------------
     //                                               application scope
     //                                               -------
@@ -16,7 +16,7 @@ public class ApplicationContext implements Context{
 
     private ApplicationContext() {}
 
-    public static void init(InstanceContainer instanceContainer) {
+    public static void initialize(InstanceContainer instanceContainer) {
         ApplicationContext.instanceContainer = instanceContainer;
     }
 

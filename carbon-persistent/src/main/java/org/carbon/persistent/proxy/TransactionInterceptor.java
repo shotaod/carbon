@@ -1,16 +1,15 @@
 package org.carbon.persistent.proxy;
 
-import net.sf.cglib.proxy.MethodProxy;
-import org.carbon.component.construct.proxy.ProxyAdapter;
-import org.carbon.persistent.annotation.Transactional;
-import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-
-import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
+import javax.sql.DataSource;
+
+import net.sf.cglib.proxy.MethodProxy;
+import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Inject;
+import org.carbon.component.enhance.ProxyAdapter;
+import org.carbon.persistent.annotation.Transactional;
 
 /**
  * @author Shota Oda 2016/11/25.

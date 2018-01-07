@@ -1,6 +1,7 @@
 package org.carbon.web.ws;
 
-import com.google.common.base.Objects;
+
+import java.util.Objects;
 
 /**
  * @author Shota Oda 2017/01/02.
@@ -22,7 +23,7 @@ public class Channel {
         if (this == object) return true;
         if (!(object instanceof Channel)) return false;
         Channel channel = (Channel) object;
-        return Objects.equal(id, channel.id);
+        return Objects.equals(id, channel.id);
     }
 
     @Override

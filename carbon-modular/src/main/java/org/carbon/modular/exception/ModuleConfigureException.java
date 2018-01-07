@@ -7,4 +7,7 @@ public class ModuleConfigureException extends RuntimeException {
     public ModuleConfigureException(String message) {
         super(message);
     }
+    public ModuleConfigureException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

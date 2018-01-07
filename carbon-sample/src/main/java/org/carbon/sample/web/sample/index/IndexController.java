@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.carbon.component.annotation.Inject;
-import org.carbon.component.construct.proxy.annotation.InOutLogging;
 import org.carbon.sample.domain.service.ProductService;
 import org.carbon.sample.domain.service.UserRoleService;
 import org.carbon.sample.ext.jooq.tables.pojos.Product;
@@ -77,7 +76,6 @@ public class IndexController {
     // -----------------------------------------------------
     //                                               Path Variable
     //                                               -------
-    @InOutLogging
     @Action(url = "/wiki/{target}/{target2}", method = HttpMethod.GET)
     public String wikiGet(@PathVariable("target") String target, @PathVariable("target2") String target2) {
         switch (target.toLowerCase()) {

@@ -8,6 +8,6 @@ public class ObjectMappingException extends RuntimeException {
         super(message);
     }
     public ObjectMappingException(Throwable cause) {
-        super(cause);
+        super("Fail to map structural data to object", cause);
     }
 }

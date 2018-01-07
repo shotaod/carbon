@@ -15,7 +15,7 @@ import org.carbon.web.annotation.Validate;
 import org.carbon.web.core.response.HtmlResponse;
 import org.carbon.web.core.response.HttpOperation;
 import org.carbon.web.core.response.RedirectOperation;
-import org.carbon.web.core.validation.SimpleValidationResult;
+import org.carbon.web.core.validation.HandyValidationResult;
 import org.carbon.web.def.HttpMethod;
 
 /**
@@ -77,7 +77,7 @@ public class LecturerController {
     @Action(url = "/business/room/create", method = HttpMethod.POST)
     public HtmlResponse roomCreatePost(@Session BusinessAuthIdentity authIdentity,
                                        @RequestBody @Validate RoomCreateForm form,
-                                       SimpleValidationResult vr) {
+                                       HandyValidationResult vr) {
         if (vr.existError()) {
             HtmlResponse response = new HtmlResponse("business/lecturer_room_create");
             response.putData("errors", vr.getViolationResults());
@@ -114,7 +114,7 @@ public class LecturerController {
     @Action(url = "/business/profile/edit", method = HttpMethod.POST)
     public HtmlResponse profileEditPost(@Session BusinessAuthIdentity authIdentity,
                                         @RequestBody @Validate LecturerProfileForm form,
-                                        SimpleValidationResult vr) {
+                                        HandyValidationResult vr) {
         if (vr.existError()) {
             HtmlResponse response = new HtmlResponse("/buisness/lecturer_profile_edit");
             response.putData("model", vr.getViolationResults());
