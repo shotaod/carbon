@@ -22,7 +22,7 @@ import org.carbon.sample.v2.ext.jooq.tables.interfaces.IAuthClient;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AuthClient implements IAuthClient {
 
-    private static final long serialVersionUID = 208259880;
+    private static final long serialVersionUID = -1756720984;
 
     private Long   id;
     private String clientHost;

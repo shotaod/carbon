@@ -6,9 +6,10 @@ package org.carbon.sample.v2.ext.jooq.tables;
 
 import java.util.Arrays;
 import java.util.List;
+
 import javax.annotation.Generated;
 
-import org.carbon.sample.v2.ext.jooq.Carbon;
+import org.carbon.sample.v2.ext.jooq.Carbondb;
 import org.carbon.sample.v2.ext.jooq.Keys;
 import org.carbon.sample.v2.ext.jooq.tables.records.AuthClientRecord;
 import org.jooq.Field;
@@ -33,10 +34,10 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AuthClient extends TableImpl<AuthClientRecord> {
 
-    private static final long serialVersionUID = 963404239;
+    private static final long serialVersionUID = 438065428;
 
     /**
-     * The reference instance of <code>carbon.auth_client</code>
+     * The reference instance of <code>carbondb.auth_client</code>
      */
     public static final AuthClient AUTH_CLIENT = new AuthClient();
 
@@ -49,29 +50,29 @@ public class AuthClient extends TableImpl<AuthClientRecord> {
     }
 
     /**
-     * The column <code>carbon.auth_client.id</code>.
+     * The column <code>carbondb.auth_client.id</code>.
      */
-    public final TableField<AuthClientRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('carbon.auth_client_id_seq'::regclass)", org.jooq.impl.SQLDataType.BIGINT)), this, "");
+    public final TableField<AuthClientRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>carbon.auth_client.client_host</code>.
+     * The column <code>carbondb.auth_client.client_host</code>.
      */
-    public final TableField<AuthClientRecord, String> CLIENT_HOST = createField("client_host", org.jooq.impl.SQLDataType.CHAR.length(127).nullable(false), this, "");
+    public final TableField<AuthClientRecord, String> CLIENT_HOST = createField("client_host", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>carbon.auth_client.client_id</code>.
+     * The column <code>carbondb.auth_client.client_id</code>.
      */
     public final TableField<AuthClientRecord, String> CLIENT_ID = createField("client_id", org.jooq.impl.SQLDataType.CHAR.length(127).nullable(false), this, "");
 
     /**
-     * Create a <code>carbon.auth_client</code> table reference
+     * Create a <code>carbondb.auth_client</code> table reference
      */
     public AuthClient() {
         this("auth_client", null);
     }
 
     /**
-     * Create an aliased <code>carbon.auth_client</code> table reference
+     * Create an aliased <code>carbondb.auth_client</code> table reference
      */
     public AuthClient(String alias) {
         this(alias, AUTH_CLIENT);
@@ -90,7 +91,7 @@ public class AuthClient extends TableImpl<AuthClientRecord> {
      */
     @Override
     public Schema getSchema() {
-        return Carbon.CARBON;
+        return Carbondb.CARBONDB;
     }
 
     /**
@@ -106,7 +107,7 @@ public class AuthClient extends TableImpl<AuthClientRecord> {
      */
     @Override
     public UniqueKey<AuthClientRecord> getPrimaryKey() {
-        return Keys.AUTH_CLIENT_PKEY;
+        return Keys.KEY_AUTH_CLIENT_PRIMARY;
     }
 
     /**
@@ -114,7 +115,7 @@ public class AuthClient extends TableImpl<AuthClientRecord> {
      */
     @Override
     public List<UniqueKey<AuthClientRecord>> getKeys() {
-        return Arrays.<UniqueKey<AuthClientRecord>>asList(Keys.AUTH_CLIENT_PKEY, Keys.AUTH_CLIENT_CLIENT_HOST_KEY, Keys.AUTH_CLIENT_CLIENT_ID_KEY);
+        return Arrays.<UniqueKey<AuthClientRecord>>asList(Keys.KEY_AUTH_CLIENT_PRIMARY, Keys.KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_HOST_UINDEX, Keys.KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_ID_UINDEX);
     }
 
     /**

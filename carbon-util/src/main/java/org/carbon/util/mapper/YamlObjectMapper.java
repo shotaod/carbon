@@ -11,10 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -70,19 +72,29 @@ public class YamlObjectMapper {
         }
     }
 
+    public YamlObjectMapper(String... fileNames) {
+        initialize(Stream.of(fileNames).map(this::getConfigString).collect(Collectors.toList()));
+    }
+
+    public YamlObjectMapper(Path... paths) {
+        initialize(Stream.of(paths).map(this::getConfigString).collect(Collectors.toList()));
+    }
+
     @SuppressWarnings("unchecked")
-    public YamlObjectMapper(String configFile) {
+    private void initialize(List<String> configStrs) {
         this.yaml = new Yaml();
         this.mapper = new KeyValueMapper();
         this.readCache = new HashMap<>();
+        Map configMap = configStrs.stream()
+                .map(str -> yaml.loadAs(str, Map.class))
+                .reduce(MergeUtil::merge)
+                .orElseGet(HashMap::new);
 
-        String configString = getConfigString(configFile);
-        Map configMap = yaml.loadAs(configString, Map.class);
         this.config = evaluateEnvironmentVariable(configMap);
-            this.flatConfig = flatten(config, null);
+        this.flatConfig = flatten(config, null);
 
         if (logger.isInfoEnabled()) {
-            logResult();
+            logResult(configStrs.size() > 1);
         }
     }
 
@@ -136,7 +148,7 @@ public class YamlObjectMapper {
                 .CatchReturn(t -> Optional.empty());
     }
 
-    private void logResult() {
+    private void logResult(boolean merged) {
         List<SimpleKeyValue<String, ?>> kvs = flatConfig.stream().map(conf -> {
             Object value;
             if (conf.getError() != null) value = conf.getError();
@@ -144,7 +156,11 @@ public class YamlObjectMapper {
             return new SimpleKeyValue<>(conf.getKey(), value);
         }).sorted(Comparator.comparing(SimpleKeyValue::getKey)).collect(Collectors.toList());
         String boxedLines = BoxedTitleMessage.produceLeft(kvs);
-        String info = ChapterAttr.getBuilder("Configuration Result").appendLine(boxedLines).toString();
+        String title = "Configuration Result";
+        if (merged) {
+            title += " (merged)";
+        }
+        String info = ChapterAttr.getBuilder(title).appendLine(boxedLines).toString();
         logger.info(info);
     }
 
@@ -187,12 +203,21 @@ public class YamlObjectMapper {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private String getConfigString(String configFile) {
+    private String getConfigString(String resourceFile) {
         try {
-            byte[] bytes = Files.readAllBytes(Paths.get(ClassLoader.getSystemResource(configFile).toURI()));
+            Path path = Paths.get(ClassLoader.getSystemResource(resourceFile).toURI());
+            return getConfigString(path);
+        } catch (URISyntaxException e) {
+            throw new ResourceLoadingException("Fail to load resource ["+resourceFile+"]", e);
+        }
+    }
+
+    private String getConfigString(Path path) {
+        try {
+            byte[] bytes = Files.readAllBytes(path);
             return new String(bytes);
         } catch (Exception e) {
-            throw new ResourceLoadingException("Fail to load resource ["+configFile+"]", e);
+            throw new ResourceLoadingException("Fail to load resource ["+path+"]", e);
         }
     }
 

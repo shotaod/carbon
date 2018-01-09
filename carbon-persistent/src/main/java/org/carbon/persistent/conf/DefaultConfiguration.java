@@ -41,7 +41,7 @@ public class DefaultConfiguration {
     }
 
     @Component
-    public PersistentSwitcher persistentSwitcher() {
+    public PersistentImplSwitcher persistentSwitcher() {
         return target -> {
             PersistentImplementation persistentImplementation = environmentMapper
                     .findPrimitive(ImplKey, String.class)

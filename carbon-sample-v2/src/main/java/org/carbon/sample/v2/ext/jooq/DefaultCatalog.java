@@ -7,6 +7,7 @@ package org.carbon.sample.v2.ext.jooq;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.annotation.Generated;
 
 import org.jooq.Schema;
@@ -26,7 +27,7 @@ import org.jooq.impl.CatalogImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultCatalog extends CatalogImpl {
 
-    private static final long serialVersionUID = -341538758;
+    private static final long serialVersionUID = 2002417384;
 
     /**
      * The reference instance of <code></code>
@@ -34,9 +35,9 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
-     * The schema <code>carbon</code>.
+     * The schema <code>carbondb</code>.
      */
-    public final Carbon CARBON = org.carbon.sample.v2.ext.jooq.Carbon.CARBON;
+    public final Carbondb CARBONDB = org.carbon.sample.v2.ext.jooq.Carbondb.CARBONDB;
 
     /**
      * No further instances allowed
@@ -54,6 +55,6 @@ public class DefaultCatalog extends CatalogImpl {
 
     private final List<Schema> getSchemas0() {
         return Arrays.<Schema>asList(
-            Carbon.CARBON);
+            Carbondb.CARBONDB);
     }
 }

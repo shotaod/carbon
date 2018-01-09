@@ -22,7 +22,7 @@ import org.carbon.sample.v2.ext.jooq.tables.interfaces.IUser;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User implements IUser {
 
-    private static final long serialVersionUID = -151155377;
+    private static final long serialVersionUID = 300652495;
 
     private Long   id;
     private String email;

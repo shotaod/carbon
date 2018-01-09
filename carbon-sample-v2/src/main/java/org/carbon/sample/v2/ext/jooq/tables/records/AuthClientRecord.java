@@ -28,10 +28,10 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> implements Record3<Long, String, String>, IAuthClient {
 
-    private static final long serialVersionUID = -869357370;
+    private static final long serialVersionUID = 855232162;
 
     /**
-     * Setter for <code>carbon.auth_client.id</code>.
+     * Setter for <code>carbondb.auth_client.id</code>.
      */
     @Override
     public void setId(Long value) {
@@ -39,7 +39,7 @@ public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> impl
     }
 
     /**
-     * Getter for <code>carbon.auth_client.id</code>.
+     * Getter for <code>carbondb.auth_client.id</code>.
      */
     @Override
     public Long getId() {
@@ -47,7 +47,7 @@ public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> impl
     }
 
     /**
-     * Setter for <code>carbon.auth_client.client_host</code>.
+     * Setter for <code>carbondb.auth_client.client_host</code>.
      */
     @Override
     public void setClientHost(String value) {
@@ -55,7 +55,7 @@ public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> impl
     }
 
     /**
-     * Getter for <code>carbon.auth_client.client_host</code>.
+     * Getter for <code>carbondb.auth_client.client_host</code>.
      */
     @Override
     public String getClientHost() {
@@ -63,7 +63,7 @@ public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> impl
     }
 
     /**
-     * Setter for <code>carbon.auth_client.client_id</code>.
+     * Setter for <code>carbondb.auth_client.client_id</code>.
      */
     @Override
     public void setClientId(String value) {
@@ -71,7 +71,7 @@ public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> impl
     }
 
     /**
-     * Getter for <code>carbon.auth_client.client_id</code>.
+     * Getter for <code>carbondb.auth_client.client_id</code>.
      */
     @Override
     public String getClientId() {

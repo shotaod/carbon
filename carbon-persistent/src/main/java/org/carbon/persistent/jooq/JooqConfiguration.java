@@ -9,20 +9,19 @@ import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
 import org.carbon.component.annotation.Switch;
 import org.carbon.persistent.ConnectionTester;
-import org.carbon.persistent.conf.PersistentSwitcher;
+import org.carbon.persistent.conf.PersistentImplSwitcher;
 import org.carbon.persistent.dialect.ClasspathDialectResolver;
 import org.carbon.persistent.dialect.Dialect;
 import org.carbon.persistent.exception.DialectResolveException;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DAOImpl;
-import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultDSLContext;
 
 /**
  * @author Shota Oda 2016/11/26.
  */
-@Switch(PersistentSwitcher.class)
+@Switch(PersistentImplSwitcher.class)
 @Configuration
 public class JooqConfiguration {
     @Inject

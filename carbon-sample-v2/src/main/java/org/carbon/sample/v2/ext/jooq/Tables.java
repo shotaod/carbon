@@ -7,14 +7,12 @@ package org.carbon.sample.v2.ext.jooq;
 import javax.annotation.Generated;
 
 import org.carbon.sample.v2.ext.jooq.tables.AuthClient;
-import org.carbon.sample.v2.ext.jooq.tables.Blog;
-import org.carbon.sample.v2.ext.jooq.tables.SchemaVersion;
-import org.carbon.sample.v2.ext.jooq.tables.Task;
+import org.carbon.sample.v2.ext.jooq.tables.FlywaySchemaHistory;
 import org.carbon.sample.v2.ext.jooq.tables.User;
 
 
 /**
- * Convenience access to all tables in carbon
+ * Convenience access to all tables in carbondb
  */
 @Generated(
     value = {
@@ -27,27 +25,17 @@ import org.carbon.sample.v2.ext.jooq.tables.User;
 public class Tables {
 
     /**
-     * The table <code>carbon.auth_client</code>.
+     * The table <code>carbondb.auth_client</code>.
      */
     public static final AuthClient AUTH_CLIENT = org.carbon.sample.v2.ext.jooq.tables.AuthClient.AUTH_CLIENT;
 
     /**
-     * The table <code>carbon.blog</code>.
+     * The table <code>carbondb.flyway_schema_history</code>.
      */
-    public static final Blog BLOG = org.carbon.sample.v2.ext.jooq.tables.Blog.BLOG;
+    public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = org.carbon.sample.v2.ext.jooq.tables.FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
-     * The table <code>carbon.schema_version</code>.
-     */
-    public static final SchemaVersion SCHEMA_VERSION = org.carbon.sample.v2.ext.jooq.tables.SchemaVersion.SCHEMA_VERSION;
-
-    /**
-     * The table <code>carbon.task</code>.
-     */
-    public static final Task TASK = org.carbon.sample.v2.ext.jooq.tables.Task.TASK;
-
-    /**
-     * The table <code>carbon.user</code>.
+     * The table <code>carbondb.user</code>.
      */
     public static final User USER = org.carbon.sample.v2.ext.jooq.tables.User.USER;
 }

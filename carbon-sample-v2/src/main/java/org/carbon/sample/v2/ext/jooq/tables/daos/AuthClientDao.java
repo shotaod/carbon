@@ -5,6 +5,7 @@ package org.carbon.sample.v2.ext.jooq.tables.daos;
 
 
 import java.util.List;
+
 import javax.annotation.Generated;
 
 import org.carbon.component.annotation.Component;

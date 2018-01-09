@@ -1,0 +1,21 @@
+web:
+  port: _OVERWRITTEN_
+  resource:
+    directory: static
+    outPath: /static
+  maxHeaderSize: 512000 #500KB
+  maxContentSize: 2097152 #2MB
+  customError:
+    notFound: /error/404
+    serverError: /error/500
+persistent:
+  implementation: jooq # jooq or hibernate
+  dataSource:
+    dialect: mysql
+    host: _OVERWRITTEN_
+    db: _OVERWRITTEN_
+    user: _OVERWRITTEN_
+    password: _OVERWRITTEN_
+    port: _OVERWRITTEN_
+    params:
+      useSSL: false

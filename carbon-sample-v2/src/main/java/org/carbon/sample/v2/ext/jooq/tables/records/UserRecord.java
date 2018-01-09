@@ -28,10 +28,10 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Record4<Long, String, String, String>, IUser {
 
-    private static final long serialVersionUID = -255348064;
+    private static final long serialVersionUID = 1614660932;
 
     /**
-     * Setter for <code>carbon.user.id</code>.
+     * Setter for <code>carbondb.user.id</code>.
      */
     @Override
     public void setId(Long value) {
@@ -39,7 +39,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Getter for <code>carbon.user.id</code>.
+     * Getter for <code>carbondb.user.id</code>.
      */
     @Override
     public Long getId() {
@@ -47,7 +47,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Setter for <code>carbon.user.email</code>.
+     * Setter for <code>carbondb.user.email</code>.
      */
     @Override
     public void setEmail(String value) {
@@ -55,7 +55,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Getter for <code>carbon.user.email</code>.
+     * Getter for <code>carbondb.user.email</code>.
      */
     @Override
     public String getEmail() {
@@ -63,7 +63,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Setter for <code>carbon.user.user_name</code>.
+     * Setter for <code>carbondb.user.user_name</code>.
      */
     @Override
     public void setUserName(String value) {
@@ -71,7 +71,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Getter for <code>carbon.user.user_name</code>.
+     * Getter for <code>carbondb.user.user_name</code>.
      */
     @Override
     public String getUserName() {
@@ -79,7 +79,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Setter for <code>carbon.user.password</code>.
+     * Setter for <code>carbondb.user.password</code>.
      */
     @Override
     public void setPassword(String value) {
@@ -87,7 +87,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Getter for <code>carbon.user.password</code>.
+     * Getter for <code>carbondb.user.password</code>.
      */
     @Override
     public String getPassword() {

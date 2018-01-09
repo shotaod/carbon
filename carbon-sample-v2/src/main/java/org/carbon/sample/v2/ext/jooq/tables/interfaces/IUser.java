@@ -5,6 +5,7 @@ package org.carbon.sample.v2.ext.jooq.tables.interfaces;
 
 
 import java.io.Serializable;
+
 import javax.annotation.Generated;
 
 
@@ -22,42 +23,42 @@ import javax.annotation.Generated;
 public interface IUser extends Serializable {
 
     /**
-     * Setter for <code>carbon.user.id</code>.
+     * Setter for <code>carbondb.user.id</code>.
      */
     public void setId(Long value);
 
     /**
-     * Getter for <code>carbon.user.id</code>.
+     * Getter for <code>carbondb.user.id</code>.
      */
     public Long getId();
 
     /**
-     * Setter for <code>carbon.user.email</code>.
+     * Setter for <code>carbondb.user.email</code>.
      */
     public void setEmail(String value);
 
     /**
-     * Getter for <code>carbon.user.email</code>.
+     * Getter for <code>carbondb.user.email</code>.
      */
     public String getEmail();
 
     /**
-     * Setter for <code>carbon.user.user_name</code>.
+     * Setter for <code>carbondb.user.user_name</code>.
      */
     public void setUserName(String value);
 
     /**
-     * Getter for <code>carbon.user.user_name</code>.
+     * Getter for <code>carbondb.user.user_name</code>.
      */
     public String getUserName();
 
     /**
-     * Setter for <code>carbon.user.password</code>.
+     * Setter for <code>carbondb.user.password</code>.
      */
     public void setPassword(String value);
 
     /**
-     * Getter for <code>carbon.user.password</code>.
+     * Getter for <code>carbondb.user.password</code>.
      */
     public String getPassword();
 

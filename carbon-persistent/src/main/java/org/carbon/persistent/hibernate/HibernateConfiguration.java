@@ -14,7 +14,7 @@ import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
 import org.carbon.component.annotation.Switch;
 import org.carbon.modular.env.EnvironmentMapper;
-import org.carbon.persistent.conf.PersistentSwitcher;
+import org.carbon.persistent.conf.PersistentImplSwitcher;
 import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
 import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
 import org.hibernate.jpa.boot.spi.EntityManagerFactoryBuilder;
@@ -25,7 +25,7 @@ import static org.carbon.persistent.ConnectionTester.testConnection;
 /**
  * @author Shota Oda 2016/11/05.
  */
-@Switch(PersistentSwitcher.class)
+@Switch(PersistentImplSwitcher.class)
 @Configuration
 public class HibernateConfiguration {
     private static final String AutoDDLKey = "persistent.option.autoddl";

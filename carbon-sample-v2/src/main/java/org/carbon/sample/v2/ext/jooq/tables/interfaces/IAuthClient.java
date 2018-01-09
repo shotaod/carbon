@@ -5,6 +5,7 @@ package org.carbon.sample.v2.ext.jooq.tables.interfaces;
 
 
 import java.io.Serializable;
+
 import javax.annotation.Generated;
 
 
@@ -22,32 +23,32 @@ import javax.annotation.Generated;
 public interface IAuthClient extends Serializable {
 
     /**
-     * Setter for <code>carbon.auth_client.id</code>.
+     * Setter for <code>carbondb.auth_client.id</code>.
      */
     public void setId(Long value);
 
     /**
-     * Getter for <code>carbon.auth_client.id</code>.
+     * Getter for <code>carbondb.auth_client.id</code>.
      */
     public Long getId();
 
     /**
-     * Setter for <code>carbon.auth_client.client_host</code>.
+     * Setter for <code>carbondb.auth_client.client_host</code>.
      */
     public void setClientHost(String value);
 
     /**
-     * Getter for <code>carbon.auth_client.client_host</code>.
+     * Getter for <code>carbondb.auth_client.client_host</code>.
      */
     public String getClientHost();
 
     /**
-     * Setter for <code>carbon.auth_client.client_id</code>.
+     * Setter for <code>carbondb.auth_client.client_id</code>.
      */
     public void setClientId(String value);
 
     /**
-     * Getter for <code>carbon.auth_client.client_id</code>.
+     * Getter for <code>carbondb.auth_client.client_id</code>.
      */
     public String getClientId();
 

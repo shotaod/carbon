@@ -7,23 +7,18 @@ package org.carbon.sample.v2.ext.jooq;
 import javax.annotation.Generated;
 
 import org.carbon.sample.v2.ext.jooq.tables.AuthClient;
-import org.carbon.sample.v2.ext.jooq.tables.Blog;
-import org.carbon.sample.v2.ext.jooq.tables.SchemaVersion;
-import org.carbon.sample.v2.ext.jooq.tables.Task;
+import org.carbon.sample.v2.ext.jooq.tables.FlywaySchemaHistory;
 import org.carbon.sample.v2.ext.jooq.tables.User;
 import org.carbon.sample.v2.ext.jooq.tables.records.AuthClientRecord;
-import org.carbon.sample.v2.ext.jooq.tables.records.BlogRecord;
-import org.carbon.sample.v2.ext.jooq.tables.records.SchemaVersionRecord;
-import org.carbon.sample.v2.ext.jooq.tables.records.TaskRecord;
+import org.carbon.sample.v2.ext.jooq.tables.records.FlywaySchemaHistoryRecord;
 import org.carbon.sample.v2.ext.jooq.tables.records.UserRecord;
-import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
 
 
 /**
- * A class modelling foreign key relationships between tables of the <code>carbon</code> 
+ * A class modelling foreign key relationships between tables of the <code>carbondb</code> 
  * schema
  */
 @Generated(
@@ -41,28 +36,23 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<AuthClientRecord, Long> IDENTITY_AUTH_CLIENT = Identities0.IDENTITY_AUTH_CLIENT;
-    public static final Identity<BlogRecord, Long> IDENTITY_BLOG = Identities0.IDENTITY_BLOG;
-    public static final Identity<TaskRecord, Long> IDENTITY_TASK = Identities0.IDENTITY_TASK;
     public static final Identity<UserRecord, Long> IDENTITY_USER = Identities0.IDENTITY_USER;
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_PKEY = UniqueKeys0.AUTH_CLIENT_PKEY;
-    public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_HOST_KEY = UniqueKeys0.AUTH_CLIENT_CLIENT_HOST_KEY;
-    public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_ID_KEY = UniqueKeys0.AUTH_CLIENT_CLIENT_ID_KEY;
-    public static final UniqueKey<BlogRecord> BLOG_PKEY = UniqueKeys0.BLOG_PKEY;
-    public static final UniqueKey<SchemaVersionRecord> SCHEMA_VERSION_PK = UniqueKeys0.SCHEMA_VERSION_PK;
-    public static final UniqueKey<TaskRecord> TASK_PKEY = UniqueKeys0.TASK_PKEY;
-    public static final UniqueKey<UserRecord> USER_PKEY = UniqueKeys0.USER_PKEY;
-    public static final UniqueKey<UserRecord> USER_EMAIL_KEY = UniqueKeys0.USER_EMAIL_KEY;
+    public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_PRIMARY = UniqueKeys0.KEY_AUTH_CLIENT_PRIMARY;
+    public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_HOST_UINDEX = UniqueKeys0.KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_HOST_UINDEX;
+    public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_ID_UINDEX = UniqueKeys0.KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_ID_UINDEX;
+    public static final UniqueKey<FlywaySchemaHistoryRecord> KEY_FLYWAY_SCHEMA_HISTORY_PRIMARY = UniqueKeys0.KEY_FLYWAY_SCHEMA_HISTORY_PRIMARY;
+    public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = UniqueKeys0.KEY_USER_PRIMARY;
+    public static final UniqueKey<UserRecord> KEY_USER_USER_EMAIL_UINDEX = UniqueKeys0.KEY_USER_USER_EMAIL_UINDEX;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<TaskRecord, UserRecord> TASK__TASK_USER_ID_FKEY = ForeignKeys0.TASK__TASK_USER_ID_FKEY;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -70,23 +60,15 @@ public class Keys {
 
     private static class Identities0 extends AbstractKeys {
         public static Identity<AuthClientRecord, Long> IDENTITY_AUTH_CLIENT = createIdentity(AuthClient.AUTH_CLIENT, AuthClient.AUTH_CLIENT.ID);
-        public static Identity<BlogRecord, Long> IDENTITY_BLOG = createIdentity(Blog.BLOG, Blog.BLOG.ID);
-        public static Identity<TaskRecord, Long> IDENTITY_TASK = createIdentity(Task.TASK, Task.TASK.ID);
         public static Identity<UserRecord, Long> IDENTITY_USER = createIdentity(User.USER, User.USER.ID);
     }
 
     private static class UniqueKeys0 extends AbstractKeys {
-        public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_PKEY = createUniqueKey(AuthClient.AUTH_CLIENT, "auth_client_pkey", AuthClient.AUTH_CLIENT.ID);
-        public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_HOST_KEY = createUniqueKey(AuthClient.AUTH_CLIENT, "auth_client_client_host_key", AuthClient.AUTH_CLIENT.CLIENT_HOST);
-        public static final UniqueKey<AuthClientRecord> AUTH_CLIENT_CLIENT_ID_KEY = createUniqueKey(AuthClient.AUTH_CLIENT, "auth_client_client_id_key", AuthClient.AUTH_CLIENT.CLIENT_ID);
-        public static final UniqueKey<BlogRecord> BLOG_PKEY = createUniqueKey(Blog.BLOG, "blog_pkey", Blog.BLOG.ID);
-        public static final UniqueKey<SchemaVersionRecord> SCHEMA_VERSION_PK = createUniqueKey(SchemaVersion.SCHEMA_VERSION, "schema_version_pk", SchemaVersion.SCHEMA_VERSION.INSTALLED_RANK);
-        public static final UniqueKey<TaskRecord> TASK_PKEY = createUniqueKey(Task.TASK, "task_pkey", Task.TASK.ID);
-        public static final UniqueKey<UserRecord> USER_PKEY = createUniqueKey(User.USER, "user_pkey", User.USER.ID);
-        public static final UniqueKey<UserRecord> USER_EMAIL_KEY = createUniqueKey(User.USER, "user_email_key", User.USER.EMAIL);
-    }
-
-    private static class ForeignKeys0 extends AbstractKeys {
-        public static final ForeignKey<TaskRecord, UserRecord> TASK__TASK_USER_ID_FKEY = createForeignKey(org.carbon.sample.v2.ext.jooq.Keys.USER_PKEY, Task.TASK, "task__task_user_id_fkey", Task.TASK.USER_ID);
+        public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_PRIMARY = createUniqueKey(AuthClient.AUTH_CLIENT, "KEY_auth_client_PRIMARY", AuthClient.AUTH_CLIENT.ID);
+        public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_HOST_UINDEX = createUniqueKey(AuthClient.AUTH_CLIENT, "KEY_auth_client_auth_client_client_host_uindex", AuthClient.AUTH_CLIENT.CLIENT_HOST);
+        public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_ID_UINDEX = createUniqueKey(AuthClient.AUTH_CLIENT, "KEY_auth_client_auth_client_client_id_uindex", AuthClient.AUTH_CLIENT.CLIENT_ID);
+        public static final UniqueKey<FlywaySchemaHistoryRecord> KEY_FLYWAY_SCHEMA_HISTORY_PRIMARY = createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, "KEY_flyway_schema_history_PRIMARY", FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK);
+        public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = createUniqueKey(User.USER, "KEY_user_PRIMARY", User.USER.ID);
+        public static final UniqueKey<UserRecord> KEY_USER_USER_EMAIL_UINDEX = createUniqueKey(User.USER, "KEY_user_user_email_uindex", User.USER.EMAIL);
     }
 }

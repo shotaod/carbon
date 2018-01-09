@@ -6,9 +6,10 @@ package org.carbon.sample.v2.ext.jooq.tables;
 
 import java.util.Arrays;
 import java.util.List;
+
 import javax.annotation.Generated;
 
-import org.carbon.sample.v2.ext.jooq.Carbon;
+import org.carbon.sample.v2.ext.jooq.Carbondb;
 import org.carbon.sample.v2.ext.jooq.Keys;
 import org.carbon.sample.v2.ext.jooq.tables.records.UserRecord;
 import org.jooq.Field;
@@ -33,10 +34,10 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = 438918788;
+    private static final long serialVersionUID = -314592246;
 
     /**
-     * The reference instance of <code>carbon.user</code>
+     * The reference instance of <code>carbondb.user</code>
      */
     public static final User USER = new User();
 
@@ -49,34 +50,34 @@ public class User extends TableImpl<UserRecord> {
     }
 
     /**
-     * The column <code>carbon.user.id</code>.
+     * The column <code>carbondb.user.id</code>.
      */
-    public final TableField<UserRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('carbon.user_id_seq'::regclass)", org.jooq.impl.SQLDataType.BIGINT)), this, "");
+    public final TableField<UserRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>carbon.user.email</code>.
+     * The column <code>carbondb.user.email</code>.
      */
     public final TableField<UserRecord, String> EMAIL = createField("email", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>carbon.user.user_name</code>.
+     * The column <code>carbondb.user.user_name</code>.
      */
-    public final TableField<UserRecord, String> USER_NAME = createField("user_name", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<UserRecord, String> USER_NAME = createField("user_name", org.jooq.impl.SQLDataType.VARCHAR.length(31).nullable(false), this, "");
 
     /**
-     * The column <code>carbon.user.password</code>.
+     * The column <code>carbondb.user.password</code>.
      */
-    public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(65).nullable(false), this, "");
+    public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.CHAR.length(65).nullable(false), this, "");
 
     /**
-     * Create a <code>carbon.user</code> table reference
+     * Create a <code>carbondb.user</code> table reference
      */
     public User() {
         this("user", null);
     }
 
     /**
-     * Create an aliased <code>carbon.user</code> table reference
+     * Create an aliased <code>carbondb.user</code> table reference
      */
     public User(String alias) {
         this(alias, USER);
@@ -95,7 +96,7 @@ public class User extends TableImpl<UserRecord> {
      */
     @Override
     public Schema getSchema() {
-        return Carbon.CARBON;
+        return Carbondb.CARBONDB;
     }
 
     /**
@@ -111,7 +112,7 @@ public class User extends TableImpl<UserRecord> {
      */
     @Override
     public UniqueKey<UserRecord> getPrimaryKey() {
-        return Keys.USER_PKEY;
+        return Keys.KEY_USER_PRIMARY;
     }
 
     /**
@@ -119,7 +120,7 @@ public class User extends TableImpl<UserRecord> {
      */
     @Override
     public List<UniqueKey<UserRecord>> getKeys() {
-        return Arrays.<UniqueKey<UserRecord>>asList(Keys.USER_PKEY, Keys.USER_EMAIL_KEY);
+        return Arrays.<UniqueKey<UserRecord>>asList(Keys.KEY_USER_PRIMARY, Keys.KEY_USER_USER_EMAIL_UINDEX);
     }
 
     /**

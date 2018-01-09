@@ -13,5 +13,5 @@ import org.slf4j.LoggerFactory;
 /**
  * @author garden 2018/01/07.
  */
-public interface PersistentSwitcher extends Switcher {
+public interface PersistentImplSwitcher extends Switcher {
 }

@@ -1,17 +1,20 @@
 package org.carbon.sample.v2.tool;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import lombok.Setter;
 import org.carbon.persistent.dialect.Dialect;
 import org.carbon.persistent.jooq.JooqCodeGenerator;
-import org.carbon.sample.v2.ext.jooq.Carbon;
 import org.carbon.util.mapper.YamlObjectMapper;
 
 /**
  * @author Shota Oda 2017/02/12.
  */
 public class DatabaseTool {
+    private static final String fileName = "config.local.yml";
+
     @Setter
     public static class DBProp {
         private String host;
@@ -22,8 +25,10 @@ public class DatabaseTool {
     }
 
     public static void main(String[] args) throws Exception {
-        YamlObjectMapper yamlMapper = new YamlObjectMapper("config.local.yml");
-        DBProp p = yamlMapper.map("persistent.datasource", DBProp.class);
+        String rootDir = System.getProperty("user.dir");
+        Path path = Paths.get(rootDir, "carbon-sample-v2/src/main/resources", fileName);
+        YamlObjectMapper yamlMapper = new YamlObjectMapper(path);
+        DBProp p = yamlMapper.map("persistent.dataSource", DBProp.class);
         String dist = "carbon-sample-v2/src/main/java/";
         JooqCodeGenerator
                 .configure(
@@ -33,7 +38,7 @@ public class DatabaseTool {
                         p.password,
                         p.db,
                         Dialect.MySql,
-                        Carbon.class.getPackage().getName(),
+                        "org.carbon.sample.v2.ext.jooq",
                         new File(dist))
                 .generate();
     }

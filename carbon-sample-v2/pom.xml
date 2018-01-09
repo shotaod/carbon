@@ -7,7 +7,6 @@
     <groupId>carbon</groupId>
     <artifactId>carbon-sample-v2</artifactId>
     <version>1.0.0-RELEASE</version>
-
     <name>Carbon Sample Ver2</name>
 
     <packaging>jar</packaging>
@@ -15,7 +14,6 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
