@@ -54,9 +54,9 @@ public class Lecturer extends TableImpl<LecturerRecord> {
     public final TableField<LecturerRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>carbondb.lecturer.username</code>.
+     * The column <code>carbondb.lecturer.identityClass</code>.
      */
-    public final TableField<LecturerRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<LecturerRecord, String> USERNAME = createField("identityClass", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
      * The column <code>carbondb.lecturer.email</code>.

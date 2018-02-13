@@ -11,7 +11,8 @@ import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.carbon.component.annotation.Configuration;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.annotation.Channeled;
 import org.carbon.web.annotation.OnClose;
@@ -33,7 +34,7 @@ import org.eclipse.jetty.websocket.WebSocketFactory;
 /**
  * @author Shota Oda 2017/01/04.
  */
-@Configuration
+@Component
 public class WebSocketActionFactory {
 
     private static class AdapterAction extends ActionDefinition {
@@ -66,6 +67,8 @@ public class WebSocketActionFactory {
 
     @Inject
     private PathVariableResolver pathResolver;
+    @Inject
+    private ObjectMapper objectMapper;
 
     @SuppressWarnings("unchecked")
     public ActionDefinition factorize(Object instance) {
@@ -79,24 +82,21 @@ public class WebSocketActionFactory {
                 .flatMap(method -> {
                     if (method.isAnnotationPresent(OnOpen.class)) {
                         methods.put(OnOpen.class, method);
-                        return paramStream(method);
                     } else if (method.isAnnotationPresent(OnClose.class)) {
                         methods.put(OnClose.class, method);
-                        return paramStream(method);
                     } else if (method.isAnnotationPresent(OnReceive.class)) {
                         methods.put(OnReceive.class, method);
-                        return paramStream(method);
                     } else if (method.isAnnotationPresent(Channeled.class)) {
                         methods.put(Channeled.class, method);
-                        return paramStream(method);
                     } else return Stream.empty();
+                    return paramStream(method);
                 });
 
         ComputedUrl computed = pathResolver.resolve(url, params);
 
         AdapterAction adapterAction = new AdapterAction(HttpMethod.GET, computed, socketClass);
         adapterAction.socketImplDelegate = aggregator -> {
-            ChannelWebSocketAdapter adapter= new ChannelWebSocketAdapter(ChannelStation.instance);
+            ChannelWebSocketAdapter adapter= new ChannelWebSocketAdapter(ChannelStation.instance, objectMapper);
             Method onOpen = methods.get(OnOpen.class);
             if (onOpen != null) {
                 adapter.setOnOpen(aggregator.resolve(onOpen, instance));

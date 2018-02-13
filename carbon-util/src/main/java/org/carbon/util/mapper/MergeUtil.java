@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author garden 2018/01/09.
+ * @author Shota Oda 2018/01/09.
  */
 public class MergeUtil {
 

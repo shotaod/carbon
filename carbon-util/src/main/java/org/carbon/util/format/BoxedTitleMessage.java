@@ -57,7 +57,7 @@ public class BoxedTitleMessage {
         return keyValues.stream()
                 .map(kv -> {
                     String boxedTitle = Stream.generate(() -> " ").limit(maxLen - kv.getKey().length()).collect(type.get(kv.getKey()));
-                    String message = kv.getValue().toString();
+                    String message = kv.getValue() != null ? kv.getValue().toString() : "";
                     if (message.contains("\n")) {
                         String emptyBox = Stream.generate(() -> " ").limit(maxLen + 1).collect(Collectors.joining()) + "|" + " ";
                         message = Arrays.stream(message.split("\\n")).map(s -> emptyBox + s).collect(Collectors.joining("\n"));

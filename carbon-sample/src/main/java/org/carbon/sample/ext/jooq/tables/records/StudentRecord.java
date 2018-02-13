@@ -63,7 +63,7 @@ public class StudentRecord extends UpdatableRecordImpl<StudentRecord> implements
     }
 
     /**
-     * Setter for <code>carbondb.student.username</code>.
+     * Setter for <code>carbondb.student.identityClass</code>.
      */
     @Override
     public void setUsername(String value) {
@@ -71,7 +71,7 @@ public class StudentRecord extends UpdatableRecordImpl<StudentRecord> implements
     }
 
     /**
-     * Getter for <code>carbondb.student.username</code>.
+     * Getter for <code>carbondb.student.identityClass</code>.
      */
     @Override
     public String getUsername() {

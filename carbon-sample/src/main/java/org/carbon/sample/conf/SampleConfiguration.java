@@ -1,5 +1,6 @@
 package org.carbon.sample.conf;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
@@ -13,12 +14,15 @@ import org.carbon.web.context.session.SessionStore;
 public class SampleConfiguration {
     @Inject
     private RedisProperty redisProperty;
+    @Inject
+    private ObjectMapper objectMapper;
 
     @Component
     public SessionStore redisSession() {
         return new RedisSessionStore(
                 redisProperty.getHost(),
-                redisProperty.getPort()
+                redisProperty.getPort(),
+                objectMapper
         );
     }
 }

@@ -1,0 +1,13 @@
+#
+# app.yml
+#
+
+- hosts: app
+  remote_user: ansible
+  gather_facts: false
+  become: true
+  vars_files:
+    - env_vars/{{ stage }}.yml
+  roles:
+    - db
+    - web

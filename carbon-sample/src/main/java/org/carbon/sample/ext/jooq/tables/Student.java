@@ -58,9 +58,9 @@ public class Student extends TableImpl<StudentRecord> {
     public final TableField<StudentRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>carbondb.student.username</code>.
+     * The column <code>carbondb.student.identityClass</code>.
      */
-    public final TableField<StudentRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<StudentRecord, String> USERNAME = createField("identityClass", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
      * The column <code>carbondb.student.email</code>.

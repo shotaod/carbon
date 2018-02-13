@@ -7,7 +7,7 @@ package org.carbon.sample.v2.ext.jooq;
 import javax.annotation.Generated;
 
 import org.carbon.sample.v2.ext.jooq.tables.AuthClient;
-import org.carbon.sample.v2.ext.jooq.tables.FlywaySchemaHistory;
+import org.carbon.sample.v2.ext.jooq.tables.RockettyRanking;
 import org.carbon.sample.v2.ext.jooq.tables.User;
 
 
@@ -30,9 +30,9 @@ public class Tables {
     public static final AuthClient AUTH_CLIENT = org.carbon.sample.v2.ext.jooq.tables.AuthClient.AUTH_CLIENT;
 
     /**
-     * The table <code>carbondb.flyway_schema_history</code>.
+     * The table <code>carbondb.rocketty_ranking</code>.
      */
-    public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = org.carbon.sample.v2.ext.jooq.tables.FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
+    public static final RockettyRanking ROCKETTY_RANKING = org.carbon.sample.v2.ext.jooq.tables.RockettyRanking.ROCKETTY_RANKING;
 
     /**
      * The table <code>carbondb.user</code>.

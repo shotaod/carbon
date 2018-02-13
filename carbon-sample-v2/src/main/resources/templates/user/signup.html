@@ -23,22 +23,22 @@
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="username" type="text" name="username">
-					<label for="username">username</label>
-					<p style="margin-top: -15px" th:if="${error && error.containsKey('username')}" th:text="${error.get('username')}" class="red-text"></p>
+					<input id="identity" type="text" name="identity">
+					<label for="identity">identity</label>
+					<p style="margin-top: -15px" th:if="${error && error.containsKey('identity')}" th:text="${error.get('identity')}" class="red-text"></p>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="password" type="password" name="password">
-					<label for="password">password</label>
-					<p style="margin-top: -15px" th:if="${error && error.containsKey('password')}" th:text="${error.get('password')}" class="red-text"></p>
+					<input id="secret" type="secret" name="secret">
+					<label for="secret">secret</label>
+					<p style="margin-top: -15px" th:if="${error && error.containsKey('secret')}" th:text="${error.get('secret')}" class="red-text"></p>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="password2" type="password" name="password2">
-					<label for="password2">confirm password</label>
+					<input id="password2" type="secret" name="password2">
+					<label for="password2">confirm secret</label>
 				</div>
 			</div>
 

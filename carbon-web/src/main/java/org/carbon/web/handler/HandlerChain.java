@@ -53,6 +53,10 @@ public abstract class HandlerChain {
         if (this.handlerChain == null) return;
 
         logger.debug("[{}] start chain ", this.handlerChain.getChainName());
-        this.handlerChain.chain(request, response);
+        try {
+            this.handlerChain.chain(request, response);
+        } finally {
+            logger.debug("[{}] end chain", this.handlerChain.getChainName());
+        }
     }
 }

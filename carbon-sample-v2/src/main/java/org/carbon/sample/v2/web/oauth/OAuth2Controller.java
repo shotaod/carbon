@@ -93,7 +93,7 @@ public class OAuth2Controller {
             AccessToken accessToken = null;
             if (grantType == GrantType.authorization_code) {
                 accessToken = service.publishAccessToken(form);
-            } else if (grantType == GrantType.refresh_token){
+            } else if (grantType == GrantType.refresh_token) {
                 accessToken = service.refreshAccessToken(form);
             }
 

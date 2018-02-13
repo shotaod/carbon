@@ -1,11 +1,10 @@
 package org.carbon.authentication;
 
-import org.carbon.web.exception.UserIdentityNotFoundException;
+import java.util.Optional;
 
 /**
  * @author Shota Oda 2016/11/03.
  */
 public interface AuthIdentifier<IDENTITY extends AuthIdentity> {
-    Class<IDENTITY> getType();
-    IDENTITY find(String username) throws UserIdentityNotFoundException;
+    Optional<IDENTITY> find(String identity);
 }

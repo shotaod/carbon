@@ -114,7 +114,7 @@ public class ActionFinder {
     private ActionNotFoundException actionNotFoundException(HttpServletRequest request) {
         return new ActionNotFoundException(
                 String.format(
-                    "[request] %s is not found in application action apply",
+                    "[request] %s is not found in application action",
                     request.getRequestURI()
                 )
         );

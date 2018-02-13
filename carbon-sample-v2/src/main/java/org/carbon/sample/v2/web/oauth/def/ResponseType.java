@@ -8,11 +8,10 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum  ResponseType {
+public enum ResponseType {
     code("code"),
     token("token"),
-    code_and_token("code_and_token"),
-    ;
+    code_and_token("code_and_token"),;
 
     private String value;
 }

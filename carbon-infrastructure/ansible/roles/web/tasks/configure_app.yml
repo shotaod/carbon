@@ -1,0 +1,19 @@
+---
+- name: Install JRE
+  apt:
+    name: default-jre
+    state: present
+    update_cache: true
+- name: Add user for app
+  user:
+    name: "{{ app_user }}"
+    shell: /bin/false
+    createhome: false
+    state: present
+- name: Make app directory
+  file:
+    path: /var/webapp
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: 0755

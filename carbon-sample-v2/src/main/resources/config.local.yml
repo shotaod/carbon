@@ -12,3 +12,10 @@ persistent:
     user: carbon
     password: carbonpw
     port: 43306
+  option:
+    schema:
+      actions:
+        - clean
+        - migrate
+        - validate
+    test: true

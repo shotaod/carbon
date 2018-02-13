@@ -17,15 +17,15 @@ import org.slf4j.LoggerFactory;
 public class ChannelWebSocketAdapter implements ChanneledSocket {
     private Logger logger = LoggerFactory.getLogger(ChannelWebSocketAdapter.class);
     private ChannelStation station;
-    private ObjectMapper jsonMapper;
+    private ObjectMapper objectMapper;
     private ExecutableAction<Void> onOpen;
     private ExecutableAction<Void> onClose;
     private ExecutableAction<Object> onReceive;
     private ExecutableAction<ChannelConfiguration> onConfig;
 
-    public ChannelWebSocketAdapter(ChannelStation station) {
+    public ChannelWebSocketAdapter(ChannelStation station, ObjectMapper objectMapper) {
         this.station = station;
-        this.jsonMapper = new ObjectMapper();
+        this.objectMapper = objectMapper;
     }
 
     public void setOnOpen(ExecutableAction<Void> onOpen) {
@@ -65,7 +65,7 @@ public class ChannelWebSocketAdapter implements ChanneledSocket {
             if (parsedMessage instanceof String) {
                 connection.sendMessage((String)parsedMessage);
             } else {
-                String json = jsonMapper.writeValueAsString(parsedMessage);
+                String json = objectMapper.writeValueAsString(parsedMessage);
                 connection.sendMessage(json);
             }
         } catch (Exception e) {

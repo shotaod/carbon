@@ -64,10 +64,10 @@ public class OAuth2Service {
 
         return OptionalStream
                 .of(dao.fetchOneByClientId(form.getClient_id()))
-                    .whenEmptyThrow(OAuth2Exception::invalidClient)
+                .whenEmptyThrow(OAuth2Exception::invalidClient)
                 .map(authClient -> codeRepository.find(authClient.getClientHost(), form.getCode()))
                 .filter(Expiration::isValid)
-                    .whenEmptyThrow(OAuth2Exception::unauthorizedClient)
+                .whenEmptyThrow(OAuth2Exception::unauthorizedClient)
                 .map(accessCode -> {
                     String host = accessCode.getHost();
                     String accessToken = stringGenerator.generate(10);

@@ -13,12 +13,10 @@ import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.conf.WebProperty;
 import org.carbon.web.exception.ServerStartupException;
-import org.eclipse.jetty.http.HttpHeaders;
-import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.util.resource.Resource;
@@ -45,12 +43,12 @@ public class StaticHandler extends ServletContextHandler {
     public StaticHandler() throws IOException {
         URL favUrl = getClass().getClassLoader().getResource("org/carbon/web/favicon.ico");
         if (favUrl != null) {
-            favicon= IO.readBytes(Resource.newResource(favUrl).getInputStream());
+            favicon = IO.readBytes(Resource.newResource(favUrl).getInputStream());
         }
     }
 
     @AfterInject
-    public void afterInject() throws Exception {
+    public void afterInject() {
         WebProperty.Resource resource = config.getResource();
         if (resource == null || resource.getDirectory() == null || resource.getOutPath() == null) {
             logger.info("Not found resource setting, so skip Resource handler mapping");
@@ -61,15 +59,15 @@ public class StaticHandler extends ServletContextHandler {
 
         ServletHolder resourceServletHolder = new ServletHolder(DefaultServlet.class);
         resourceServletHolder.setInitParameter("acceptRanges", "f");
-        resourceServletHolder.setInitParameter("dirAllowed","f");
-        resourceServletHolder.setInitParameter("redirectWelcome","f");
+        resourceServletHolder.setInitParameter("dirAllowed", "f");
+        resourceServletHolder.setInitParameter("redirectWelcome", "f");
         resourceServletHolder.setInitParameter("welcomeServlets", "f");
         resourceServletHolder.setInitParameter("gzip", "t");
         resourceServletHolder.setInitParameter("etags", "t");
         resourceServletHolder.setInitParameter("cacheControl", "t");
 
         String resourceDirectory = resource.getDirectory();
-        String resourceBase = Optional.ofNullable(getClass().getClassLoader().getResource(resourceDirectory))
+        String resourceBase = Optional.ofNullable(ClassLoader.getSystemResource(resourceDirectory))
                 .map(URL::toString)
                 .orElseThrow(() -> new ServerStartupException(resourceSetupFailMessage(resourceDirectory)));
         resourceServletHolder.setInitParameter("resourceBase", resourceBase);
@@ -91,26 +89,27 @@ public class StaticHandler extends ServletContextHandler {
     }
 
     public boolean canHandle(HttpServletRequest request) {
-        return checkFavicon(request) ||
-                request.getRequestURI().startsWith(resourcePath);
+        return enabled && (checkFavicon(request) || checkResource(request));
     }
 
     private boolean checkFavicon(HttpServletRequest request) {
-        return request.getMethod().equals("GET")
-                && request.getRequestURI().equals("/favicon.ico");
+        return request.getMethod().equals("GET") && request.getRequestURI().equals("/favicon.ico");
+    }
+
+    private boolean checkResource(HttpServletRequest request) {
+        return request.getRequestURI().startsWith(resourcePath);
     }
 
     private boolean handleFavicon(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (checkFavicon(request)) {
-            if (request.getDateHeader(HttpHeaders.IF_MODIFIED_SINCE)== faviconModified)
+            if (request.getDateHeader(HttpHeader.IF_MODIFIED_SINCE.asString()) == faviconModified)
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-            else
-            {
+            else {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("image/x-icon");
                 response.setContentLength(favicon.length);
-                response.setDateHeader(HttpHeaders.LAST_MODIFIED, faviconModified);
-                response.setHeader(HttpHeaders.CACHE_CONTROL,"max-age=360000,public");
+                response.setDateHeader(HttpHeader.LAST_MODIFIED.asString(), faviconModified);
+                response.setHeader(HttpHeader.CACHE_CONTROL.asString(), "max-age=360000,public");
                 response.getOutputStream().write(favicon);
             }
             return true;

@@ -41,6 +41,6 @@ public class RootHandler extends HandlerWrapper {
 
     @AfterInject
     public void afterInject() {
-        this._handler = new SwitchHandler();
+        setHandler(new SwitchHandler());
     }
 }

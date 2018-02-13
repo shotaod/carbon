@@ -108,7 +108,7 @@
                 <version>4.0.3</version>
                 <configuration>
                     <user>root</user>
-                    <password>password</password>
+                    <secret>secret</secret>
                     <url>jdbc:mysql://localhost:23306/carbondb</url>
                 </configuration>
             </plugin>

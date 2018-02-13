@@ -1,0 +1,6 @@
+# local
+[app]
+ansible.local
+
+[all:vars]
+stage=local

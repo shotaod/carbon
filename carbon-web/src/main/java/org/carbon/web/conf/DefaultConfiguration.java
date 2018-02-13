@@ -4,10 +4,10 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
-import org.carbon.modular.env.EnvironmentMapper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
@@ -50,5 +50,10 @@ public class DefaultConfiguration {
     public Validator validator() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         return factory.getValidator();
+    }
+
+    @Component
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

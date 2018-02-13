@@ -18,12 +18,7 @@ import org.carbon.web.context.session.SessionContext;
 public class SessionScopeChain extends ScopeChain {
 
     private String cookieName = "CRBS";
-    private static ThreadLocal<Optional<String>> tmpSessionKey = new ThreadLocal<Optional<String>>() {
-        @Override
-        protected Optional<String> initialValue() {
-            return Optional.empty();
-        }
-    };
+    private static ThreadLocal<Optional<String>> tmpSessionKey = ThreadLocal.withInitial(Optional::empty);
 
     @Inject
     private SessionContext sessionContext;

@@ -41,7 +41,7 @@ CREATE TABLE "carbon"."user" (
     id bigint DEFAULT nextval('user_id_seq'::regclass) NOT NULL,
     email character varying(255) NOT NULL,
     user_name character varying(255) NOT NULL,
-    password character varying(65) NOT NULL
+    secret character varying(65) NOT NULL
 );
 
 --

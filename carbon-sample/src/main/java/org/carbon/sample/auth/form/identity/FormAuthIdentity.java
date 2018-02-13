@@ -15,17 +15,17 @@ public class FormAuthIdentity implements AuthIdentity {
     }
 
     @Override
-    public String username() {
+    public String identity() {
         return user.getUsername();
     }
 
     @Override
-    public String cryptPassword() {
+    public String cryptSecret() {
         return user.getPassword();
     }
 
     @Override
     public boolean confirm(String plainPassword) {
-        return cryptPassword().equals(plainPassword);
+        return cryptSecret().equals(plainPassword);
     }
 }

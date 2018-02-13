@@ -52,7 +52,7 @@ public class DataSourceProperty {
 
     public DataSource toDataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        String dbUrl = String.format("jdbc:%s://%s:%s", dialect, host, port);
+        String dbUrl = String.format("jdbc:%s://%s:%s/%s", dialect, host, port, db);
         if (params != null) {
             String query = params.entrySet().stream()
                     .map(e -> String.format("%s=%s", e.getKey(), e.getValue()))

@@ -43,7 +43,7 @@ public class UserController {
         if (vr.existError()) {
             retry.putData("error", vr.getViolationResults());
             return retry;
-        } else if (!form.isIllegalPassword()){
+        } else if (!form.isIllegalPassword()) {
             Map<String, String> error = new HashMap<>();
             error.put("password", "Password is not match.");
             retry.putData("error", error);

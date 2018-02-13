@@ -16,17 +16,17 @@ public class ConsumerAuthIdentity implements AuthIdentity {
     private Student student;
 
     @Override
-    public String username() {
+    public String identity() {
         return student.getUsername();
     }
 
     @Override
-    public String cryptPassword() {
+    public String cryptSecret() {
         return student.getPassword();
     }
 
     @Override
     public boolean confirm(String plainPassword) {
-        return BCrypt.checkpw(plainPassword, cryptPassword());
+        return BCrypt.checkpw(plainPassword, cryptSecret());
     }
 }

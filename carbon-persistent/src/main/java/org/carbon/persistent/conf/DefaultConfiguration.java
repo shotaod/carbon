@@ -6,10 +6,10 @@ import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.component.annotation.Inject;
 import org.carbon.modular.env.EnvironmentMapper;
-import org.carbon.persistent.hibernate.HibernateConfiguration;
-import org.carbon.persistent.jooq.JooqConfiguration;
+import org.carbon.persistent.vendor.hibernate.HibernateConfiguration;
+import org.carbon.persistent.vendor.jooq.JooqConfiguration;
 import org.carbon.persistent.prop.DataSourceProperty;
-import org.carbon.persistent.prop.PersistentImplementation;
+import org.carbon.persistent.vendor.PersistentImplementation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

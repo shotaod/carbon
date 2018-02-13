@@ -6,7 +6,7 @@ import org.carbon.web.conf.WebProperty;
 import org.carbon.web.server.EmbedServer;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ServerConnector;
 
 /**
  * @author Shota Oda 2016/10/17.
@@ -26,14 +26,16 @@ public class JettyServerBridge implements EmbedServer {
 
     @Override
     public void run() throws Exception {
-
-        SelectChannelConnector connector = new SelectChannelConnector();
+        ServerConnector connector = new ServerConnector(server);
         connector.setPort(config.getPort());
-        connector.setRequestHeaderSize(config.getMaxHeaderSize());
-        connector.setRequestBufferSize(config.getMaxContentSize());
+        Connector[] cons = {connector};
+        server.setConnectors(cons);
 
         server.setHandler(rootHandler);
-        server.setConnectors(new Connector[]{connector});
+        server.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", config.getMaxContentSize());
+        // todo add header size
+        // server.setAttribute("", config.getMaxHeaderSize());
+
         server.start();
     }
 

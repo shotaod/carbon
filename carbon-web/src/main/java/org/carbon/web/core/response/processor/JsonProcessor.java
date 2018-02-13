@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.carbon.component.annotation.Component;
+import org.carbon.component.annotation.Inject;
 import org.carbon.web.core.response.AbstractResponseProcessor;
 
 /**
@@ -11,12 +12,15 @@ import org.carbon.web.core.response.AbstractResponseProcessor;
  */
 @Component
 public class JsonProcessor extends AbstractResponseProcessor<JsonProcessor, Object> {
-    private ObjectMapper mapper = new ObjectMapper();
+
+    @Inject
+    private ObjectMapper mapper;
     private Object object;
 
     @Override
     protected JsonProcessor doInit(Object o) {
         JsonProcessor self = new JsonProcessor();
+        self.mapper = mapper;
         self.object = o;
         return self;
     }

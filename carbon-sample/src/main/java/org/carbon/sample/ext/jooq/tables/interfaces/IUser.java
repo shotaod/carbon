@@ -32,12 +32,12 @@ public interface IUser extends Serializable {
     public Long getId();
 
     /**
-     * Setter for <code>carbondb.user.username</code>.
+     * Setter for <code>carbondb.user.identityClass</code>.
      */
     public void setUsername(String value);
 
     /**
-     * Getter for <code>carbondb.user.username</code>.
+     * Getter for <code>carbondb.user.identityClass</code>.
      */
     public String getUsername();
 

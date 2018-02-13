@@ -8,15 +8,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.stream.Collectors;
@@ -104,15 +103,15 @@ public class TargetBaseScanner {
             } catch (IOException e) {
                 throw new PackageScanException(protocol, e);
             }
-            URL[] urls = {url};
-            classLoader = URLClassLoader.newInstance(urls);
+            if (!url.toString().contains("!/")) return Collections.emptyList();
+            String packagePrefix = url.toString().split("!/")[1];
             while (entries.hasMoreElements()) {
                 JarEntry je = entries.nextElement();
-
-                if (je.isDirectory() || !je.getName().endsWith(Class_Suffix)) continue;
+                if (!je.getName().startsWith(packagePrefix) || je.isDirectory() || !je.getName().endsWith(Class_Suffix)) continue;
                 String className = je.getName().substring(0, je.getName().length() - Class_Suffix_Length).replace('/', '.');
                 classNames.add(className);
             }
+            return classNames;
         } else {
             throw new UnsupportedProtocolException("protocol:[" + protocol + "] is not supported.");
         }

@@ -2,6 +2,7 @@ package org.carbon.web.context.session;
 
 import java.util.Optional;
 
+import org.carbon.component.annotation.AfterInject;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Inject;
 import org.carbon.web.context.Context;
@@ -11,15 +12,17 @@ import org.carbon.web.context.Context;
  */
 @Component
 public class SessionContext implements Context {
-    private static ThreadLocal<String> sessionKey = new ThreadLocal<String>() {
-        @Override
-        protected String initialValue() {
-            return "";
-        }
-    };
+    private static ThreadLocal<String> sessionKey = ThreadLocal.withInitial(() -> "");
 
     @Inject(optional = true)
-    private SessionStore sessionStore = new InMemorySessionStore();
+    private SessionStore sessionStore;
+
+    @AfterInject
+    public void afterInject() {
+        if (sessionStore == null) {
+            sessionStore = new InMemorySessionStore();
+        }
+    }
 
     public void setSessionKey(String sessionKey) {
         SessionContext.sessionKey.set(sessionKey);
@@ -40,6 +43,7 @@ public class SessionContext implements Context {
     private String getSessionKey() {
         String key = sessionKey.get();
         if (key == null || key.isEmpty()) {
+            // TODO throw appropriate exception
             throw new RuntimeException("Not found SessionKey. Must set sessionKey (e.g. by use SessionScopeChain)");
         }
         return key;
@@ -47,9 +51,5 @@ public class SessionContext implements Context {
 
     public void clear() {
         sessionKey.remove();
-    }
-
-    private boolean isSetSessionKey() {
-        return !sessionKey.get().isEmpty();
     }
 }

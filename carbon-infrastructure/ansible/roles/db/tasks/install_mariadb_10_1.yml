@@ -1,0 +1,47 @@
+---
+- name: Install required modules for install
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items:
+    - software-properties-common
+    - dirmngr
+    - python-mysqldb
+- name: Add repository key to the system
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "0xF1656F24C74CD1D8"
+- name: Resolve MariaDB repository
+  apt_repository:
+    repo: "deb [arch=amd64,i386,ppc64el] http://sfo1.mirrors.digitalocean.com/mariadb/repo/10.2/debian stretch main"
+    state: present
+- name: Install DB Server
+  apt:
+    name: mariadb-server
+    state: present
+    update_cache: yes
+- name: Modify configuration file to listen to local
+  lineinfile:
+    dest: /etc/mysql/my.cnf
+    insertbefore: "^bind-address.*"
+    line: "[mysqld]"
+- name: Start MariaDB service
+  service:
+    name: mysql
+    state: started
+- name: Create application user
+  mysql_user:
+    host: "%"
+    name: "{{ mariadb_app_username }}"
+    password: "{{ mariadb_app_password }}"
+    priv: "*.*:CREATE,SELECT,INSERT,UPDATE,DELETE"
+    state: present
+- name: Setup initial schema
+  mysql_db:
+      name: "{{ mariadb_app_database }}"
+      state: present
+- name: Restart MariaDB service
+  service:
+    name: mysql
+    state: restarted

@@ -19,3 +19,9 @@ persistent:
     port: _OVERWRITTEN_
     params:
       useSSL: false
+  option:
+    schema:
+      actions:
+      src:
+        - /db/migration/mysql
+    test: true

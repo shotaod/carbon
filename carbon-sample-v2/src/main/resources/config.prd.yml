@@ -12,3 +12,9 @@ persistent:
     user: "{$DB_USER}"
     password: "{$DB_PASSWORD}"
     port: 3306
+  option:
+    schema:
+      actions:
+        - migrate
+        - validate
+    test: true

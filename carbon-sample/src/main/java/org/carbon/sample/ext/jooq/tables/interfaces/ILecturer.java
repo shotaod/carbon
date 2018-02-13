@@ -32,12 +32,12 @@ public interface ILecturer extends Serializable {
     public Long getId();
 
     /**
-     * Setter for <code>carbondb.lecturer.username</code>.
+     * Setter for <code>carbondb.lecturer.identityClass</code>.
      */
     public void setUsername(String value);
 
     /**
-     * Getter for <code>carbondb.lecturer.username</code>.
+     * Getter for <code>carbondb.lecturer.identityClass</code>.
      */
     public String getUsername();
 

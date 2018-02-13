@@ -16,17 +16,17 @@ public class BusinessAuthIdentity implements AuthIdentity {
     private Lecturer user;
 
     @Override
-    public String username() {
+    public String identity() {
         return user.getUsername();
     }
 
     @Override
-    public String cryptPassword() {
+    public String cryptSecret() {
         return user.getPassword();
     }
 
     @Override
     public boolean confirm(String plainPassword) {
-        return BCrypt.checkpw(plainPassword, cryptPassword());
+        return BCrypt.checkpw(plainPassword, cryptSecret());
     }
 }

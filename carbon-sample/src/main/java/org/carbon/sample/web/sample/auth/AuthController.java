@@ -29,8 +29,8 @@ public class AuthController {
         HtmlResponse response = new HtmlResponse("basic/secret");
 
         UserInfoModel model = new UserInfoModel();
-        model.setUsername(userSession.username());
-        model.setPassword(userSession.cryptPassword());
+        model.setUsername(userSession.identity());
+        model.setPassword(userSession.cryptSecret());
 
         response.putData("model", model);
         response.putData("secretNumber", number);
@@ -53,8 +53,8 @@ public class AuthController {
             @Session SessionInfo sessionInfo) {
         HtmlResponse response = new HtmlResponse("/form/secret");
         UserInfoModel model = new UserInfoModel();
-        model.setUsername(userSession.username());
-        model.setPassword(userSession.cryptPassword());
+        model.setUsername(userSession.identity());
+        model.setPassword(userSession.cryptSecret());
         response.putData("model", model);
         response.putData("loginInfo", sessionInfo);
         return response;

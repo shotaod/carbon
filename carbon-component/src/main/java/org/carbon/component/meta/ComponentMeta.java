@@ -1,11 +1,12 @@
 package org.carbon.component.meta;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.carbon.component.Switcher;
-import org.carbon.component.annotation.Switch;
 import org.carbon.component.exception.ClassNotRegisteredException;
+import org.carbon.component.exception.ImpossibleDetermineException;
 
 /**
  * @author Shota Oda 2018/01/01.
@@ -13,6 +14,7 @@ import org.carbon.component.exception.ClassNotRegisteredException;
 public final class ComponentMeta<T> {
     private Class<T> asClass;
     private T instance;
+    private ComponentMetaSet parent;
 
     public static <T> ComponentMeta<T> noImpl(Class<T> asClass) {
         return new ComponentMeta<>(asClass, null);
@@ -48,6 +50,10 @@ public final class ComponentMeta<T> {
         return instance == null;
     }
 
+    public void setParent(ComponentMetaSet parent) {
+        this.parent = parent;
+    }
+
     @SuppressWarnings("unchecked")
     public void merge(ComponentMeta otherMeta) {
         if (!asClass.equals(otherMeta.asClass)) {
@@ -59,19 +65,38 @@ public final class ComponentMeta<T> {
         if (otherMeta.instance != null) {
             instance = (T) otherMeta.instance;
         }
+        if (otherMeta.parent != null) {
+            this.parent = otherMeta.parent;
+        }
     }
 
-    public boolean isQualified(ComponentMetaSet candidates) {
-        Switch switchAnnotation = getType().getDeclaredAnnotation(Switch.class);
-        if (switchAnnotation == null) return true;
-        Class<? extends Switcher> switcherClass = switchAnnotation.value();
-        ComponentMeta<? extends Switcher> switcherMeta = candidates.get(switcherClass);
-        if (switcherMeta == null) throw new ClassNotRegisteredException(String.format("Class[%s] is required Switcher[%s], but not found", asClass, switcherClass));
-        return switcherMeta.getInstance().on(getInstance().getClass());
+    public boolean annotatedBy(Class<? extends Annotation> annotation) {
+        return instance.getClass().isAnnotationPresent(annotation) || asClass.isAnnotationPresent(annotation);
+    }
+
+    public <A extends Annotation> A getAnnotate(Class<A> annotation) {
+        A instanceClassAnnotate = instance.getClass().getDeclaredAnnotation(annotation);
+        if (instanceClassAnnotate == null) return asClass.getDeclaredAnnotation(annotation);
+        return instanceClassAnnotate;
+    }
+
+    public Field[] getPrivateField() {
+        return instance.getClass().getDeclaredFields();
     }
 
     // ===================================================================================
-    //                                                                          Base
+    //                                                                   ComponentMeta Ext
+    //                                                                          ==========
+    public boolean isQualified() throws ImpossibleDetermineException {
+        return parent.isQualified(this);
+    }
+
+    public void awareDependency(ComponentMetaSet dependency) throws ClassNotRegisteredException {
+        parent.awareDependency(this, dependency);
+    }
+
+    // ===================================================================================
+    //                                                                                Base
     //                                                                          ==========
 
     @Override

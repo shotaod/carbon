@@ -14,10 +14,10 @@ public class RedisSessionStore implements SessionStore{
     Jedis jedis;
     ObjectMapper jsonMapper;
 
-    public RedisSessionStore(String host, int port) {
+    public RedisSessionStore(String host, int port, ObjectMapper objectMapper) {
         cache = new InMemorySessionStore();
         jedis = new Jedis(host, port);
-        jsonMapper = new ObjectMapper();
+        jsonMapper = objectMapper;
     }
 
     @Override

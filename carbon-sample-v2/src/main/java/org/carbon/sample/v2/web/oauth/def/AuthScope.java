@@ -13,10 +13,9 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum  AuthScope {
+public enum AuthScope {
     read_profile("read_profile"),
-    update_profile("update_profile"),
-    ;
+    update_profile("update_profile"),;
 
     private String code;
 

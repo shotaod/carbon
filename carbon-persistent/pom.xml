@@ -52,6 +52,13 @@
             <version>9.0.0.M18</version>
         </dependency>
 
+        <!-- Migration Tool -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>5.0.5</version>
+        </dependency>
+
         <!-- O/R Mappers -->
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>

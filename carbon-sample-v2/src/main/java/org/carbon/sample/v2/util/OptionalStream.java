@@ -8,11 +8,11 @@ import java.util.function.Supplier;
 /**
  * @author Shota Oda 2017/07/31.
  */
-public class OptionalStream<T>  {
-    
+public class OptionalStream<T> {
+
+    private static OptionalStream<?> _empty = new OptionalStream<>(null);
     private T _value;
     private Throwable _throwable;
-    private static OptionalStream<?> _empty = new OptionalStream<>(null);
 
     private OptionalStream(T _value) {
         this._value = _value;

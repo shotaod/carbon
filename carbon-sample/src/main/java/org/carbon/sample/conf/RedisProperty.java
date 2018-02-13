@@ -2,7 +2,7 @@ package org.carbon.sample.conf;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.carbon.web.annotation.Property;
+import org.carbon.modular.annotation.Property;
 
 /**
  * @author Shota Oda 2016/12/17.

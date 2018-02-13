@@ -15,6 +15,33 @@ import org.carbon.sample.v2.web.oauth.def.AuthScope;
  */
 @Component
 public class AccessTokenRepository {
+    private ConcurrentHashMap<AccessTokenKey, Set<AuthScope>> accessTokens;
+
+    public void save(AccessToken token) {
+        save(token.getHost(), token.getToken(), token.getAuthScopes());
+    }
+
+    public void save(String host, String accessToken, AuthScope... grantTypes) {
+        Set<AuthScope> set = Stream.of(grantTypes).collect(Collectors.toSet());
+        save(host, accessToken, set);
+    }
+
+    public void save(String host, String accessToken, Set<AuthScope> grantTypes) {
+        if (accessTokens == null) {
+            accessTokens = new ConcurrentHashMap<>();
+        }
+        accessTokens.put(new AccessTokenKey(host, accessToken), grantTypes);
+    }
+
+    public Set<AuthScope> getAuthScope(String host, String accessToken) {
+        if (accessTokens == null) {
+            return Collections.emptySet();
+        }
+
+        AccessTokenKey target = new AccessTokenKey(host, accessToken);
+        return accessTokens.search(1, (key, scopes) -> key.equals(target) ? scopes : Collections.emptySet());
+    }
+
     private class AccessTokenKey extends Expiration {
         private String host;
         private String token;
@@ -43,31 +70,5 @@ public class AccessTokenRepository {
             result = 31 * result + token.hashCode();
             return result;
         }
-    }
-    private ConcurrentHashMap<AccessTokenKey, Set<AuthScope>> accessTokens;
-
-    public void save(AccessToken token) {
-        save(token.getHost(), token.getToken(), token.getAuthScopes());
-    }
-
-    public void save(String host, String accessToken, AuthScope... grantTypes) {
-        Set<AuthScope> set = Stream.of(grantTypes).collect(Collectors.toSet());
-        save(host, accessToken, set);
-    }
-
-    public void save(String host, String accessToken, Set<AuthScope> grantTypes) {
-        if (accessTokens == null) {
-            accessTokens = new ConcurrentHashMap<>();
-        }
-        accessTokens.put(new AccessTokenKey(host, accessToken), grantTypes);
-    }
-
-    public Set<AuthScope> getAuthScope(String host, String accessToken) {
-        if (accessTokens == null) {
-            return Collections.emptySet();
-        }
-
-        AccessTokenKey target = new AccessTokenKey(host, accessToken);
-        return accessTokens.search(1, (key, scopes) -> key.equals(target) ? scopes : Collections.emptySet());
     }
 }

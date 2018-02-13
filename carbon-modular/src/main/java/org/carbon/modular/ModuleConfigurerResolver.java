@@ -1,10 +1,9 @@
 package org.carbon.modular;
 
-import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.carbon.component.ComponentFactory;
+import org.carbon.component.HandyComponentManager;
 import org.carbon.component.meta.ComponentMeta;
 import org.carbon.component.meta.ComponentMetaSet;
 import org.carbon.modular.exception.ModuleConfigureException;
@@ -15,23 +14,34 @@ import org.carbon.util.exception.ConstructionException;
  * @author Shota Oda 2017/03/04.
  */
 public class ModuleConfigurerResolver {
-    public ComponentMetaSet resolve(Set<Class<? extends ModuleConfigurer>> moduleConfigurerClasses) {
-        ComponentFactory componentFactory = new ComponentFactory();
-        ModuleConfigurationResult additionalModuleConfiguration = moduleConfigurerClasses.stream()
-                .map(this::construct)
+    private Set<Class<? extends ModuleConfigurer>> moduleConfigurerClasses;
+    private Stream<ModuleConfigurer> moduleConfigurers;
+
+    public ModuleConfigurerResolver(Set<Class<? extends ModuleConfigurer>> moduleConfigurerClasses, ModuleConfigurer... moduleConfigurers) {
+        this.moduleConfigurerClasses = moduleConfigurerClasses;
+        this.moduleConfigurers = Stream.of(moduleConfigurers);
+    }
+
+    public ComponentMetaSet resolve() {
+        HandyComponentManager componentManager = new HandyComponentManager();
+        Stream<ModuleConfigurer> moduleConfigurerStream = moduleConfigurerClasses.stream()
+                .map(this::construct);
+        ModuleConfigurationResult additionalModuleConfiguration = Stream.concat(moduleConfigurerStream, moduleConfigurers)
                 .map(ModuleConfigurer::configure)
                 .reduce(ModuleConfigurationResult::assign)
                 .orElseThrow(() -> new ModuleConfigureException("Fail to configure module, Not found ModuleConfigurers"));
 
-        ModuleConfigurationResult moduleConfiguration = additionalModuleConfiguration.assign(new ModuleConfigurationResult(ModulerScanBase.class));
+        ModuleConfigurationResult moduleModuleConfigurer = ModuleConfigurationResult.forScan(ModulerScanBase.class);
+        ModuleConfigurationResult moduleConfiguration = additionalModuleConfiguration.assign(moduleModuleConfigurer);
 
-        Set<ComponentMeta> scannedMeta = moduleConfiguration.getScanBases().stream()
-                .flatMap(moduleScanBase -> componentFactory.scanComponent(moduleScanBase).stream())
+        ComponentMetaSet scannedMeta = moduleConfiguration.getScanBases().stream()
+                .flatMap(moduleScanBase -> componentManager.scanComponent(moduleScanBase).stream())
                 .map(ComponentMeta::noImpl)
-                .collect(Collectors.toSet());
+                .collect(ComponentMetaSet.Collectors.toSet());
+        ModuleConfigurationResult scannedConfigurer = ModuleConfigurationResult.forMetas(scannedMeta);
 
         return moduleConfiguration
-                .assign(new ModuleConfigurationResult(scannedMeta, Collections.emptySet()))
+                .assign(scannedConfigurer)
                 .getComponentMetas();
     }
 

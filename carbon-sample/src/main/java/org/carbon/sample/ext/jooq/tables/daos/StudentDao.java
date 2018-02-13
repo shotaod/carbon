@@ -70,14 +70,14 @@ public class StudentDao extends DAOImpl<StudentRecord, org.carbon.sample.ext.joo
     }
 
     /**
-     * Fetch records that have <code>username IN (values)</code>
+     * Fetch records that have <code>identityClass IN (values)</code>
      */
     public List<org.carbon.sample.ext.jooq.tables.pojos.Student> fetchByUsername(String... values) {
         return fetch(Student.STUDENT.USERNAME, values);
     }
 
     /**
-     * Fetch a unique record that has <code>username = value</code>
+     * Fetch a unique record that has <code>identityClass = value</code>
      */
     public org.carbon.sample.ext.jooq.tables.pojos.Student fetchOneByUsername(String value) {
         return fetchOne(Student.STUDENT.USERNAME, value);

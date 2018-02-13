@@ -7,6 +7,7 @@ import java.time.temporal.TemporalUnit;
  */
 public abstract class RefreshableExpiration<REFRESH_TOKEN> extends Expiration {
     protected REFRESH_TOKEN refresh_token;
+
     public RefreshableExpiration(Integer expire, TemporalUnit unit, REFRESH_TOKEN refresh_token) {
         super(expire, unit);
         this.refresh_token = refresh_token;

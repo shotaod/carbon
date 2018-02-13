@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.carbon.web.annotation.Property;
+import org.carbon.modular.annotation.Property;
 import org.carbon.web.def.HttpMethod;
 
 /**

@@ -9,14 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.carbon.web.core.response.HtmlResponse;
 import org.carbon.web.core.response.processor.HtmlProcessor;
 import org.carbon.web.exception.ActionNotFoundException;
+
 import static java.util.AbstractMap.SimpleEntry;
 import static java.util.Map.Entry;
 
 /**
- *
  * @author Shota Oda 2016/10/18.
  */
-public class MinimumHtmlTranslator extends AbstractHttpErrorTranslator{
+public class MinimumHtmlTranslator extends AbstractHttpErrorTranslator {
     private interface ThrowableErrorResponseConsumer {
         void consume(Throwable throwable, HttpServletResponse response) throws Exception;
     }
@@ -32,17 +32,13 @@ public class MinimumHtmlTranslator extends AbstractHttpErrorTranslator{
 
         rule.add(new SimpleEntry<>(ActionNotFoundException.class, (e, resp) -> {
             int status = HttpServletResponse.SC_NOT_FOUND;
-            if (notFoundPage != null) {
-                writeCustom(status, notFoundPage, resp);
-            }
+            if (notFoundPage != null) writeCustom(status, notFoundPage, resp);
             else writeDefault(status, "Not Found", resp);
         }));
 
         rule.add(new SimpleEntry<>(Exception.class, (e, resp) -> {
             int status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-            if (internalServerErrorPage != null) {
-                writeCustom(status, internalServerErrorPage, resp);
-            }
+            if (internalServerErrorPage != null) writeCustom(status, internalServerErrorPage, resp);
             else writeDefault(status, "Internal Server Error", resp);
         }));
     }
@@ -50,6 +46,7 @@ public class MinimumHtmlTranslator extends AbstractHttpErrorTranslator{
     public void setNotFoundPage(String notFoundPage) {
         this.notFoundPage = notFoundPage;
     }
+
     public void setInternalServerErrorPage(String internalServerErrorPage) {
         this.internalServerErrorPage = internalServerErrorPage;
     }

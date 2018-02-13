@@ -1,0 +1,6 @@
+# production
+[app]
+cbn.ggl
+
+[all:vars]
+stage=prd
