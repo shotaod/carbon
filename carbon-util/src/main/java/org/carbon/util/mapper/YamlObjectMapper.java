@@ -124,6 +124,9 @@ public class YamlObjectMapper {
         for (String k : Arrays.asList(key.split("\\."))) {
             try {
                 copy = (Map<String, Object>) copy.get(k);
+                if (copy == null) {
+                    throw new NullPointerException();
+                }
             } catch (NullPointerException e) {
                 throw new PropertyMappingException("Not found for key: [" + k + "] declared at " + object.getClass());
             } catch (ClassCastException e) {
