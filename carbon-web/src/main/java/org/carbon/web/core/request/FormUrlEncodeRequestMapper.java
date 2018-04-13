@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
 import org.carbon.util.mapper.KeyValueMapper;
 
 /**
@@ -21,22 +21,26 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
     private class KeyAndIndex {
         private String key;
         private Integer index;
+
         public KeyAndIndex(String key, Integer index) {
             this.key = key;
             this.index = index;
         }
+
         public String getKey() {
             return key;
         }
+
         public Integer getIndex() {
             return index;
         }
+
         public boolean isIndexed() {
             return index != null;
         }
     }
 
-    @Inject
+    @Assemble
     private KeyValueMapper keyValueMapper;
 
     @Override
@@ -44,9 +48,7 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
 
         Map<String, Object> result = new HashMap<>();
         Map<String, String[]> parameterMap = request.getParameterMap();
-        parameterMap.entrySet().forEach(entry -> {
-            String key = entry.getKey();
-            String[] value = entry.getValue();
+        parameterMap.forEach((key, value) -> {
             LinkedList<String> keys = new LinkedList<>();
             keys.addAll(Arrays.asList(key.split("\\.")));
             insertDeep(keys, value, result);
@@ -66,23 +68,17 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
                 source.put(key, value[0]);
                 return source;
             }
-            List list = (List) source.computeIfAbsent(key, absentKey -> {
-                return new ArrayList<>();
-            });
+            List list = (List) source.computeIfAbsent(key, absentKey -> new ArrayList<>());
             list.addAll(Arrays.asList(value));
             return source;
         }
 
         if (!isList) {
-            Map<String, Object> nestMap = (Map) source.computeIfAbsent(key, absentKey -> {
-                return new HashMap<>();
-            });
+            Map<String, Object> nestMap = (Map) source.computeIfAbsent(key, absentKey -> new HashMap<>());
             source.put(key, insertDeep(keys, value, nestMap));
             return source;
         } else {
-            List list = (List) source.computeIfAbsent(key, absentKey -> {
-                return new ArrayList<>();
-            });
+            List list = (List) source.computeIfAbsent(key, absentKey -> new ArrayList<>());
             Integer index = keyAndIndex.getIndex();
             if (list.size() > index) {
                 Map indexedMap = (Map) list.get(index);
@@ -99,7 +95,7 @@ public class FormUrlEncodeRequestMapper implements TypeSafeRequestMapper {
         int indexOf = key.indexOf("[");
         if (indexOf > 0) {
             String name = key.substring(0, indexOf);
-            Integer index = Integer.parseInt(key.substring(indexOf, key.length()).replace("[","").replace("]",""));
+            Integer index = Integer.parseInt(key.substring(indexOf, key.length()).replace("[", "").replace("]", ""));
             return new KeyAndIndex(name, index);
         }
         return new KeyAndIndex(key, null);

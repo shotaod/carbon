@@ -3,7 +3,7 @@ package org.carbon.web.core.request;
 import java.util.Optional;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 
 /**
  * @author Shota Oda 2016/11/29.
@@ -18,18 +18,18 @@ public class RequestMapperFactory {
     private static final String MULTIPART_FORM = "multipart/form-data";
     private static final String X_WWW_FORM_URL_ENCODE = "application/x-www-form-urlencoded";
 
-    @Inject
-    private JsonKeyValueRequestMapper jsonKeyValueRequestMapper;
-    @Inject
+    @Assemble
+    private JsonRequestMapper jsonRequestMapper;
+    @Assemble
     private MultipartFormKeyValueRequestMapper multipartFormKeyValueRequestMapper;
-    @Inject
+    @Assemble
     private FormUrlEncodeRequestMapper formUrlEncodeRequestMapper;
 
 
     public Optional<TypeSafeRequestMapper> factorize(ContentType contentType) {
         String media = contentType.getMediaType();
         if (APPLICATION_JSON.equals(media)) {
-            return Optional.of(jsonKeyValueRequestMapper);
+            return Optional.of(jsonRequestMapper);
         }
 
         if (MULTIPART_FORM.equals(media)) {

@@ -4,17 +4,17 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-import org.carbon.web.exception.RequestMappingException;
+import org.carbon.web.exception.request_mapping.JsonRequestMappingException;
 
 /**
  * @author Shota Oda 2016/10/12.
  */
 @Component
-public class JsonKeyValueRequestMapper implements TypeSafeRequestMapper {
+public class JsonRequestMapper implements TypeSafeRequestMapper {
 
-    @Inject
+    @Assemble
     private ObjectMapper objectMapper;
 
     @Override
@@ -23,7 +23,7 @@ public class JsonKeyValueRequestMapper implements TypeSafeRequestMapper {
         try {
             return objectMapper.readValue(request.getReader(), mapTo);
         } catch (IOException e) {
-            throw new RequestMappingException("json mapping exception", e);
+            throw new JsonRequestMappingException(e);
         }
     }
 }
