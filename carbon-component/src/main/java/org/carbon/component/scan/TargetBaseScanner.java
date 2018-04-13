@@ -3,16 +3,12 @@ package org.carbon.component.scan;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -21,9 +17,9 @@ import java.util.jar.JarEntry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.carbon.component.annotation.Transparent;
 import org.carbon.component.exception.PackageScanException;
 import org.carbon.component.exception.UnsupportedProtocolException;
+import org.carbon.util.annotation.AnnotationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,12 +34,6 @@ public class TargetBaseScanner {
     private static final String Protocol_Jar = "jar";
     private static final String Class_Suffix = ".class";
     private static final int Class_Suffix_Length = Class_Suffix.length();
-
-    private static final Set<Class<? extends Annotation>> Annotations_Escape = Stream.of(
-            Documented.class,
-            Retention.class,
-            Target.class
-    ).collect(Collectors.toSet());
 
     // ===================================================================================
     //                                                                       Private Field
@@ -60,10 +50,9 @@ public class TargetBaseScanner {
     public Set<Class<?>> scan(Class scanBase, Set<Class<? extends Annotation>> scanTargets) throws PackageScanException {
         Package scanBasePackage = scanBase.getPackage();
         logger.debug("Start scan at package [{}]", scanBasePackage);
-        logger.debug("Escape annotations are {}", Annotations_Escape);
         return walkPackage(scanBasePackage).stream()
                 .flatMap(this::getClassStream)
-                .filter(clazz -> isScanTarget(clazz, scanTargets))
+                .filter(clazz -> AnnotationUtil.isAnnotated(clazz, scanTargets))
                 .collect(Collectors.toSet());
     }
 
@@ -107,7 +96,8 @@ public class TargetBaseScanner {
             String packagePrefix = url.toString().split("!/")[1];
             while (entries.hasMoreElements()) {
                 JarEntry je = entries.nextElement();
-                if (!je.getName().startsWith(packagePrefix) || je.isDirectory() || !je.getName().endsWith(Class_Suffix)) continue;
+                if (!je.getName().startsWith(packagePrefix) || je.isDirectory() || !je.getName().endsWith(Class_Suffix))
+                    continue;
                 String className = je.getName().substring(0, je.getName().length() - Class_Suffix_Length).replace('/', '.');
                 classNames.add(className);
             }
@@ -156,17 +146,5 @@ public class TargetBaseScanner {
             logger.error("Not found Class:[%s]", className);
             throw new RuntimeException(impossible);
         }
-    }
-
-    private boolean isScanTarget(Class<?> clazz, Set<Class<? extends Annotation>> scanTargets) {
-        Annotation[] declaredAnnotations = clazz.getDeclaredAnnotations();
-        if (clazz.isAnnotationPresent(Transparent.class)) return false;
-        if (declaredAnnotations.length == 0) return false;
-        if (scanTargets.stream().anyMatch(clazz::isAnnotationPresent)) return true;
-
-        return Arrays.stream(declaredAnnotations)
-                .map(Annotation::annotationType)
-                .filter(annotation -> !Annotations_Escape.contains(annotation))
-                .anyMatch(type -> isScanTarget(type, scanTargets));
     }
 }
