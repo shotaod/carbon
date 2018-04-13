@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Shota Oda 2017/01/02.
+ * @author Shota Oda 2016/10/12.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Channeled {
+@Target(ElementType.PARAMETER)
+public @interface Cookie {
 }

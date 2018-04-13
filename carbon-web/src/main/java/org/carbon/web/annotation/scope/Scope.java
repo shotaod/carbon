@@ -1,19 +1,14 @@
-package org.carbon.web.annotation;
+package org.carbon.web.annotation.scope;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.carbon.component.annotation.Component;
-
 /**
- * @author Shota Oda 2017/01/01.
+ * @author Shota Oda 2016/10/12.
  */
-@Component
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Socket {
-    String path();
-    String[] protocols();
+public @interface Scope {
 }

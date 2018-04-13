@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Shota Oda 2016/10/12.
+ * @author Shota Oda 2017/01/01.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-public @interface Session {
+@Target(ElementType.METHOD)
+public @interface ConfigureChannel {
 }
