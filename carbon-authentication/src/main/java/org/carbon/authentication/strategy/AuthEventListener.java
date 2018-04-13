@@ -8,17 +8,13 @@ import org.carbon.authentication.AuthIdentity;
 public interface AuthEventListener {
     void onPermitNoAuth();
 
-    void onExpire();
-
+    /**
+     * event handler for on existSession
+     */
     void onExistSession();
 
-    void onProhibitNoAuth();
-
-    void onIllegalAuthRequest();
-
-    void onNoFoundIdentity();
-
+    /**
+     * event handler for on authenticated
+     */
     void onAuth(AuthIdentity identity);
-
-    void onNoMatchSecret();
 }

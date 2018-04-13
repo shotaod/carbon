@@ -4,9 +4,9 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-import org.carbon.web.context.session.SessionContext;
+import org.carbon.web.context.session.SessionPool;
 
 /**
  * @author Shota Oda 2016/10/29.
@@ -14,15 +14,11 @@ import org.carbon.web.context.session.SessionContext;
 @Component
 public class AuthStrategyContext {
 
-    @Inject
-    private SessionContext session;
+    @Assemble
+    private SessionPool session;
 
-    @Inject
+    @Assemble
     private AuthStrategyRepository repository;
-
-    public AuthStrategyContext(AuthStrategyRepository repository) {
-        this.repository = repository;
-    }
 
     public boolean existSecurity() {
         return !repository.isEmpty();

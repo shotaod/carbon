@@ -1,7 +1,6 @@
 package org.carbon.authentication.strategy;
 
 import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,9 +8,9 @@ import org.carbon.authentication.AuthIdentity;
 import org.carbon.authentication.strategy.request.AuthRequest;
 
 /**
- * @author garden 2018/02/12.
+ * @author Shota.Oda 2018/02/12.
  */
-public interface AuthStrategy extends AuthEventListener {
+public interface AuthStrategy extends AuthEventListener, AuthFailureTranslator {
     AuthStrategy prototype(HttpServletRequest request, HttpServletResponse response);
 
     boolean shouldHandle(HttpServletRequest request);
@@ -26,7 +25,5 @@ public interface AuthStrategy extends AuthEventListener {
 
     Optional<AuthRequest> mapRequest();
 
-    Optional<AuthIdentity> find(AuthRequest authRequest);
-
-    boolean confirm(AuthIdentity authIdentity);
+    Optional<? extends AuthIdentity> find(AuthRequest authRequest);
 }

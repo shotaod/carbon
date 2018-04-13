@@ -3,6 +3,7 @@ package org.carbon.authentication.strategy.delegate;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,89 +11,33 @@ import org.carbon.authentication.AuthIdentity;
 import org.carbon.authentication.strategy.AbstractSessionAuthStrategy;
 import org.carbon.authentication.strategy.AuthStrategy;
 import org.carbon.authentication.strategy.request.AuthRequest;
-import org.carbon.web.context.session.SessionContext;
+import org.carbon.authentication.translator.SignedTranslatable;
+import org.carbon.web.context.session.SessionPool;
 
 /**
- * @author garden 2018/02/12.
+ * @author Shota.Oda 2018/02/12.
  */
 public class DelegateAuthStrategy<IDENTITY extends AuthIdentity> extends AbstractSessionAuthStrategy<IDENTITY> {
-    private /*static*/ interface Should<I> extends Function<I, Boolean> {
-    }
-
-    private /*static*/ interface OptionMapper<I, O> extends Function<I, Optional<O>> {
-    }
-
-    private /*static*/ interface ResponseWriter extends Consumer<HttpServletResponse> {
-    }
-
-    public /*static*/ interface ShouldHandle extends Should<HttpServletRequest> {
-    }
-
-    public /*static*/ interface ShouldPermitNoAuth extends Should<HttpServletRequest> {
-    }
-
-    public /*static*/ interface ShouldExpire extends Should<HttpServletRequest> {
-    }
-
-    public /*static*/ interface ShouldTryAuth extends Should<HttpServletRequest> {
-    }
-
-    public /*static*/ interface MapRequest extends OptionMapper<HttpServletRequest, AuthRequest> {
-    }
-
-    public /*static*/ interface Find<IDENTITY extends AuthIdentity> extends OptionMapper<AuthRequest, IDENTITY> {
-    }
-
-    public /*static*/ interface Confirm extends Should<AuthIdentity> {
-    }
-
-    public /*static*/ interface OnPermitNoAuth extends ResponseWriter {
-    }
-
-    public /*static*/ interface OnExpire extends ResponseWriter {
-    }
-
-    public /*static*/ interface OnExistSession extends ResponseWriter {
-    }
-
-    public /*static*/ interface OnProhibitNoAuth extends ResponseWriter {
-    }
-
-    public /*static*/ interface OnIllegalAuthRequest extends ResponseWriter {
-    }
-
-    public /*static*/ interface OnNoFoundIdentity extends ResponseWriter {
-    }
-
-    public /*static*/ interface OnAuth extends ResponseWriter {
-    }
-
-    public /*static*/ interface OnNoMatchSecret extends ResponseWriter {
-    }
-
     private ShouldHandle shouldHandle;
-    private ShouldPermitNoAuth shouldPermitNoAuth;
+    private ShouldPermitAnonymous shouldPermitAnonymous;
     private ShouldExpire shouldExpire;
     private ShouldTryAuth shouldTryAuth;
     private MapRequest mapRequest;
-    private Find<AuthIdentity> find;
-    private Confirm confirm;
-
-    private OnPermitNoAuth onPermitNoAuth;
-    private OnExpire onExpire;
-    private OnExistSession onExistSession;
-    private OnProhibitNoAuth onProhibitNoAuth;
-    private OnIllegalAuthRequest onIllegalAuthRequest;
-    private OnNoFoundIdentity onNoFoundIdentity;
-    private OnAuth onAuth;
-    private OnNoMatchSecret onNoMatchSecret;
-
+    private Find<? extends AuthIdentity> find;
+    private ResponseAware onPermitNoAuth;
+    private ResponseAware onExistSession;
+    private ResponseAware onAuth;
+    private SignedTranslator onExpire;
+    private SignedTranslator onProhibitNoAuth;
+    private SignedTranslator onIllegalAuthRequest;
+    private SignedTranslator onNoFoundIdentity;
+    private SignedTranslator onNoMatchSecret;
     private HttpServletRequest request;
     private HttpServletResponse response;
 
     public DelegateAuthStrategy(
             Class<IDENTITY> identityClass,
-            SessionContext sessionContext) {
+            SessionPool sessionContext) {
         super(identityClass, sessionContext);
     }
 
@@ -100,11 +45,25 @@ public class DelegateAuthStrategy<IDENTITY extends AuthIdentity> extends Abstrac
      * for Prototype
      */
     private DelegateAuthStrategy(
-            Class<IDENTITY> identityClass,
-            SessionContext sessionContext,
+            DelegateAuthStrategy<IDENTITY> self,
             HttpServletRequest request,
-            HttpServletResponse response) {
-        super(identityClass, sessionContext);
+            HttpServletResponse response
+    ) {
+        super(self.identityClass, self.sessionContext);
+        this.shouldHandle = self.shouldHandle;
+        this.shouldPermitAnonymous = self.shouldPermitAnonymous;
+        this.shouldExpire = self.shouldExpire;
+        this.shouldTryAuth = self.shouldTryAuth;
+        this.mapRequest = self.mapRequest;
+        this.find = self.find;
+        this.onPermitNoAuth = self.onPermitNoAuth;
+        this.onExpire = self.onExpire;
+        this.onExistSession = self.onExistSession;
+        this.onProhibitNoAuth = self.onProhibitNoAuth;
+        this.onIllegalAuthRequest = self.onIllegalAuthRequest;
+        this.onNoFoundIdentity = self.onNoFoundIdentity;
+        this.onAuth = self.onAuth;
+        this.onNoMatchSecret = self.onNoMatchSecret;
         this.request = request;
         this.response = response;
     }
@@ -112,8 +71,7 @@ public class DelegateAuthStrategy<IDENTITY extends AuthIdentity> extends Abstrac
     @Override
     public AuthStrategy prototype(HttpServletRequest request, HttpServletResponse response) {
         return new DelegateAuthStrategy<>(
-                identityClass,
-                sessionContext,
+                this,
                 request,
                 response);
     }
@@ -125,8 +83,8 @@ public class DelegateAuthStrategy<IDENTITY extends AuthIdentity> extends Abstrac
         this.shouldHandle = shouldHandle;
     }
 
-    public void delegateShouldPermitNoAuth(ShouldPermitNoAuth shouldPermitNoAuth) {
-        this.shouldPermitNoAuth = shouldPermitNoAuth;
+    public void delegateShouldPermitAnonymous(ShouldPermitAnonymous shouldPermitAnonymous) {
+        this.shouldPermitAnonymous = shouldPermitAnonymous;
     }
 
     public void delegateShouldExpire(ShouldExpire shouldExpire) {
@@ -141,43 +99,39 @@ public class DelegateAuthStrategy<IDENTITY extends AuthIdentity> extends Abstrac
         this.mapRequest = mapRequest;
     }
 
-    public void delegateFind(Find<AuthIdentity> find) {
+    public void delegateFind(Find<IDENTITY> find) {
         this.find = find;
     }
 
-    public void delegateConfirm(Confirm confirm) {
-        this.confirm = confirm;
-    }
-
-    public void delegateOnPermitNoAuth(OnPermitNoAuth onPermitNoAuth) {
+    public void delegateOnPermitNoAuth(ResponseAware onPermitNoAuth) {
         this.onPermitNoAuth = onPermitNoAuth;
     }
 
-    public void delegateOnExpire(OnExpire onExpire) {
-        this.onExpire = onExpire;
-    }
-
-    public void delegateOnExistSession(OnExistSession onExistSession) {
+    public void delegateOnExistSession(ResponseAware onExistSession) {
         this.onExistSession = onExistSession;
     }
 
-    public void delegateOnProhibitNoAuth(OnProhibitNoAuth onProhibitNoAuth) {
-        this.onProhibitNoAuth = onProhibitNoAuth;
-    }
-
-    public void delegateOnIllegalAuthRequest(OnIllegalAuthRequest onIllegalAuthRequest) {
-        this.onIllegalAuthRequest = onIllegalAuthRequest;
-    }
-
-    public void delegateOnNoFoundIdentity(OnNoFoundIdentity onNoFoundIdentity) {
-        this.onNoFoundIdentity = onNoFoundIdentity;
-    }
-
-    public void delegateOnAuth(OnAuth onAuth) {
+    public void delegateOnAuth(ResponseAware onAuth) {
         this.onAuth = onAuth;
     }
 
-    public void delegateOnNoMatchSecret(OnNoMatchSecret onNoMatchSecret) {
+    public void delegateOnExpire(SignedTranslator onExpire) {
+        this.onExpire = onExpire;
+    }
+
+    public void delegateOnProhibitNoAuth(SignedTranslator onProhibitNoAuth) {
+        this.onProhibitNoAuth = onProhibitNoAuth;
+    }
+
+    public void delegateOnIllegalAuthRequest(SignedTranslator onIllegalAuthRequest) {
+        this.onIllegalAuthRequest = onIllegalAuthRequest;
+    }
+
+    public void delegateOnNoFoundIdentity(SignedTranslator onNoFoundIdentity) {
+        this.onNoFoundIdentity = onNoFoundIdentity;
+    }
+
+    public void delegateOnNoMatchSecret(SignedTranslator onNoMatchSecret) {
         this.onNoMatchSecret = onNoMatchSecret;
     }
 
@@ -191,7 +145,7 @@ public class DelegateAuthStrategy<IDENTITY extends AuthIdentity> extends Abstrac
 
     @Override
     public boolean shouldPermitNoAuth() {
-        return shouldPermitNoAuth.apply(request);
+        return shouldPermitAnonymous.apply(request);
     }
 
     @Override
@@ -204,6 +158,7 @@ public class DelegateAuthStrategy<IDENTITY extends AuthIdentity> extends Abstrac
         return super.existSession();
     }
 
+
     @Override
     public boolean shouldTryAuth() {
         return shouldTryAuth.apply(request);
@@ -215,55 +170,83 @@ public class DelegateAuthStrategy<IDENTITY extends AuthIdentity> extends Abstrac
     }
 
     @Override
-    public Optional<AuthIdentity> find(AuthRequest authRequest) {
+    public Optional<? extends AuthIdentity> find(AuthRequest authRequest) {
         return find.apply(authRequest);
     }
 
     @Override
-    public boolean confirm(AuthIdentity authIdentity) {
-        return confirm.apply(authIdentity);
-    }
-
-    @Override
     public void onPermitNoAuth() {
+        if (onPermitNoAuth == null) return;
         onPermitNoAuth.accept(response);
-
-    }
-
-    @Override
-    public void onExpire() {
-        super.onExpire();
-        onExpire.accept(response);
     }
 
     @Override
     public void onExistSession() {
+        if (onExistSession == null) return;
         onExistSession.accept(response);
     }
 
     @Override
-    public void onProhibitNoAuth() {
-        onProhibitNoAuth.accept(response);
-    }
-
-    @Override
-    public void onIllegalAuthRequest() {
-        onIllegalAuthRequest.accept(response);
-    }
-
-    @Override
-    public void onNoFoundIdentity() {
-        onNoFoundIdentity.accept(response);
-    }
-
-    @Override
-    public void onAuth(AuthIdentity identity) {
-        super.onAuth(identity);
+    protected void doOnAuth() {
+        if (onAuth == null) return;
         onAuth.accept(response);
     }
 
+    // ===================================================================================
+    //                                                                          translation
+    //                                                                          ==========
     @Override
-    public void onNoMatchSecret() {
-        onNoMatchSecret.accept(response);
+    protected SignedTranslatable<?> doOnExpire() {
+        return onExpire.get();
+    }
+
+    @Override
+    public SignedTranslatable<?> translateProhibitNoAuth() {
+        return onProhibitNoAuth.get();
+    }
+
+    @Override
+    public SignedTranslatable<?> translateIllegalAuthRequest() {
+        return onIllegalAuthRequest.get();
+    }
+
+    @Override
+    public SignedTranslatable<?> translateNoFoundIdentity() {
+        return onNoFoundIdentity.get();
+    }
+
+    @Override
+    public SignedTranslatable<?> translateNoMatchSecret() {
+        return onNoMatchSecret.get();
+    }
+
+    private /*static*/ interface Should<I> extends Function<I, Boolean> {
+    }
+
+    private /*static*/ interface OptionMapper<I, O> extends Function<I, Optional<O>> {
+    }
+
+    public /*static*/ interface ResponseAware extends Consumer<HttpServletResponse> {
+    }
+
+    public /*static*/ interface SignedTranslator extends Supplier<SignedTranslatable<?>> {
+    }
+
+    public /*static*/ interface ShouldHandle extends Should<HttpServletRequest> {
+    }
+
+    public /*static*/ interface ShouldPermitAnonymous extends Should<HttpServletRequest> {
+    }
+
+    public /*static*/ interface ShouldExpire extends Should<HttpServletRequest> {
+    }
+
+    public /*static*/ interface ShouldTryAuth extends Should<HttpServletRequest> {
+    }
+
+    public /*static*/ interface MapRequest extends OptionMapper<HttpServletRequest, AuthRequest> {
+    }
+
+    public /*static*/ interface Find<IDENTITY extends AuthIdentity> extends OptionMapper<AuthRequest, IDENTITY> {
     }
 }

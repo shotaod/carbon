@@ -6,6 +6,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.carbon.util.Describable;
+
 /**
  * @author Shota Oda 2016/10/27.
  */

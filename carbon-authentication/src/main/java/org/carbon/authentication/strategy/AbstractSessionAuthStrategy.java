@@ -1,16 +1,17 @@
 package org.carbon.authentication.strategy;
 
 import org.carbon.authentication.AuthIdentity;
-import org.carbon.web.context.session.SessionContext;
+import org.carbon.authentication.translator.SignedTranslatable;
+import org.carbon.web.context.session.SessionPool;
 
 /**
- * @author garden 2018/02/12.
+ * @author Shota.Oda 2018/02/12.
  */
 public abstract class AbstractSessionAuthStrategy<IDENTITY extends AuthIdentity> implements AuthStrategy {
     protected Class<IDENTITY> identityClass;
-    protected SessionContext sessionContext;
+    protected SessionPool sessionContext;
 
-    public AbstractSessionAuthStrategy(Class<IDENTITY> identityClass, SessionContext sessionContext) {
+    public AbstractSessionAuthStrategy(Class<IDENTITY> identityClass, SessionPool sessionContext) {
         this.identityClass = identityClass;
         this.sessionContext = sessionContext;
     }
@@ -21,12 +22,18 @@ public abstract class AbstractSessionAuthStrategy<IDENTITY extends AuthIdentity>
     }
 
     @Override
-    public void onExpire() {
+    public final SignedTranslatable<?> translateExpire() {
         sessionContext.removeObject(identityClass);
+        return doOnExpire();
     }
 
     @Override
-    public void onAuth(AuthIdentity identity) {
+    public final void onAuth(AuthIdentity identity) {
         sessionContext.setObject(identity);
+        doOnAuth();
     }
+
+    protected abstract SignedTranslatable<?> doOnExpire();
+
+    protected abstract void doOnAuth();
 }
