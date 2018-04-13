@@ -3,10 +3,9 @@ package org.carbon.modular.conf;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.carbon.component.annotation.AfterInject;
+import org.carbon.component.annotation.AfterAssemble;
 import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Configuration;
-import org.carbon.component.annotation.Inject;
 import org.carbon.modular.annotation.Property;
 import org.carbon.modular.env.EnvironmentMapper;
 import org.slf4j.Logger;
@@ -20,13 +19,13 @@ public class PropertyConfiguration {
     private static Logger logger = LoggerFactory.getLogger(PropertyConfiguration.class);
     private boolean initialized = false;
 
-    @Inject
+    @Assemble
     private EnvironmentMapper envMapper;
 
-    @Assemble({Property.class})
+    @Assemble(gather = {Property.class})
     private List<Object> props;
 
-    @AfterInject
+    @AfterAssemble
     public void afterInject() {
         if (logger.isInfoEnabled()) {
             String classes = props.stream().map(prop -> "-" + prop.getClass().getName()).collect(Collectors.joining("\n"));

@@ -2,7 +2,7 @@ package org.carbon.modular.qua;
 
 import java.lang.reflect.Field;
 
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.exception.ClassNotRegisteredException;
 import org.carbon.component.exception.ImpossibleDetermineException;
 import org.carbon.component.meta.ComponentMeta;
@@ -34,8 +34,8 @@ public class PropertyInjectQualifier implements ComponentQualifier {
 
     @Override
     public boolean isQualified(ComponentMeta<?> meta) throws ImpossibleDetermineException {
-        for (Field field : meta.getPrivateField()) {
-            if (isPropertyInjected(field)) {
+        for (Field field : meta.getDeclaredField()) {
+            if (isAssemblePropertyField(field)) {
                 if (!propertyConfiguration.getInstance().isReady()) {
                     throw new ImpossibleDetermineException(field.getType());
                 } else {
@@ -46,9 +46,9 @@ public class PropertyInjectQualifier implements ComponentQualifier {
         return true;
     }
 
-    private boolean isPropertyInjected(Field field) {
-        boolean isInject = field.isAnnotationPresent(Inject.class);
+    private boolean isAssemblePropertyField(Field field) {
+        boolean isAssemble = field.isAnnotationPresent(Assemble.class);
         boolean isProperty = field.getType().isAnnotationPresent(Property.class);
-        return isInject && isProperty;
+        return isAssemble && isProperty;
     }
 }
