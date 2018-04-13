@@ -7,7 +7,9 @@ package org.carbon.sample.v2.ext.jooq;
 import javax.annotation.Generated;
 
 import org.carbon.sample.v2.ext.jooq.tables.AuthClient;
+import org.carbon.sample.v2.ext.jooq.tables.RockettyAuthClient;
 import org.carbon.sample.v2.ext.jooq.tables.RockettyRanking;
+import org.carbon.sample.v2.ext.jooq.tables.RockettyUser;
 import org.carbon.sample.v2.ext.jooq.tables.User;
 
 
@@ -30,9 +32,19 @@ public class Tables {
     public static final AuthClient AUTH_CLIENT = org.carbon.sample.v2.ext.jooq.tables.AuthClient.AUTH_CLIENT;
 
     /**
+     * The table <code>carbondb.rocketty_auth_client</code>.
+     */
+    public static final RockettyAuthClient ROCKETTY_AUTH_CLIENT = org.carbon.sample.v2.ext.jooq.tables.RockettyAuthClient.ROCKETTY_AUTH_CLIENT;
+
+    /**
      * The table <code>carbondb.rocketty_ranking</code>.
      */
     public static final RockettyRanking ROCKETTY_RANKING = org.carbon.sample.v2.ext.jooq.tables.RockettyRanking.ROCKETTY_RANKING;
+
+    /**
+     * The table <code>carbondb.rocketty_user</code>.
+     */
+    public static final RockettyUser ROCKETTY_USER = org.carbon.sample.v2.ext.jooq.tables.RockettyUser.ROCKETTY_USER;
 
     /**
      * The table <code>carbondb.user</code>.

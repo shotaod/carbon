@@ -23,56 +23,17 @@ import javax.annotation.Generated;
 public interface IRockettyRanking extends Serializable {
 
     /**
-     * Setter for <code>carbondb.rocketty_ranking.id</code>.
-     */
-    public void setId(Long value);
-
-    /**
      * Getter for <code>carbondb.rocketty_ranking.id</code>.
      */
     public Long getId();
 
     /**
-     * Setter for <code>carbondb.rocketty_ranking.internal_user_id</code>.
+     * Getter for <code>carbondb.rocketty_ranking.rocketty_user_id</code>.
      */
-    public void setInternalUserId(String value);
-
-    /**
-     * Getter for <code>carbondb.rocketty_ranking.internal_user_id</code>.
-     */
-    public String getInternalUserId();
-
-    /**
-     * Setter for <code>carbondb.rocketty_ranking.score</code>.
-     */
-    public void setScore(Integer value);
+    public Long getRockettyUserId();
 
     /**
      * Getter for <code>carbondb.rocketty_ranking.score</code>.
      */
     public Integer getScore();
-
-    /**
-     * Setter for <code>carbondb.rocketty_ranking.display_name</code>.
-     */
-    public void setDisplayName(String value);
-
-    /**
-     * Getter for <code>carbondb.rocketty_ranking.display_name</code>.
-     */
-    public String getDisplayName();
-
-    // -------------------------------------------------------------------------
-    // FROM and INTO
-    // -------------------------------------------------------------------------
-
-    /**
-     * Load data from another generated Record/POJO implementing the common interface IRockettyRanking
-     */
-    public void from(org.carbon.sample.v2.ext.jooq.tables.interfaces.IRockettyRanking from);
-
-    /**
-     * Copy data into another generated Record/POJO implementing the common interface IRockettyRanking
-     */
-    public <E extends org.carbon.sample.v2.ext.jooq.tables.interfaces.IRockettyRanking> E into(E into);
 }

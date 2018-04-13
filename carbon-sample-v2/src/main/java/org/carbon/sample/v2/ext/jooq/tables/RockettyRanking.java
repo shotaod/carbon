@@ -13,6 +13,7 @@ import org.carbon.sample.v2.ext.jooq.Carbondb;
 import org.carbon.sample.v2.ext.jooq.Keys;
 import org.carbon.sample.v2.ext.jooq.tables.records.RockettyRankingRecord;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Schema;
 import org.jooq.Table;
@@ -34,7 +35,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RockettyRanking extends TableImpl<RockettyRankingRecord> {
 
-    private static final long serialVersionUID = -1079742085;
+    private static final long serialVersionUID = 339631805;
 
     /**
      * The reference instance of <code>carbondb.rocketty_ranking</code>
@@ -55,19 +56,14 @@ public class RockettyRanking extends TableImpl<RockettyRankingRecord> {
     public final TableField<RockettyRankingRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>carbondb.rocketty_ranking.internal_user_id</code>.
+     * The column <code>carbondb.rocketty_ranking.rocketty_user_id</code>.
      */
-    public final TableField<RockettyRankingRecord, String> INTERNAL_USER_ID = createField("internal_user_id", org.jooq.impl.SQLDataType.CHAR.length(127).nullable(false), this, "");
+    public final TableField<RockettyRankingRecord, Long> ROCKETTY_USER_ID = createField("rocketty_user_id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * The column <code>carbondb.rocketty_ranking.score</code>.
      */
-    public final TableField<RockettyRankingRecord, Integer> SCORE = createField("score", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column <code>carbondb.rocketty_ranking.display_name</code>.
-     */
-    public final TableField<RockettyRankingRecord, String> DISPLAY_NAME = createField("display_name", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<RockettyRankingRecord, Integer> SCORE = createField("score", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * Create a <code>carbondb.rocketty_ranking</code> table reference
@@ -120,7 +116,15 @@ public class RockettyRanking extends TableImpl<RockettyRankingRecord> {
      */
     @Override
     public List<UniqueKey<RockettyRankingRecord>> getKeys() {
-        return Arrays.<UniqueKey<RockettyRankingRecord>>asList(Keys.KEY_ROCKETTY_RANKING_PRIMARY, Keys.KEY_ROCKETTY_RANKING_ROCKETTY_RANKING_INTERNAL_USER_ID__INDEX);
+        return Arrays.<UniqueKey<RockettyRankingRecord>>asList(Keys.KEY_ROCKETTY_RANKING_PRIMARY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<RockettyRankingRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<RockettyRankingRecord, ?>>asList(Keys.ROCKETTY_RANKING_ROCKETTY_USER_ID_FK);
     }
 
     /**

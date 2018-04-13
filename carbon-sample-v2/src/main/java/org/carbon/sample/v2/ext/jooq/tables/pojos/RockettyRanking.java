@@ -22,32 +22,26 @@ import org.carbon.sample.v2.ext.jooq.tables.interfaces.IRockettyRanking;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RockettyRanking implements IRockettyRanking {
 
-    private static final long serialVersionUID = 1989700696;
+    private static final long serialVersionUID = 312078102;
 
-    private Long    id;
-    private String  internalUserId;
-    private Integer score;
-    private String  displayName;
-
-    public RockettyRanking() {}
+    private final Long    id;
+    private final Long    rockettyUserId;
+    private final Integer score;
 
     public RockettyRanking(RockettyRanking value) {
         this.id = value.id;
-        this.internalUserId = value.internalUserId;
+        this.rockettyUserId = value.rockettyUserId;
         this.score = value.score;
-        this.displayName = value.displayName;
     }
 
     public RockettyRanking(
         Long    id,
-        String  internalUserId,
-        Integer score,
-        String  displayName
+        Long    rockettyUserId,
+        Integer score
     ) {
         this.id = id;
-        this.internalUserId = internalUserId;
+        this.rockettyUserId = rockettyUserId;
         this.score = score;
-        this.displayName = displayName;
     }
 
     @Override
@@ -56,18 +50,8 @@ public class RockettyRanking implements IRockettyRanking {
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getInternalUserId() {
-        return this.internalUserId;
-    }
-
-    @Override
-    public void setInternalUserId(String internalUserId) {
-        this.internalUserId = internalUserId;
+    public Long getRockettyUserId() {
+        return this.rockettyUserId;
     }
 
     @Override
@@ -76,54 +60,14 @@ public class RockettyRanking implements IRockettyRanking {
     }
 
     @Override
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return this.displayName;
-    }
-
-    @Override
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("RockettyRanking (");
 
         sb.append(id);
-        sb.append(", ").append(internalUserId);
+        sb.append(", ").append(rockettyUserId);
         sb.append(", ").append(score);
-        sb.append(", ").append(displayName);
 
         sb.append(")");
         return sb.toString();
-    }
-
-    // -------------------------------------------------------------------------
-    // FROM and INTO
-    // -------------------------------------------------------------------------
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void from(IRockettyRanking from) {
-        setId(from.getId());
-        setInternalUserId(from.getInternalUserId());
-        setScore(from.getScore());
-        setDisplayName(from.getDisplayName());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <E extends IRockettyRanking> E into(E into) {
-        into.from(this);
-        return into;
     }
 }

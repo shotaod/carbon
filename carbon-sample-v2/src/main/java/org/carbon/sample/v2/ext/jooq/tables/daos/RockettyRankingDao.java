@@ -66,17 +66,10 @@ public class RockettyRankingDao extends DAOImpl<RockettyRankingRecord, org.carbo
     }
 
     /**
-     * Fetch records that have <code>internal_user_id IN (values)</code>
+     * Fetch records that have <code>rocketty_user_id IN (values)</code>
      */
-    public List<org.carbon.sample.v2.ext.jooq.tables.pojos.RockettyRanking> fetchByInternalUserId(String... values) {
-        return fetch(RockettyRanking.ROCKETTY_RANKING.INTERNAL_USER_ID, values);
-    }
-
-    /**
-     * Fetch a unique record that has <code>internal_user_id = value</code>
-     */
-    public org.carbon.sample.v2.ext.jooq.tables.pojos.RockettyRanking fetchOneByInternalUserId(String value) {
-        return fetchOne(RockettyRanking.ROCKETTY_RANKING.INTERNAL_USER_ID, value);
+    public List<org.carbon.sample.v2.ext.jooq.tables.pojos.RockettyRanking> fetchByRockettyUserId(Long... values) {
+        return fetch(RockettyRanking.ROCKETTY_RANKING.ROCKETTY_USER_ID, values);
     }
 
     /**
@@ -84,12 +77,5 @@ public class RockettyRankingDao extends DAOImpl<RockettyRankingRecord, org.carbo
      */
     public List<org.carbon.sample.v2.ext.jooq.tables.pojos.RockettyRanking> fetchByScore(Integer... values) {
         return fetch(RockettyRanking.ROCKETTY_RANKING.SCORE, values);
-    }
-
-    /**
-     * Fetch records that have <code>display_name IN (values)</code>
-     */
-    public List<org.carbon.sample.v2.ext.jooq.tables.pojos.RockettyRanking> fetchByDisplayName(String... values) {
-        return fetch(RockettyRanking.ROCKETTY_RANKING.DISPLAY_NAME, values);
     }
 }

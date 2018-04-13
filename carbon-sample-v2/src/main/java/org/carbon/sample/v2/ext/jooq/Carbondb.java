@@ -11,7 +11,9 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import org.carbon.sample.v2.ext.jooq.tables.AuthClient;
+import org.carbon.sample.v2.ext.jooq.tables.RockettyAuthClient;
 import org.carbon.sample.v2.ext.jooq.tables.RockettyRanking;
+import org.carbon.sample.v2.ext.jooq.tables.RockettyUser;
 import org.carbon.sample.v2.ext.jooq.tables.User;
 import org.jooq.Catalog;
 import org.jooq.Table;
@@ -31,7 +33,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Carbondb extends SchemaImpl {
 
-    private static final long serialVersionUID = -899469074;
+    private static final long serialVersionUID = 1322959008;
 
     /**
      * The reference instance of <code>carbondb</code>
@@ -44,9 +46,19 @@ public class Carbondb extends SchemaImpl {
     public final AuthClient AUTH_CLIENT = org.carbon.sample.v2.ext.jooq.tables.AuthClient.AUTH_CLIENT;
 
     /**
+     * The table <code>carbondb.rocketty_auth_client</code>.
+     */
+    public final RockettyAuthClient ROCKETTY_AUTH_CLIENT = org.carbon.sample.v2.ext.jooq.tables.RockettyAuthClient.ROCKETTY_AUTH_CLIENT;
+
+    /**
      * The table <code>carbondb.rocketty_ranking</code>.
      */
     public final RockettyRanking ROCKETTY_RANKING = org.carbon.sample.v2.ext.jooq.tables.RockettyRanking.ROCKETTY_RANKING;
+
+    /**
+     * The table <code>carbondb.rocketty_user</code>.
+     */
+    public final RockettyUser ROCKETTY_USER = org.carbon.sample.v2.ext.jooq.tables.RockettyUser.ROCKETTY_USER;
 
     /**
      * The table <code>carbondb.user</code>.
@@ -79,7 +91,9 @@ public class Carbondb extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             AuthClient.AUTH_CLIENT,
+            RockettyAuthClient.ROCKETTY_AUTH_CLIENT,
             RockettyRanking.ROCKETTY_RANKING,
+            RockettyUser.ROCKETTY_USER,
             User.USER);
     }
 }
