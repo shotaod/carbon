@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.carbon.persistent.adhoc.BooleanConverter;
 import org.carbon.persistent.adhoc.LocalDateTimeConverter;
 import org.carbon.persistent.dialect.Dialect;
 import org.jooq.SQLDialect;
@@ -65,31 +66,37 @@ public class JooqCodeGenerator {
 
     public void generate() throws Exception {
         Configuration configuration = new Configuration()
-            .withJdbc(new Jdbc()
-                .withDriver(dialect.getDriverClassName())
-                .withUrl(getUrl())
-                .withUsername(user)
-                .withPassword(password))
-            .withGenerator(new Generator()
-                .withName(CarbonJooqGenerator.class.getName())
-                .withGenerate(new Generate()
-                    .withRelations(true)
-                    .withImmutablePojos(false) // if true, cannot use 'into()' method
-                    .withInterfaces(true)
-                    .withDaos(true))
-                .withDatabase(new Database()
-                    .withName(getJooqDBClassName())
-                    .withIncludes(".*")
-                    .withExcludes(exclusions.stream().collect(Collectors.joining(",")))
-                    .withInputSchema(db)
-                    .withForcedTypes(new ForcedType()
-                        .withUserType(LocalDateTime.class.getName())
-                        .withConverter(LocalDateTimeConverter.class.getName())
-                        .withTypes("DATETIME"))
-                )
-                .withTarget(new Target()
-                    .withPackageName(packageName)
-                    .withDirectory(outputDir.getAbsolutePath())));
+                .withJdbc(new Jdbc()
+                        .withDriver(dialect.getDriverClassName())
+                        .withUrl(getUrl())
+                        .withUsername(user)
+                        .withPassword(password))
+                .withGenerator(new Generator()
+                        .withName(CarbonJooqGenerator.class.getName())
+                        .withGenerate(new Generate()
+                                .withRelations(true)
+                                .withImmutablePojos(true) // if true, cannot use 'into()' method
+                                .withInterfaces(true)
+                                .withDaos(true))
+                        .withDatabase(new Database()
+                                .withName(getJooqDBClassName())
+                                .withIncludes(".*")
+                                .withExcludes(exclusions.stream().collect(Collectors.joining(",")))
+                                .withInputSchema(db)
+                                .withForcedTypes(
+                                        new ForcedType()
+                                                .withUserType(LocalDateTime.class.getName())
+                                                .withConverter(LocalDateTimeConverter.class.getName())
+                                                .withTypes("DATETIME"),
+                                        new ForcedType()
+                                                .withUserType(Boolean.class.getName())
+                                                .withConverter(BooleanConverter.class.getName())
+                                                .withTypes("TINYINT")
+                                )
+                        )
+                        .withTarget(new Target()
+                                .withPackageName(packageName)
+                                .withDirectory(outputDir.getAbsolutePath())));
         GenerationTool.generate(configuration);
     }
 
