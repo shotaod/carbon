@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.carbon.component.annotation.AfterInject;
+import org.carbon.component.annotation.AfterAssemble;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
-import org.carbon.component.annotation.Inject;
 import org.carbon.component.enhance.ProxyEnhancer;
 import org.carbon.component.exception.ClassNotRegisteredException;
 import org.carbon.component.exception.IllegalDependencyException;
@@ -63,9 +63,6 @@ public class HandyComponentManager {
         // define base component metas
         ComponentMetaSet baseMetas = metas.assign(enhancedMetas);
 
-        // -----------------------------------------------------
-        //                                               todo trying
-        //                                               -------
         // try injection and resolve dependency
         ComponentMetaSet pooling = new ComponentMetaSet(baseMetas);
         int counter = 0;
@@ -91,7 +88,7 @@ public class HandyComponentManager {
                         try {
                             boolean isQualified = meta.isQualified();
                             if (!isQualified) {
-                                logger.debug("Find unqualified meta[{}]", meta);
+                                logger.debug("Find unqualified meta[{}]", meta.describe());
                                 unqualified.add(meta);
                             }
                             return isQualified;
@@ -131,9 +128,9 @@ public class HandyComponentManager {
 
     private void callAfterInject(ComponentMeta meta) {
         Stream.of(meta.getType().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(AfterInject.class))
+                .filter(method -> method.isAnnotationPresent(AfterAssemble.class))
                 .forEach(method -> {
-                    logger.debug("call @AfterInject Method {} at {}", method.getName(), meta.getType());
+                    logger.debug("call @AfterAssemble Method {} at {}", method.getName(), meta.getType());
                     try {
                         method.invoke(meta.getInstance());
                     } catch (IllegalAccessException | InvocationTargetException e) {
@@ -156,7 +153,7 @@ public class HandyComponentManager {
     //                                                                          ==========
     private void loggingConfiguration(ComponentMetaSet configurationMetas) {
         String confClassNames = configurationMetas.stream()
-                .filter(meta -> meta.annotatedBy(Configuration.class))
+                .filter(meta -> ((ComponentMeta<?>)meta).annotatedBy(Configuration.class))
                 .map(meta -> "- " + meta.getType().getName())
                 .sorted(String::compareTo)
                 .collect(java.util.stream.Collectors.joining("\n"));
@@ -194,7 +191,7 @@ public class HandyComponentManager {
             sb.appendLine(clazz.getName());
         }
         List<Field> injectField = Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Inject.class))
+                .filter(field -> field.isAnnotationPresent(Assemble.class))
                 .collect(java.util.stream.Collectors.toList());
         if (injectField.isEmpty()) return sb;
         else if (injectField.size() > 1) {
