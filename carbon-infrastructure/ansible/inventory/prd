@@ -1,6 +1,6 @@
 # production
 [app]
-cbn.ggl
+cbn.ggl.ansible
 
 [all:vars]
 stage=prd

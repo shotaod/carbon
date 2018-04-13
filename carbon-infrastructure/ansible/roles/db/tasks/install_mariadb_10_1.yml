@@ -18,24 +18,32 @@
     state: present
 - name: Install DB Server
   apt:
-    name: mariadb-server
+    name: mariadb-server={{ mariadb_version }}
     state: present
     update_cache: yes
-- name: Modify configuration file to listen to local
-  lineinfile:
-    dest: /etc/mysql/my.cnf
-    insertbefore: "^bind-address.*"
-    line: "[mysqld]"
+- name: Set configuration files
+  copy:
+    src: templates/
+    dest: /etc/mysql/
+    owner: root
+    group: root
+    mode: 0755
 - name: Start MariaDB service
   service:
     name: mysql
     state: started
-- name: Create application user
+- name: Change Root password
   mysql_user:
-    host: "%"
+    host: "localhost"
+    name: root
+    password: "{{ mariadb_root_password }}"
+    state: present
+- name: Create application user for database connection
+  mysql_user:
+    host: "localhost"
     name: "{{ mariadb_app_username }}"
     password: "{{ mariadb_app_password }}"
-    priv: "*.*:CREATE,SELECT,INSERT,UPDATE,DELETE"
+    priv: "*.*:CREATE,SELECT,INSERT,UPDATE,DELETE,INDEX"
     state: present
 - name: Setup initial schema
   mysql_db:

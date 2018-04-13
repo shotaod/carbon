@@ -1,0 +1,97 @@
+#!/bin/bash
+
+PID_FILE='/var/webapp/carbon-pid'
+PROFILE='{{ app_profile }}'
+ARGS='-Dlogback.configurationFile=logback.sample.v2.xml '
+
+# helper functions
+RED='\e[0;31m'
+GREEN='\e[0;32m'
+YELLOW='\e[0;33m'
+RESET='\e[0;0m'
+echoRed() {
+    echo -e "${RED}$1${RESET}"
+}
+echoGreen() {
+    echo -e "${GREEN}$1${RESET}"
+}
+echoYellow() {
+    echo -e "${YELLOW}$1${RESET}"
+}
+
+# lifecycle functions
+enterMaintenance() {
+    cp /var/www/html/_maintenance.html /var/www/html/maintenance.html
+}
+exitMaintenance() {
+    rm -f /var/www/html/maintenance.html
+}
+start() {
+    echoGreen 'starting java app'
+    PID=`nohup java -jar -Dprofile=${PROFILE} ${ARGS} /var/webapp/carbon-app.jar > /dev/null 2>&1 & echo $!`
+}
+stop () {
+    kill -9 $1
+}
+
+# Begin of process
+
+# source environment
+source /etc/profile
+
+case "$1" in
+start)
+    if [ -f ${PID_FILE} ]; then
+        PID=`cat ${PID_FILE}`
+        if [ -z "`ps axf | grep -w ${PID} | grep -v grep`" ]; then
+            enterMaintenance
+            start
+        else
+            echoYellow 'Already running application'
+        fi
+    else
+        enterMaintenance
+        start
+    fi
+
+    if [ -z ${PID} ]; then
+        echoRed "Failed starting"
+        exit 3
+    else
+        exitMaintenance
+        echo ${PID} > ${PID_FILE}
+        echoGreen "Started [${PID}]"
+        exit 0
+    fi
+;;
+
+stop)
+    enterMaintenance
+    if [ -f ${PID_FILE} ]; then
+        PID=`cat ${PID_FILE}`
+        if [ -z "`ps axf | grep -w ${PID} | grep -v grep`" ]; then
+            echoRed 'Not running (process dead but PID file exists)'
+            rm -f ${PID_FILE}
+            exit 1
+        else
+            echoGreen "Stopped [${PID}]"
+            stop ${PID}
+            rm -f ${PID_FILE}
+            exit 0
+        fi
+    else
+        echoYellow 'Not running application(pid not found)'
+        exit 0
+    fi
+;;
+
+restart)
+    $0 stop
+    $0 start
+;;
+
+*)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+;;
+esac
