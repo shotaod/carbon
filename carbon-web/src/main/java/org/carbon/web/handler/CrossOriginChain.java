@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.web.conf.WebProperty;
 import org.carbon.web.def.HttpMethod;
 
@@ -23,12 +23,12 @@ public class CrossOriginChain extends HandlerChain {
     private static final String Access_Control_Allow_Headers = "Access-Control-Allow-Headers";
     private static final String Access_Control_Max_Age = "Access-Control-Max-Age";
 
-    @Inject
+    @Assemble
     private WebProperty property;
     private Map<String, String> propertyReadCache = new HashMap<>();
 
     @Override
-    protected void chain(HttpServletRequest request, HttpServletResponse response) {
+    protected void chain(HttpServletRequest request, HttpServletResponse response) throws Throwable {
         response.addHeader(Access_Control_Allow_Origin, getAllowOrigin());
         response.addHeader(Access_Control_Allow_Headers, getAllowHeader());
         response.addHeader(Access_Control_Allow_Methods, getAllowMethod());
@@ -40,23 +40,19 @@ public class CrossOriginChain extends HandlerChain {
     }
 
     private String getAllowOrigin() {
-        return propertyReadCache.computeIfAbsent(Access_Control_Allow_Origin, header -> {
-            return property.getCors().getAllowOrigins().stream().collect(Collectors.joining(","));
-        });
+        return propertyReadCache.computeIfAbsent(Access_Control_Allow_Origin, header ->
+                property.getCors().getAllowOrigins().stream().collect(Collectors.joining(",")));
     }
     private String getAllowMethod() {
-        return propertyReadCache.computeIfAbsent(Access_Control_Allow_Methods, header -> {
-            return property.getCors().getAllowMethods().stream().collect(Collectors.joining(","));
-        });
+        return propertyReadCache.computeIfAbsent(Access_Control_Allow_Methods, header ->
+                property.getCors().getAllowMethods().stream().collect(Collectors.joining(",")));
     }
     private String getAllowHeader() {
-        return propertyReadCache.computeIfAbsent(Access_Control_Allow_Headers, header -> {
-            return property.getCors().getAllowHeaders().stream().collect(Collectors.joining(","));
-        });
+        return propertyReadCache.computeIfAbsent(Access_Control_Allow_Headers, header ->
+                property.getCors().getAllowHeaders().stream().collect(Collectors.joining(",")));
     }
     private String getMaxAge() {
-        return propertyReadCache.computeIfAbsent(Access_Control_Max_Age, header -> {
-            return property.getCors().getMaxAge().toString();
-        });
+        return propertyReadCache.computeIfAbsent(Access_Control_Max_Age, header ->
+                property.getCors().getMaxAge().toString());
     }
 }

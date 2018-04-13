@@ -5,25 +5,27 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.carbon.util.Describable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Shota Oda 2016/10/17.
  */
-public abstract class HandlerChain {
+public abstract class HandlerChain implements Describable {
     private Logger logger = LoggerFactory.getLogger(HandlerChain.class);
     private final Object lock = new Object();
     private HandlerChain handlerChain;
 
-    public String getChainName() {
+    private String getName() {
         return this.getClass().getSimpleName();
     }
 
-    public String getChainResult() {
-        return String.format("└─ %s", getChainName()) +
+    @Override
+    public final String describe() {
+        return String.format("└─ %s", getName()) +
                 Optional.ofNullable(handlerChain)
-                        .map(HandlerChain::getChainResult)
+                        .map(HandlerChain::describe)
                         .map(child -> "\n" + child)
                         .orElse("");
     }
@@ -33,30 +35,37 @@ public abstract class HandlerChain {
         return handlerChain;
     }
 
-    public final HandlerChain setChains(List<HandlerChain> handlerChains) {
+    public final HandlerChain withChains(List<HandlerChain> handlerChains) {
         return handlerChains.stream().reduce(this, HandlerChain::withChain);
     }
 
     public final void startSync(HttpServletRequest request, HttpServletResponse response) {
-        logger.debug("[{}] start sync", getChainName());
+        logger.debug("[{}] start sync", getName());
         synchronized (lock) {
-            chain(request, response);
+            try {
+                chain(request, response);
+            } catch (Throwable ignored) {
+                // nothing to do
+            }
         }
     }
 
     public final void startAsync(HttpServletRequest request, HttpServletResponse response) {
-        logger.debug("[{}] start async", getChainName());
-        chain(request, response);
+        logger.debug("[{}] start async", getName());
+        try {
+            chain(request, response);
+        } catch (Throwable ignored) {
+            // nothing to do
+        }
     }
 
-    protected void chain(HttpServletRequest request, HttpServletResponse response) {
+    protected void chain(HttpServletRequest request, HttpServletResponse response) throws Throwable {
         if (this.handlerChain == null) return;
-
-        logger.debug("[{}] start chain ", this.handlerChain.getChainName());
         try {
+            logger.debug("start chain [{}]", this.handlerChain.getName());
             this.handlerChain.chain(request, response);
         } finally {
-            logger.debug("[{}] end chain", this.handlerChain.getChainName());
+            logger.debug("end chain [{}]", this.handlerChain.getName());
         }
     }
 }
