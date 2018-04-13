@@ -23,19 +23,9 @@ import javax.annotation.Generated;
 public interface IUser extends Serializable {
 
     /**
-     * Setter for <code>carbondb.user.id</code>.
-     */
-    public void setId(Long value);
-
-    /**
      * Getter for <code>carbondb.user.id</code>.
      */
     public Long getId();
-
-    /**
-     * Setter for <code>carbondb.user.email</code>.
-     */
-    public void setEmail(String value);
 
     /**
      * Getter for <code>carbondb.user.email</code>.
@@ -43,36 +33,12 @@ public interface IUser extends Serializable {
     public String getEmail();
 
     /**
-     * Setter for <code>carbondb.user.user_name</code>.
-     */
-    public void setUserName(String value);
-
-    /**
      * Getter for <code>carbondb.user.user_name</code>.
      */
     public String getUserName();
 
     /**
-     * Setter for <code>carbondb.user.password</code>.
-     */
-    public void setPassword(String value);
-
-    /**
      * Getter for <code>carbondb.user.password</code>.
      */
     public String getPassword();
-
-    // -------------------------------------------------------------------------
-    // FROM and INTO
-    // -------------------------------------------------------------------------
-
-    /**
-     * Load data from another generated Record/POJO implementing the common interface IUser
-     */
-    public void from(org.carbon.sample.v2.ext.jooq.tables.interfaces.IUser from);
-
-    /**
-     * Copy data into another generated Record/POJO implementing the common interface IUser
-     */
-    public <E extends org.carbon.sample.v2.ext.jooq.tables.interfaces.IUser> E into(E into);
 }

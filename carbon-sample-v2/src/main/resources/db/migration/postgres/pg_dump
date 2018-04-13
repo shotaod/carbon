@@ -6,4 +6,4 @@ pg_dump \
 -O -x \
 -s \
 carbon \
-> ./carbon-sample-heroku/src/main/resources/db/migration/V4__auth_client.sql
+> ./carbon-sample-SampleV2/src/main/resources/db/migration/V4__auth_client.sql

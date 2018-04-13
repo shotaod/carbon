@@ -7,11 +7,16 @@ package org.carbon.sample.v2.ext.jooq;
 import javax.annotation.Generated;
 
 import org.carbon.sample.v2.ext.jooq.tables.AuthClient;
-import org.carbon.sample.v2.ext.jooq.tables.FlywaySchemaHistory;
+import org.carbon.sample.v2.ext.jooq.tables.RockettyAuthClient;
+import org.carbon.sample.v2.ext.jooq.tables.RockettyRanking;
+import org.carbon.sample.v2.ext.jooq.tables.RockettyUser;
 import org.carbon.sample.v2.ext.jooq.tables.User;
 import org.carbon.sample.v2.ext.jooq.tables.records.AuthClientRecord;
-import org.carbon.sample.v2.ext.jooq.tables.records.FlywaySchemaHistoryRecord;
+import org.carbon.sample.v2.ext.jooq.tables.records.RockettyAuthClientRecord;
+import org.carbon.sample.v2.ext.jooq.tables.records.RockettyRankingRecord;
+import org.carbon.sample.v2.ext.jooq.tables.records.RockettyUserRecord;
 import org.carbon.sample.v2.ext.jooq.tables.records.UserRecord;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
@@ -36,6 +41,9 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<AuthClientRecord, Long> IDENTITY_AUTH_CLIENT = Identities0.IDENTITY_AUTH_CLIENT;
+    public static final Identity<RockettyAuthClientRecord, Long> IDENTITY_ROCKETTY_AUTH_CLIENT = Identities0.IDENTITY_ROCKETTY_AUTH_CLIENT;
+    public static final Identity<RockettyRankingRecord, Long> IDENTITY_ROCKETTY_RANKING = Identities0.IDENTITY_ROCKETTY_RANKING;
+    public static final Identity<RockettyUserRecord, Long> IDENTITY_ROCKETTY_USER = Identities0.IDENTITY_ROCKETTY_USER;
     public static final Identity<UserRecord, Long> IDENTITY_USER = Identities0.IDENTITY_USER;
 
     // -------------------------------------------------------------------------
@@ -45,7 +53,11 @@ public class Keys {
     public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_PRIMARY = UniqueKeys0.KEY_AUTH_CLIENT_PRIMARY;
     public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_HOST_UINDEX = UniqueKeys0.KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_HOST_UINDEX;
     public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_ID_UINDEX = UniqueKeys0.KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_ID_UINDEX;
-    public static final UniqueKey<FlywaySchemaHistoryRecord> KEY_FLYWAY_SCHEMA_HISTORY_PRIMARY = UniqueKeys0.KEY_FLYWAY_SCHEMA_HISTORY_PRIMARY;
+    public static final UniqueKey<RockettyAuthClientRecord> KEY_ROCKETTY_AUTH_CLIENT_PRIMARY = UniqueKeys0.KEY_ROCKETTY_AUTH_CLIENT_PRIMARY;
+    public static final UniqueKey<RockettyAuthClientRecord> KEY_ROCKETTY_AUTH_CLIENT_ROCKETTY_AUTH_CLIENT_CLIENT_ID__UINDEX = UniqueKeys0.KEY_ROCKETTY_AUTH_CLIENT_ROCKETTY_AUTH_CLIENT_CLIENT_ID__UINDEX;
+    public static final UniqueKey<RockettyRankingRecord> KEY_ROCKETTY_RANKING_PRIMARY = UniqueKeys0.KEY_ROCKETTY_RANKING_PRIMARY;
+    public static final UniqueKey<RockettyUserRecord> KEY_ROCKETTY_USER_PRIMARY = UniqueKeys0.KEY_ROCKETTY_USER_PRIMARY;
+    public static final UniqueKey<RockettyUserRecord> KEY_ROCKETTY_USER_ROCKETTY_USER_DISPLAY_NAME_UINDEX = UniqueKeys0.KEY_ROCKETTY_USER_ROCKETTY_USER_DISPLAY_NAME_UINDEX;
     public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = UniqueKeys0.KEY_USER_PRIMARY;
     public static final UniqueKey<UserRecord> KEY_USER_USER_EMAIL_UINDEX = UniqueKeys0.KEY_USER_USER_EMAIL_UINDEX;
 
@@ -53,6 +65,8 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<RockettyRankingRecord, RockettyUserRecord> ROCKETTY_RANKING_ROCKETTY_USER_ID_FK = ForeignKeys0.ROCKETTY_RANKING_ROCKETTY_USER_ID_FK;
+    public static final ForeignKey<RockettyUserRecord, RockettyAuthClientRecord> ROCKETTY_USER_ROCKETTY_AUTH_CLIENT_ID_FK = ForeignKeys0.ROCKETTY_USER_ROCKETTY_AUTH_CLIENT_ID_FK;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -60,6 +74,9 @@ public class Keys {
 
     private static class Identities0 extends AbstractKeys {
         public static Identity<AuthClientRecord, Long> IDENTITY_AUTH_CLIENT = createIdentity(AuthClient.AUTH_CLIENT, AuthClient.AUTH_CLIENT.ID);
+        public static Identity<RockettyAuthClientRecord, Long> IDENTITY_ROCKETTY_AUTH_CLIENT = createIdentity(RockettyAuthClient.ROCKETTY_AUTH_CLIENT, RockettyAuthClient.ROCKETTY_AUTH_CLIENT.ID);
+        public static Identity<RockettyRankingRecord, Long> IDENTITY_ROCKETTY_RANKING = createIdentity(RockettyRanking.ROCKETTY_RANKING, RockettyRanking.ROCKETTY_RANKING.ID);
+        public static Identity<RockettyUserRecord, Long> IDENTITY_ROCKETTY_USER = createIdentity(RockettyUser.ROCKETTY_USER, RockettyUser.ROCKETTY_USER.ID);
         public static Identity<UserRecord, Long> IDENTITY_USER = createIdentity(User.USER, User.USER.ID);
     }
 
@@ -67,8 +84,17 @@ public class Keys {
         public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_PRIMARY = createUniqueKey(AuthClient.AUTH_CLIENT, "KEY_auth_client_PRIMARY", AuthClient.AUTH_CLIENT.ID);
         public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_HOST_UINDEX = createUniqueKey(AuthClient.AUTH_CLIENT, "KEY_auth_client_auth_client_client_host_uindex", AuthClient.AUTH_CLIENT.CLIENT_HOST);
         public static final UniqueKey<AuthClientRecord> KEY_AUTH_CLIENT_AUTH_CLIENT_CLIENT_ID_UINDEX = createUniqueKey(AuthClient.AUTH_CLIENT, "KEY_auth_client_auth_client_client_id_uindex", AuthClient.AUTH_CLIENT.CLIENT_ID);
-        public static final UniqueKey<FlywaySchemaHistoryRecord> KEY_FLYWAY_SCHEMA_HISTORY_PRIMARY = createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, "KEY_flyway_schema_history_PRIMARY", FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK);
+        public static final UniqueKey<RockettyAuthClientRecord> KEY_ROCKETTY_AUTH_CLIENT_PRIMARY = createUniqueKey(RockettyAuthClient.ROCKETTY_AUTH_CLIENT, "KEY_rocketty_auth_client_PRIMARY", RockettyAuthClient.ROCKETTY_AUTH_CLIENT.ID);
+        public static final UniqueKey<RockettyAuthClientRecord> KEY_ROCKETTY_AUTH_CLIENT_ROCKETTY_AUTH_CLIENT_CLIENT_ID__UINDEX = createUniqueKey(RockettyAuthClient.ROCKETTY_AUTH_CLIENT, "KEY_rocketty_auth_client_rocketty_auth_client_client_id__uindex", RockettyAuthClient.ROCKETTY_AUTH_CLIENT.CLIENT_ID);
+        public static final UniqueKey<RockettyRankingRecord> KEY_ROCKETTY_RANKING_PRIMARY = createUniqueKey(RockettyRanking.ROCKETTY_RANKING, "KEY_rocketty_ranking_PRIMARY", RockettyRanking.ROCKETTY_RANKING.ID);
+        public static final UniqueKey<RockettyUserRecord> KEY_ROCKETTY_USER_PRIMARY = createUniqueKey(RockettyUser.ROCKETTY_USER, "KEY_rocketty_user_PRIMARY", RockettyUser.ROCKETTY_USER.ID);
+        public static final UniqueKey<RockettyUserRecord> KEY_ROCKETTY_USER_ROCKETTY_USER_DISPLAY_NAME_UINDEX = createUniqueKey(RockettyUser.ROCKETTY_USER, "KEY_rocketty_user_rocketty_user_display_name_uindex", RockettyUser.ROCKETTY_USER.DISPLAY_NAME);
         public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = createUniqueKey(User.USER, "KEY_user_PRIMARY", User.USER.ID);
         public static final UniqueKey<UserRecord> KEY_USER_USER_EMAIL_UINDEX = createUniqueKey(User.USER, "KEY_user_user_email_uindex", User.USER.EMAIL);
+    }
+
+    private static class ForeignKeys0 extends AbstractKeys {
+        public static final ForeignKey<RockettyRankingRecord, RockettyUserRecord> ROCKETTY_RANKING_ROCKETTY_USER_ID_FK = createForeignKey(org.carbon.sample.v2.ext.jooq.Keys.KEY_ROCKETTY_USER_PRIMARY, RockettyRanking.ROCKETTY_RANKING, "rocketty_ranking_rocketty_user_id_fk", RockettyRanking.ROCKETTY_RANKING.ROCKETTY_USER_ID);
+        public static final ForeignKey<RockettyUserRecord, RockettyAuthClientRecord> ROCKETTY_USER_ROCKETTY_AUTH_CLIENT_ID_FK = createForeignKey(org.carbon.sample.v2.ext.jooq.Keys.KEY_ROCKETTY_AUTH_CLIENT_PRIMARY, RockettyUser.ROCKETTY_USER, "rocketty_user_rocketty_auth_client_id_fk", RockettyUser.ROCKETTY_USER.ROCKETTY_AUTH_CLIENT_ID);
     }
 }

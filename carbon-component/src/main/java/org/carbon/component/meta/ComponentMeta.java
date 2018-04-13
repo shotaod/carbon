@@ -1,18 +1,26 @@
 package org.carbon.component.meta;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.carbon.component.Switcher;
-import org.carbon.component.annotation.Switch;
 import org.carbon.component.exception.ClassNotRegisteredException;
+import org.carbon.component.exception.IllegalDeclarationException;
+import org.carbon.component.exception.ImpossibleDetermineException;
+import org.carbon.util.Describable;
 
 /**
  * @author Shota Oda 2018/01/01.
  */
-public final class ComponentMeta<T> {
+public final class ComponentMeta<T> implements Describable {
     private Class<T> asClass;
     private T instance;
+    private ComponentMetaSet parent;
 
     public static <T> ComponentMeta<T> noImpl(Class<T> asClass) {
         return new ComponentMeta<>(asClass, null);
@@ -26,7 +34,7 @@ public final class ComponentMeta<T> {
     @SuppressWarnings("unchecked")
     public static ComponentMeta implAs(Class<?> asClass, Object instance) {
         if (!ClassUtils.isAssignable(instance.getClass(), asClass)) {
-            throw new IllegalArgumentException("instance(type["+instance.getClass()+"]) cannot not assign to asClass["+asClass+"]");
+            throw new IllegalArgumentException("instance(type[" + instance.getClass() + "]) cannot not assign to asClass[" + asClass + "]");
         }
         return new ComponentMeta(asClass, instance);
     }
@@ -48,6 +56,56 @@ public final class ComponentMeta<T> {
         return instance == null;
     }
 
+
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
+        A instanceClassAnnotate = instance.getClass().getDeclaredAnnotation(type);
+        if (instanceClassAnnotate == null) return asClass.getDeclaredAnnotation(type);
+        return instanceClassAnnotate;
+    }
+
+
+    public boolean annotatedBy(Class<? extends Annotation> annotation) {
+        return instance.getClass().isAnnotationPresent(annotation) || asClass.isAnnotationPresent(annotation);
+    }
+
+    public Field[] getDeclaredField() {
+        return instance.getClass().getDeclaredFields();
+    }
+
+    public boolean isAssignableTo(Type other) {
+        Class<T> self = getType();
+        if (other instanceof Class) {
+            return ((Class<?>) other).isAssignableFrom(self);
+        }
+
+        if (other instanceof WildcardType) {
+            Type[] upperBounds = ((WildcardType) other).getUpperBounds();
+            if (upperBounds.length != 1) {
+                throw new IllegalDeclarationException(other.getTypeName() + " is illegal, Single Wildcard(*) declaration is only supported");
+            }
+            Type upperType = upperBounds[0];
+            if (upperType instanceof Class) {
+                return ((Class<?>) upperType).isAssignableFrom(self);
+            } else {
+                throw new IllegalDeclarationException(other.getTypeName() + " is illegal declaration");
+            }
+        }
+
+        if (other instanceof ParameterizedType) {
+            ParameterizedType pType = (ParameterizedType) other;
+            Type rawType = pType.getRawType();
+            if (rawType instanceof Class) {
+                return ((Class<?>) rawType).isAssignableFrom(self)
+                        && Stream.of(pType.getActualTypeArguments())
+                        .allMatch(generic -> generic.equals(Object.class) || generic instanceof WildcardType);
+            } else {
+                throw new IllegalDeclarationException("Nested type is not acceptable");
+            }
+        }
+
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     public void merge(ComponentMeta otherMeta) {
         if (!asClass.equals(otherMeta.asClass)) {
@@ -59,19 +117,28 @@ public final class ComponentMeta<T> {
         if (otherMeta.instance != null) {
             instance = (T) otherMeta.instance;
         }
+        if (otherMeta.parent != null) {
+            this.parent = otherMeta.parent;
+        }
     }
 
-    public boolean isQualified(ComponentMetaSet candidates) {
-        Switch switchAnnotation = getType().getDeclaredAnnotation(Switch.class);
-        if (switchAnnotation == null) return true;
-        Class<? extends Switcher> switcherClass = switchAnnotation.value();
-        ComponentMeta<? extends Switcher> switcherMeta = candidates.get(switcherClass);
-        if (switcherMeta == null) throw new ClassNotRegisteredException(String.format("Class[%s] is required Switcher[%s], but not found", asClass, switcherClass));
-        return switcherMeta.getInstance().on(getInstance().getClass());
+    void setParent(ComponentMetaSet parent) {
+        this.parent = parent;
     }
 
     // ===================================================================================
-    //                                                                          Base
+    //                                                                   ComponentMeta Ext
+    //                                                                          ==========
+    public boolean isQualified() throws ImpossibleDetermineException {
+        return parent.isQualified(this);
+    }
+
+    public void awareDependency(ComponentMetaSet dependency) throws ClassNotRegisteredException {
+        parent.awareDependency(this, dependency);
+    }
+
+    // ===================================================================================
+    //                                                                                Base
     //                                                                          ==========
 
     @Override
@@ -87,6 +154,11 @@ public final class ComponentMeta<T> {
     @Override
     public int hashCode() {
         return asClass.hashCode();
+    }
+
+    @Override
+    public String describe() {
+        return toString();
     }
 
     @Override

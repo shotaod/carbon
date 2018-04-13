@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.carbon.component.Switcher;
+import org.carbon.component.swt.Switcher;
 
 /**
  * @author Shota Oda 2018/01/07.

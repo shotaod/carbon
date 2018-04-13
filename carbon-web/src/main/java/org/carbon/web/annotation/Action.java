@@ -14,6 +14,6 @@ import org.carbon.web.def.HttpMethod;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Action {
-    String url();
+    String path();
     HttpMethod method();
 }

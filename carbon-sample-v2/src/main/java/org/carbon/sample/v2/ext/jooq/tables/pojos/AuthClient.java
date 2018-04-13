@@ -22,13 +22,11 @@ import org.carbon.sample.v2.ext.jooq.tables.interfaces.IAuthClient;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AuthClient implements IAuthClient {
 
-    private static final long serialVersionUID = -1756720984;
+    private static final long serialVersionUID = 451225050;
 
-    private Long   id;
-    private String clientHost;
-    private String clientId;
-
-    public AuthClient() {}
+    private final Long   id;
+    private final String clientHost;
+    private final String clientId;
 
     public AuthClient(AuthClient value) {
         this.id = value.id;
@@ -52,28 +50,13 @@ public class AuthClient implements IAuthClient {
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
     public String getClientHost() {
         return this.clientHost;
     }
 
     @Override
-    public void setClientHost(String clientHost) {
-        this.clientHost = clientHost;
-    }
-
-    @Override
     public String getClientId() {
         return this.clientId;
-    }
-
-    @Override
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 
     @Override
@@ -86,28 +69,5 @@ public class AuthClient implements IAuthClient {
 
         sb.append(")");
         return sb.toString();
-    }
-
-    // -------------------------------------------------------------------------
-    // FROM and INTO
-    // -------------------------------------------------------------------------
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void from(IAuthClient from) {
-        setId(from.getId());
-        setClientHost(from.getClientHost());
-        setClientId(from.getClientId());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <E extends IAuthClient> E into(E into) {
-        into.from(this);
-        return into;
     }
 }

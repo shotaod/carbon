@@ -1,19 +1,15 @@
 package org.carbon.sample.auth;
 
-import org.carbon.authentication.AuthConfigAdapter;
-import org.carbon.authentication.AuthDefinition;
+import org.carbon.authentication.conf.AuthConfigAdapter;
+import org.carbon.authentication.conf.AuthDefinitionBuilder;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-import org.carbon.sample.auth.basic.BasicAuthEvent;
-import org.carbon.sample.auth.basic.BasicAuthRequestMapper;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.auth.basic.identity.SampleBasicAuthIdentifier;
 import org.carbon.sample.auth.basic.identity.SampleBasicAuthIdentity;
-import org.carbon.sample.auth.business.BusinessAuthEvent;
 import org.carbon.sample.auth.business.BusinessAuthIdentifier;
-import org.carbon.sample.auth.consumer.ConsumerAuthEvent;
+import org.carbon.sample.auth.business.BusinessAuthIdentity;
 import org.carbon.sample.auth.consumer.ConsumerAuthIdentifier;
-import org.carbon.sample.auth.form.FormAuthEvent;
-import org.carbon.sample.auth.form.FormAuthRequestMapper;
+import org.carbon.sample.auth.consumer.ConsumerAuthIdentity;
 import org.carbon.sample.auth.form.identity.FormAuthIdentifier;
 import org.carbon.sample.auth.form.identity.FormAuthIdentity;
 import org.carbon.web.def.HttpMethod;
@@ -24,80 +20,50 @@ import org.carbon.web.def.HttpMethod;
 @Component
 public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
 
-    // -----------------------------------------------------
-    //                                               for Basic Auth
-    //                                               -------
-    @Inject
-    private BasicAuthRequestMapper basicMapper;
-    @Inject
+    // for Basic Auth
+    @Assemble
     private SampleBasicAuthIdentifier basicIdentifier;
-    @Inject
-    private BasicAuthEvent basicFinisher;
-
-    // -----------------------------------------------------
-    //                                               for Form Auth
-    //                                               -------
-    @Inject
-    private FormAuthRequestMapper formMapper;
-    @Inject
+    // for Form Auth
+    @Assemble
     private FormAuthIdentifier formIdentifier;
-    @Inject
-    private FormAuthEvent formFinisher;
-
-    // -----------------------------------------------------
-    //                                               for Consumer Auth
-    //                                               -------
-    @Inject
-    private ConsumerAuthEvent consumerAuthEvent;
-    @Inject
+    // for Consumer Auth
+    @Assemble
     private ConsumerAuthIdentifier consumerAuthIdentifier;
-
-    // -----------------------------------------------------
-    //                                               for Business Auth
-    //                                               -------
-    @Inject
-    private BusinessAuthEvent businessAuthEvent;
-    @Inject
+    // for Business Auth
+    @Assemble
     private BusinessAuthIdentifier businessAuthIdentifier;
 
     @Override
-    public void configure(AuthDefinition config) {
+    public void configure(AuthDefinitionBuilder config) {
         config
-                .<SampleBasicAuthIdentity>define()
+                .defineForPage(SampleBasicAuthIdentity.class)
                     .identifier(basicIdentifier)
+                    .basicAuth()
                     .base("/basic/")
-                    .endPoint(HttpMethod.GET, "/basic/**")
+                    .authTo(HttpMethod.GET, "/basic/**")
                     .logout("/basic/logout")
                     .redirect("/basic")
-                    .requestMapper(basicMapper)
-                    .eventListener(basicFinisher)
-                    .end()
-                .<FormAuthIdentity>define()
+                .end()
+                .defineForPage(FormAuthIdentity.class)
                     .identifier(formIdentifier)
                     .base("/form/")
-                    .endPoint(HttpMethod.POST, "/form/auth")
+                    .authTo(HttpMethod.POST, "/form/auth")
                     .logout("/form/logout")
                     .redirect("/form")
-                    .requestMapper(formMapper)
-                    .eventListener(formFinisher)
-                    .end()
-                .<FormAuthIdentity>define()
+                .end()
+                .defineForPage(BusinessAuthIdentity.class)
                     .identifier(businessAuthIdentifier)
                     .base("/business/")
-                    .endPoint(HttpMethod.POST, "/business/auth")
+                    .authTo(HttpMethod.POST, "/business/auth")
                     .logout("/business/logout")
                     .redirect("/business")
-                    .requestMapper(formMapper)
-                    .eventListener(businessAuthEvent)
-                    .end()
-                .<FormAuthIdentity>define()
+                .end()
+                .defineForPage(ConsumerAuthIdentity.class)
                     .identifier(consumerAuthIdentifier)
                     .base("/consumer/")
-                    .endPoint(HttpMethod.POST, "/consumer/auth")
+                    .authTo(HttpMethod.POST, "/consumer/auth")
                     .logout("/consumer/logout")
                     .redirect("/consumer")
-                    .requestMapper(formMapper)
-                    .eventListener(consumerAuthEvent)
                 .end()
         ;
     }

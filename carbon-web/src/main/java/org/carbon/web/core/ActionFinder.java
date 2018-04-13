@@ -3,15 +3,15 @@ package org.carbon.web.core;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-import org.carbon.web.container.ComputedUrl;
-import org.carbon.web.container.PathVariableValues;
-import org.carbon.web.container.RequestAssociatedAction;
-import org.carbon.web.mapping.ActionMappingContext;
-import org.carbon.web.mapping.ActionDefinition;
+import org.carbon.web.container.ComputedPath;
+import org.carbon.web.container.PathVariables;
+import org.carbon.web.context.request.RequestPool;
 import org.carbon.web.def.HttpMethod;
 import org.carbon.web.exception.ActionNotFoundException;
+import org.carbon.web.mapping.ActionDefinition;
+import org.carbon.web.mapping.ActionMappingContext;
 
 /**
  * @author Shota Oda 2016/10/07.
@@ -19,13 +19,13 @@ import org.carbon.web.exception.ActionNotFoundException;
 @Component
 public class ActionFinder {
 
-    private class UrlMatchResult {
+    private class PathCheckResult {
         private boolean match;
         private ActionDefinition action;
-        private PathVariableValues pathVariableValues;
+        private PathVariables pathVariables;
 
-        public UrlMatchResult() {
-            pathVariableValues = new PathVariableValues();
+        public PathCheckResult() {
+            pathVariables = new PathVariables();
         }
 
         public void setMatch(boolean match) {
@@ -37,25 +37,33 @@ public class ActionFinder {
         }
 
         public void addBind(String varName, String value) {
-            this.pathVariableValues.addValue(varName, value);
+            this.pathVariables.addValue(varName, value);
         }
 
         public boolean isMatch() {
             return match;
         }
 
-        public RequestAssociatedAction getActionContainer() {
-            return new RequestAssociatedAction(
-                action,
-                this.pathVariableValues
-            );
+        public ActionDefinition getAction() {
+            return action;
+        }
+
+        public PathVariables getPathVariables() {
+            return pathVariables;
         }
     }
 
-    @Inject
+    @Assemble
+    private RequestPool requestPool;
+    @Assemble
     private ActionMappingContext actionMappingContext;
 
-    public RequestAssociatedAction find(HttpServletRequest request) {
+    /**
+     * search target action and set path variables to requet pool
+     *
+     * @param request not null
+     */
+    public ActionDefinition find(HttpServletRequest request) {
         // classify by HttpMethod
         List<ActionDefinition> actionDefinitions = filterByHttpMethod(request);
 
@@ -68,35 +76,36 @@ public class ActionFinder {
         return actionMappingContext.getByHttpMethod(httpMethod);
     }
 
-    private RequestAssociatedAction findAction(HttpServletRequest request, List<ActionDefinition> actionDefinitions) {
+    private ActionDefinition findAction(HttpServletRequest request, List<ActionDefinition> actionDefinitions) {
         if (actionDefinitions == null) {
             throw actionNotFoundException(request);
         }
         return actionDefinitions.stream()
-            .map(action -> matchUrl(request.getPathInfo(), action))
-            .filter(UrlMatchResult::isMatch)
-            .findFirst()
-            .map(UrlMatchResult::getActionContainer)
-            .orElseThrow(() -> actionNotFoundException(request));
+                .map(action -> checkPath(request.getPathInfo(), action))
+                .filter(PathCheckResult::isMatch)
+                .findFirst()
+                .map(result -> {
+                    ActionDefinition action = result.getAction();
+                    requestPool.setObject(result.getPathVariables());
+                    return action;
+                })
+                .orElseThrow(() -> actionNotFoundException(request));
     }
 
-    private UrlMatchResult matchUrl(String requestPath, ActionDefinition action) {
-        UrlMatchResult result = new UrlMatchResult();
+    private PathCheckResult checkPath(String requestPath, ActionDefinition action) {
+        PathCheckResult result = new PathCheckResult();
         String[] requestParts = requestPath.split("/");
-//        if (requestParts.length == 0) {
-//            requestParts = new String[] {""};
-//        }
-        ComputedUrl computed = action.getComputed();
-        List<ComputedUrl.Path> computedPaths = computed.getComputedPaths();
+        ComputedPath computed = action.getComputed();
+        List<ComputedPath.Node> computedPaths = computed.getComputedPaths();
 
-        if(requestParts.length != computedPaths.size()) {
+        if (requestParts.length != computedPaths.size()) {
             result.setMatch(false);
             return result;
         }
 
         for (int i = 0; i < requestParts.length; i++) {
             String requestPart = requestParts[i];
-            ComputedUrl.Path defined = computedPaths.get(i);
+            ComputedPath.Node defined = computedPaths.get(i);
 
             if (defined.isVar()) {
                 result.addBind(defined.getVarName(), requestPart);
@@ -114,8 +123,8 @@ public class ActionFinder {
     private ActionNotFoundException actionNotFoundException(HttpServletRequest request) {
         return new ActionNotFoundException(
                 String.format(
-                    "[request] %s is not found in application action apply",
-                    request.getRequestURI()
+                        "[request] %s is not found in application action",
+                        request.getRequestURI()
                 )
         );
     }

@@ -1,10 +1,11 @@
 package org.carbon.sample.tool;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 import lombok.Setter;
 import org.carbon.persistent.dialect.Dialect;
-import org.carbon.persistent.jooq.JooqCodeGenerator;
+import org.carbon.persistent.vendor.jooq.JooqCodeGenerator;
 import org.carbon.util.mapper.YamlObjectMapper;
 
 /**
@@ -21,7 +22,7 @@ public class DatabaseTool {
     }
 
     public static void main(String[] args) throws Exception {
-        YamlObjectMapper propertyMapper = new YamlObjectMapper("config.yml");
+        YamlObjectMapper propertyMapper = new YamlObjectMapper(Paths.get("config.yml"));
         DBProp p = propertyMapper.map("persistent.dataSource", DBProp.class);
 
         JooqCodeGenerator

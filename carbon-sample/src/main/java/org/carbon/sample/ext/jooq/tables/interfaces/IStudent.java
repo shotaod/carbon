@@ -42,12 +42,12 @@ public interface IStudent extends Serializable {
     public String getPassword();
 
     /**
-     * Setter for <code>carbondb.student.username</code>.
+     * Setter for <code>carbondb.student.identityClass</code>.
      */
     public void setUsername(String value);
 
     /**
-     * Getter for <code>carbondb.student.username</code>.
+     * Getter for <code>carbondb.student.identityClass</code>.
      */
     public String getUsername();
 

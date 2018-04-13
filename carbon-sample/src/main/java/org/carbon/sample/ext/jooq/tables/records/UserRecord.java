@@ -47,7 +47,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Setter for <code>carbondb.user.username</code>.
+     * Setter for <code>carbondb.user.identityClass</code>.
      */
     @Override
     public void setUsername(String value) {
@@ -55,7 +55,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Getter for <code>carbondb.user.username</code>.
+     * Getter for <code>carbondb.user.identityClass</code>.
      */
     @Override
     public String getUsername() {

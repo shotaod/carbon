@@ -1,0 +1,48 @@
+---
+- name: Install JRE
+  apt:
+    name: default-jre
+    state: present
+    update_cache: true
+- name: Make app required directory
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0775
+  with_items:
+    - /var/webapp
+    - /var/log/webapp
+- name: Copy application init.d script
+  template:
+    src: templates/{{ item.key }}
+    dest: /etc/init.d/{{ item.value }}
+    force: true
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  with_dict:
+    start.sh.j2: webapp
+- name: Set environment variables
+  lineinfile:
+    dest: /etc/profile
+    state: present
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    create: true
+  with_items:
+    - regexp: '^export\sPORT'
+      line: 'export PORT={{ app_port }}'
+    - regexp: '^export\sDB_HOST'
+      line: 'export DB_HOST=localhost'
+    - regexp: '^export\sDB_NAME'
+      line: 'export DB_NAME={{ mariadb_app_database }}'
+    - regexp: '^export\sDB_USER'
+      line: 'export DB_USER={{ mariadb_app_username }}'
+    - regexp: '^export\sDB_PASSWORD'
+      line: 'export DB_PASSWORD={{ mariadb_app_password }}'
+    - regexp: '^export\sROCKETTY_SECRET'
+      line: 'export ROCKETTY_SECRET="{{ rocketty_secret }}"'
+    - regexp: '^export\sROCKETTY_CIPHER_KEY'
+      line: 'export ROCKETTY_CIPHER_KEY="{{ rocketty_cipher_key }}"'

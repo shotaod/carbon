@@ -4,7 +4,7 @@ package org.carbon.authentication;
  * @author Shota Oda 2016/11/03.
  */
 public interface AuthIdentity {
-    String username();
-    String cryptPassword();
-    boolean confirm(String plainPassword);
+    String identity();
+
+    boolean confirm(String plainSecret);
 }

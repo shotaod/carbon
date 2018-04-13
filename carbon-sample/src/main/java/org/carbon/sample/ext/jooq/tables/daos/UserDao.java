@@ -63,14 +63,14 @@ public class UserDao extends DAOImpl<UserRecord, org.carbon.sample.ext.jooq.tabl
     }
 
     /**
-     * Fetch records that have <code>username IN (values)</code>
+     * Fetch records that have <code>identityClass IN (values)</code>
      */
     public List<org.carbon.sample.ext.jooq.tables.pojos.User> fetchByUsername(String... values) {
         return fetch(User.USER.USERNAME, values);
     }
 
     /**
-     * Fetch a unique record that has <code>username = value</code>
+     * Fetch a unique record that has <code>identityClass = value</code>
      */
     public org.carbon.sample.ext.jooq.tables.pojos.User fetchOneByUsername(String value) {
         return fetchOne(User.USER.USERNAME, value);

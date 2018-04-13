@@ -1,28 +1,23 @@
 package org.carbon.sample.auth.consumer;
 
+import java.util.Optional;
+
 import org.carbon.authentication.AuthIdentifier;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.domain.service.StudentService;
-import org.carbon.web.exception.UserIdentityNotFoundException;
 
 /**
  * @author Shota Oda 2016/11/23.
  */
 @Component
 public class ConsumerAuthIdentifier implements AuthIdentifier<ConsumerAuthIdentity> {
-    @Inject
+    @Assemble
     private StudentService service;
 
     @Override
-    public Class<ConsumerAuthIdentity> getType() {
-        return ConsumerAuthIdentity.class;
-    }
-
-    @Override
-    public ConsumerAuthIdentity find(String address) throws UserIdentityNotFoundException {
-        return service.selectOneByAddress(address)
-                .map(ConsumerAuthIdentity::new)
-                .orElseThrow(() -> new UserIdentityNotFoundException(address));
+    public Optional<ConsumerAuthIdentity> identify(String identity) {
+        return service.selectOneByAddress(identity)
+                .map(ConsumerAuthIdentity::new);
     }
 }

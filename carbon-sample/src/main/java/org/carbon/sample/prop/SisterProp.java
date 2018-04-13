@@ -1,7 +1,7 @@
 package org.carbon.sample.prop;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.prop.sub.supersub.SuperSubProp1;
 
 /**
@@ -9,8 +9,8 @@ import org.carbon.sample.prop.sub.supersub.SuperSubProp1;
  */
 @Component
 public class SisterProp {
-    @Inject
+    @Assemble
     private BrotherProp broProp;
-    @Inject
+    @Assemble
     private SuperSubProp1 ssProp1;
 }

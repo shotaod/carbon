@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.sf.cglib.proxy.Callback;
@@ -21,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Constructor for Class and enhance by proxy
+ * Constructor for Class by proxied enhance
  *
  * @author Shota Oda 2016/10/07.
  */
@@ -62,9 +61,9 @@ public class ProxyEnhancer {
         List<ProxyAdapter> proxyAdapters = classes.stream()
                 .filter(clazz -> !clazz.isInterface() && !clazz.isAnnotation() && ProxyAdapter.class.isAssignableFrom(clazz))
                 .map(clazz -> (ProxyAdapter) constructClass(clazz))
-                .collect(Collectors.toList());
+                .collect(java.util.stream.Collectors.toList());
 
-        Map<Class<? extends ProxyAdapter>, ProxyAdapter> adapters = proxyAdapters.stream().collect(Collectors.toMap(
+        Map<Class<? extends ProxyAdapter>, ProxyAdapter> adapters = proxyAdapters.stream().collect(java.util.stream.Collectors.toMap(
                 ProxyAdapter::getClass,
                 Function.identity()
         ));
@@ -80,13 +79,15 @@ public class ProxyEnhancer {
                     // check target proxy
                     List<ProxyAdapter> handleProxyAdapters = proxyAdapters.stream()
                             .filter(proxyAdapter -> proxyAdapter.shouldHandle(clazz))
-                            .collect(Collectors.toList());
+                            .collect(java.util.stream.Collectors.toList());
                     if (handleProxyAdapters.isEmpty()) {
                         return new ClassAndObject(clazz, constructClass(clazz));
                     }
 
                     if (logger.isDebugEnabled()) {
-                        List<? extends Class<? extends ProxyAdapter>> proxies = handleProxyAdapters.stream().map(ProxyAdapter::getClass).collect(Collectors.toList());
+                        List<? extends Class<? extends ProxyAdapter>> proxies = handleProxyAdapters.stream()
+                                .map(ProxyAdapter::getClass)
+                                .collect(java.util.stream.Collectors.toList());
                         logger.debug("enhance {} by interceptors({})", clazz, proxies);
                     }
 
@@ -96,7 +97,7 @@ public class ProxyEnhancer {
                     enhancer.setCallbacks(handleProxyAdapters.toArray(new Callback[handleProxyAdapters.size()]));
                     return new ClassAndObject(clazz, enhancer.create());
                 })
-                .collect(Collectors.toMap(
+                .collect(java.util.stream.Collectors.toMap(
                         ClassAndObject::getC,
                         ClassAndObject::getO
                 ));
@@ -105,10 +106,8 @@ public class ProxyEnhancer {
         return generateInstances;
     }
 
-    public ComponentMetaSet generateMethodComponent(ComponentMetaSet configurations) {
-        return configurations.stream()
-                .flatMap(meta -> doGenerateByMethodComponent(meta.getType(), meta.getInstance()))
-                .collect(ComponentMetaSet.MetaCollectors.toSet());
+    public ComponentMetaSet generateMethodComponent(ComponentMeta meta) {
+        return doGenerateByMethodComponent(meta.getType(), meta.getInstance()).collect(ComponentMetaSet.Collectors.toSet());
     }
 
     public Object constructClass(Class<?> clazz) {
@@ -127,6 +126,7 @@ public class ProxyEnhancer {
                     .filter(method -> method.isAnnotationPresent(Component.class))
                     .flatMap(method -> {
                         try {
+                            logger.debug("[Enhance ] call method [{}] at @Configuration class[{}]", method.getName(), holderClass.getName());
                             Object result = method.invoke(object);
                             if (result == null) {
                                 return Stream.empty();

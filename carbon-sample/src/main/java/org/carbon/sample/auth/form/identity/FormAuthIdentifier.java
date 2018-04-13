@@ -4,9 +4,8 @@ import java.util.Optional;
 
 import org.carbon.authentication.AuthIdentifier;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.domain.service.UserRoleService;
-import org.carbon.web.exception.UserIdentityNotFoundException;
 
 /**
  * @author Shota Oda 2016/11/03.
@@ -14,18 +13,12 @@ import org.carbon.web.exception.UserIdentityNotFoundException;
 @Component
 public class FormAuthIdentifier implements AuthIdentifier<FormAuthIdentity> {
 
-    @Inject
+    @Assemble
     private UserRoleService userRoleService;
 
     @Override
-    public Class<FormAuthIdentity> getType() {
-        return FormAuthIdentity.class;
-    }
-
-    @Override
-    public FormAuthIdentity find(String username) throws UserIdentityNotFoundException {
-        return Optional.ofNullable(userRoleService.findByUsername(username))
-                .map(FormAuthIdentity::new)
-                .orElseThrow(() -> new UserIdentityNotFoundException(username));
+    public Optional<FormAuthIdentity> identify(String identity) {
+        return Optional.ofNullable(userRoleService.findByUsername(identity))
+                .map(FormAuthIdentity::new);
     }
 }

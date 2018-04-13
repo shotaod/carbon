@@ -8,13 +8,12 @@ import java.util.stream.Stream;
 import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
-import org.carbon.component.annotation.Inject;
 import org.carbon.util.SimpleKeyValue;
 import org.carbon.util.format.BoxedTitleMessage;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.web.annotation.Controller;
 import org.carbon.web.annotation.Socket;
-import org.carbon.web.core.PathVariableResolver;
+import org.carbon.web.core.PathDefinitionResolver;
 import org.carbon.web.def.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +26,14 @@ public class ActionMappingConfiguration {
 
     private static Logger logger = LoggerFactory.getLogger(ActionMappingConfiguration.class);
 
-    @Inject
-    private PathVariableResolver pathVariableResolver;
-    @Inject
+    @Assemble
+    private PathDefinitionResolver pathDefinitionResolver;
+    @Assemble
     private ControllerActionFactory controllerActionFactory;
-    @Inject
+    @Assemble
     private WebSocketActionFactory socketAdapterActionFactory;
 
-    @Assemble({Controller.class, Socket.class})
+    @Assemble(gather = {Controller.class, Socket.class})
     private List<Object> endpoints;
 
     @Component

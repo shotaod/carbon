@@ -5,7 +5,7 @@
     .tab a,
     .tab.disabled a,
     .tab.disabled a:hover {
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .tab a:hover,
@@ -24,8 +24,8 @@
     .tab {
       -webkit-box-flex: 1;
       -webkit-flex-grow: 1;
-          -ms-flex-positive: 1;
-              flex-grow: 1;
+      -ms-flex-positive: 1;
+      flex-grow: 1;
     }
   }
 

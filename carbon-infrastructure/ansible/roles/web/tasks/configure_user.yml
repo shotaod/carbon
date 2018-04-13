@@ -1,0 +1,25 @@
+---
+- name: Add user for Nginx
+  user:
+    name: '{{ nginx_user }}'
+    shell: /bin/false
+    createhome: false
+    state: present
+- name: create group
+  group:
+    name: '{{ app_group }}'
+    gid: 1927
+- name: Add ansible user to app_group
+  user:
+    name: ansible
+    groups:
+      - '{{ app_group }}'
+      - ansible
+    state: present
+- name: Add user for App
+  user:
+    name: '{{ app_user }}'
+    shell: /bin/bash
+    createhome: true
+    group: '{{ app_group }}'
+    state: present

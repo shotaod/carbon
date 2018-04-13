@@ -3,7 +3,7 @@ package org.carbon.sample.domain.service;
 import java.util.List;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.ext.jooq.tables.pojos.Product;
 import org.jooq.DSLContext;
 
@@ -12,7 +12,7 @@ import org.jooq.DSLContext;
  */
 @Component
 public class ProductService {
-    @Inject
+    @Assemble
     private DSLContext jooq;
 
     public List<Product> getProductsAll() {

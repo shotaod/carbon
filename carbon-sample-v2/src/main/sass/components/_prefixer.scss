@@ -48,7 +48,6 @@
 //          transition-property($property)
 //          transition-timing-fn($fn)
 
-
 // Animation
 
 // @mixin animation($args) {
@@ -135,7 +134,6 @@
 //     backface-visibility: $args;
 // }
 
-
 // Background Size
 
 // @mixin background-size($args) {
@@ -156,7 +154,6 @@
 // @mixin content-box(){
 //     @include box-sizing(content-box);
 // }
-
 
 // Columns
 
@@ -202,30 +199,30 @@
 //   display: -webkit-flex;
 //   display: flex;
 // }
-    // @mixin flex($values) {
-    //   -webkit-box-flex: $values;
-    //   -moz-box-flex:  $values;
-    //   -webkit-flex:  $values;
-    //   -ms-flex:  $values;
-    //   flex:  $values;
-    // }
-    // @mixin order($val) {
-    //   -webkit-box-ordinal-group: $val;
-    //   -moz-box-ordinal-group: $val;
-    //   -ms-flex-order: $val;
-    //   -webkit-order: $val;
-    //   order: $val;
-    // }
-    // @mixin align($align) {
-    //   -webkit-flex-align: $align;
-    //   -ms-flex-align: $align;
-    //   -webkit-align-items: $align;
-    //   align-items: $align;
-    // }
-    // @mixin justify-content($val) {
-    //   -webkit-justify-content: $val;
-    //   justify-content: $val;
-    // }
+// @mixin flex($values) {
+//   -webkit-box-flex: $values;
+//   -moz-box-flex:  $values;
+//   -webkit-flex:  $values;
+//   -ms-flex:  $values;
+//   flex:  $values;
+// }
+// @mixin order($val) {
+//   -webkit-box-ordinal-group: $val;
+//   -moz-box-ordinal-group: $val;
+//   -ms-flex-order: $val;
+//   -webkit-order: $val;
+//   order: $val;
+// }
+// @mixin align($align) {
+//   -webkit-flex-align: $align;
+//   -ms-flex-align: $align;
+//   -webkit-align-items: $align;
+//   align-items: $align;
+// }
+// @mixin justify-content($val) {
+//   -webkit-justify-content: $val;
+//   justify-content: $val;
+// }
 // Gradients
 
 // @mixin gradient($default: #F5F5F5, $start: #EEE, $stop: #FFF) {
@@ -288,17 +285,15 @@
 
 // Perspective
 @mixin perspective($pixels) {
-    perspective: $pixels;
-    -webkit-perspective: $pixels;
+  perspective: $pixels;
+  -webkit-perspective: $pixels;
 }
-
 
 // Text Shadow
 
 // @mixin text-shadow($args) {
 //     text-shadow: $args;
 // }
-
 
 // Transforms
 
@@ -343,7 +338,6 @@
 //     -ms-transform: translate3d($x,$y,0);
 //     transform: translate3d($x,$y,0);
 // }
-
 
 // Transitions
 

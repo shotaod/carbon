@@ -3,7 +3,7 @@ package org.carbon.sample.web.sample.index;
 import java.util.Arrays;
 import java.util.List;
 
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.domain.service.ProductService;
 import org.carbon.sample.domain.service.UserRoleService;
 import org.carbon.sample.ext.jooq.tables.pojos.Product;
@@ -13,8 +13,8 @@ import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
 import org.carbon.web.annotation.PathVariable;
 import org.carbon.web.annotation.RequestBody;
-import org.carbon.web.annotation.RequestCookie;
-import org.carbon.web.core.response.HtmlResponse;
+import org.carbon.web.annotation.Cookie;
+import org.carbon.web.translate.dto.Html;
 import org.carbon.web.def.HttpMethod;
 import org.carbon.web.def.Logo;
 
@@ -24,11 +24,11 @@ import org.carbon.web.def.Logo;
 @Controller
 public class IndexController {
 
-    @Inject
+    @Assemble
     private RootProp prop;
-    @Inject
+    @Assemble
     private ProductService productService;
-    @Inject
+    @Assemble
     private UserRoleService userRoleService;
 
     // ===================================================================================
@@ -37,10 +37,10 @@ public class IndexController {
     // -----------------------------------------------------
     //                                               Basic
     //                                               -------
-    @Action(url = "/about", method = HttpMethod.POST)
-    public HtmlResponse carbon() {
+    @Action(path = "/about", method = HttpMethod.POST)
+    public Html carbon() {
         String htmlString = new Logo().logo.replace("<", "・").replace(">", "・").replace("\n", "<br>").replaceAll("\\s", "&nbsp;");
-        HtmlResponse response = new HtmlResponse("about");
+        Html response = new Html("about");
         response.putData("model", htmlString);
 
         return response;
@@ -49,34 +49,34 @@ public class IndexController {
     // -----------------------------------------------------
     //                                               DB integration
     //                                               -------
-    @Action(url = "/users", method = HttpMethod.GET)
+    @Action(path = "/users", method = HttpMethod.GET)
     public List<User> usersGet() {
         return userRoleService.findUsers();
     }
 
-    @Action(url = "/products", method = HttpMethod.GET)
-    public HtmlResponse productsGet() {
+    @Action(path = "/products", method = HttpMethod.GET)
+    public Html productsGet() {
         List<Product> products = productService.getProductsAll();
 
-        HtmlResponse response = new HtmlResponse("/index/product_list");
+        Html response = new Html("/index/product_list");
         response.putData("models", products);
         return response;
     }
 
-    @Action(url = "/products/{productId}", method = HttpMethod.GET)
-    public HtmlResponse productGet(@PathVariable("productId") String productId) {
+    @Action(path = "/products/{productId}", method = HttpMethod.GET)
+    public Html productGet(@PathVariable("productId") String productId) {
         Long id = Long.parseLong(productId);
         Product product = productService.getProduct(id);
 
-        HtmlResponse response = new HtmlResponse("/index/product_detail");
+        Html response = new Html("/index/product_detail");
         response.putData("model", product);
         return response;
     }
 
     // -----------------------------------------------------
-    //                                               Path Variable
+    //                                               Node Variable
     //                                               -------
-    @Action(url = "/wiki/{target}/{target2}", method = HttpMethod.GET)
+    @Action(path = "/wiki/{target}/{target2}", method = HttpMethod.GET)
     public String wikiGet(@PathVariable("target") String target, @PathVariable("target2") String target2) {
         switch (target.toLowerCase()) {
             case "java":
@@ -91,9 +91,9 @@ public class IndexController {
     // -----------------------------------------------------
     //                                               RequestBody and Cookie binding
     //                                               -------
-    @Action(url = "/request/test", method = HttpMethod.GET)
-    public HtmlResponse requestTestGet(@RequestCookie IndexCookie cookie) {
-        HtmlResponse response = new HtmlResponse("sample");
+    @Action(path = "/request/test", method = HttpMethod.GET)
+    public Html requestTestGet(@Cookie IndexCookie cookie) {
+        Html response = new Html("sample");
         TestResponseModel model = new TestResponseModel();
 
         // of course can't get body, It is testing for miss
@@ -106,10 +106,10 @@ public class IndexController {
         return response;
     }
 
-    @Action(url = "/request/test", method = HttpMethod.POST)
-    public HtmlResponse requestTestPost(@RequestCookie IndexCookie cookie,
-                                        @RequestBody UserInfoForm form) {
-        HtmlResponse response = new HtmlResponse("sample");
+    @Action(path = "/request/test", method = HttpMethod.POST)
+    public Html requestTestPost(@Cookie IndexCookie cookie,
+                                @RequestBody UserInfoForm form) {
+        Html response = new Html("sample");
         TestResponseModel model = new TestResponseModel();
         model.setCookie1(cookie.getKey1());
         model.setCookie2(cookie.getKey2());

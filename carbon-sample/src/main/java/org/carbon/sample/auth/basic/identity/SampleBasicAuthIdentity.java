@@ -15,17 +15,16 @@ public class SampleBasicAuthIdentity implements AuthIdentity {
     }
 
     @Override
-    public String username() {
+    public String identity() {
         return user.getUsername();
     }
 
     @Override
-    public String cryptPassword() {
-        return user.getPassword();
+    public boolean confirm(String plainSecret) {
+        return user.getPassword().equals(plainSecret);
     }
 
-    @Override
-    public boolean confirm(String plainPassword) {
-        return cryptPassword().equals(plainPassword);
+    public String getPassword() {
+        return user.getPassword();
     }
 }

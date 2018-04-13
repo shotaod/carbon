@@ -1,0 +1,4 @@
+---
+- import_tasks: ./tasks/configure_user.yml
+- import_tasks: ./tasks/configure_nginx.yml
+- import_tasks: ./tasks/configure_app.yml

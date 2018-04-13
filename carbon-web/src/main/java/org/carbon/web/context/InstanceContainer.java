@@ -1,7 +1,12 @@
 package org.carbon.web.context;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.carbon.component.exception.ImpossibleDetermineException;
+import org.carbon.web.exception.WrappedException;
 
 /**
  * @author Shota Oda 2016/10/08.
@@ -34,6 +39,22 @@ public class InstanceContainer {
 
     @SuppressWarnings("unchecked")
     public <T> T getByType(Class<T> type) {
-        return (T)this.instances.get(type);
+        T t = (T) this.instances.get(type);
+        if (t != null) {
+            return t;
+        }
+
+        List<T> candidate = (List<T>) this.instances.entrySet().stream()
+                .filter(e -> type.isAssignableFrom(e.getKey()))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+        if (candidate.isEmpty()) {
+            return null;
+        }
+        if (candidate.size() > 1) {
+            throw WrappedException.wrap(new ImpossibleDetermineException(type));
+        }
+
+        return candidate.get(0);
     }
 }

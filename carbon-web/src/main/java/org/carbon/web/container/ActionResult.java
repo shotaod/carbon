@@ -5,36 +5,26 @@ package org.carbon.web.container;
  */
 public class ActionResult {
     private Object result;
-    private Exception exception;
     private boolean noop;
+    private static final ActionResult EMPTY = new ActionResult(null, true);
 
-    public ActionResult(Object result, Exception exception, boolean noop) {
+    private ActionResult(Object result, boolean noop) {
         this.result = result;
-        this.exception = exception;
         this.noop = noop;
     }
 
     public static ActionResult Result(Object result) {
-        return new ActionResult(result, null, false);
+        return new ActionResult(result, false);
     }
 
-    public static ActionResult NoOp() {
-        return new ActionResult(null, null, true);
-    }
-
-    public static ActionResult OnException(Exception e) {
-        return new ActionResult(null, e, false);
+    public static ActionResult Empty() {
+        return EMPTY;
     }
 
     public Object getResult() {
         return result;
     }
-    public boolean hasException() {
-     return exception != null;
-    }
-    public Exception getException() {
-        return exception;
-    }
+
     public boolean handled() {
         return noop;
     }

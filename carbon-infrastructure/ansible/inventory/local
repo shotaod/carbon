@@ -1,0 +1,6 @@
+# local
+[app]
+cbn.local.ansible
+
+[all:vars]
+stage=local

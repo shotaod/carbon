@@ -63,7 +63,7 @@ public class LecturerDao extends DAOImpl<LecturerRecord, org.carbon.sample.ext.j
     }
 
     /**
-     * Fetch records that have <code>username IN (values)</code>
+     * Fetch records that have <code>identityClass IN (values)</code>
      */
     public List<org.carbon.sample.ext.jooq.tables.pojos.Lecturer> fetchByUsername(String... values) {
         return fetch(Lecturer.LECTURER.USERNAME, values);

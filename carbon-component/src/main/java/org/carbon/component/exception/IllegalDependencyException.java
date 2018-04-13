@@ -7,4 +7,8 @@ public class IllegalDependencyException extends RuntimeException {
     public IllegalDependencyException(String message) {
         super(message);
     }
+
+    public IllegalDependencyException(Throwable cause) {
+        super(cause);
+    }
 }

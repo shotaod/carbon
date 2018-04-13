@@ -8,22 +8,22 @@ CREATE TABLE asset
 CREATE TABLE user
 (
     id BIGINT(20) PRIMARY KEY NOT NULL,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    identity VARCHAR(255) NOT NULL,
+    secret VARCHAR(255) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE UNIQUE INDEX user_username_uindex ON user (username);
+CREATE UNIQUE INDEX user_username_uindex ON user (identity);
 
 CREATE TABLE student
 (
     id BIGINT(20) PRIMARY KEY NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    secret VARCHAR(255) NOT NULL,
+    identity VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE UNIQUE INDEX student_email_uindex ON student (email);
-CREATE UNIQUE INDEX student_username_uindex ON student (username);
+CREATE UNIQUE INDEX student_username_uindex ON student (identity);
 
 CREATE TABLE role
 (
@@ -38,11 +38,11 @@ CREATE TABLE product
 CREATE TABLE lecturer
 (
     id BIGINT(20) PRIMARY KEY NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    identity VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     thumbnail_id BIGINT(20),
     pr_text TEXT,
-    password VARCHAR(255) NOT NULL,
+    secret VARCHAR(255) NOT NULL,
     pr_text_short VARCHAR(255),
     CONSTRAINT lecturer_asset_id_fk FOREIGN KEY (thumbnail_id) REFERENCES asset (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

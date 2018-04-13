@@ -28,12 +28,11 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Record4<Long, String, String, String>, IUser {
 
-    private static final long serialVersionUID = 1614660932;
+    private static final long serialVersionUID = -187076243;
 
     /**
      * Setter for <code>carbondb.user.id</code>.
      */
-    @Override
     public void setId(Long value) {
         set(0, value);
     }
@@ -49,7 +48,6 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     /**
      * Setter for <code>carbondb.user.email</code>.
      */
-    @Override
     public void setEmail(String value) {
         set(1, value);
     }
@@ -65,7 +63,6 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     /**
      * Setter for <code>carbondb.user.user_name</code>.
      */
-    @Override
     public void setUserName(String value) {
         set(2, value);
     }
@@ -81,7 +78,6 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     /**
      * Setter for <code>carbondb.user.password</code>.
      */
-    @Override
     public void setPassword(String value) {
         set(3, value);
     }
@@ -242,24 +238,11 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     // FROM and INTO
     // -------------------------------------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void from(IUser from) {
         setId(from.getId());
         setEmail(from.getEmail());
         setUserName(from.getUserName());
         setPassword(from.getPassword());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <E extends IUser> E into(E into) {
-        into.from(this);
-        return into;
     }
 
     // -------------------------------------------------------------------------

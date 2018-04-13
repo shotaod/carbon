@@ -218,7 +218,7 @@ public class KeyValueMapper {
     }
 
     private <T> T construct(Class<T> type, Object parentIfAny) throws ConstructionException {
-        if (NoArgsConstructorUtil.isInnerNoStaticClass(type)) {
+        if (NoArgsConstructorUtil.isInnerMemberClass(type)) {
             return NoArgsConstructorUtil.construct(type, parentIfAny);
         }
         return Fn.Try(() -> NoArgsConstructorUtil.construct(type))

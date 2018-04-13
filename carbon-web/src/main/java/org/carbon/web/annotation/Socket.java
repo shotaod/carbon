@@ -14,5 +14,6 @@ import org.carbon.component.annotation.Component;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Socket {
-    String url();
+    String path();
+    String[] protocols();
 }

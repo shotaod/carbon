@@ -1,0 +1,15 @@
+debian_version: stretch
+
+mariadb_version: 10.2.14+maria~stretch
+mariadb_app_username: carbon
+mariadb_app_database: carbondb
+
+nginx_version: 1.10.3-1+deb9u1
+nginx_user: nginx
+
+server_name: localhost
+
+app_port: 8080
+app_user: carbon
+app_group: apprunner
+app_profile: stg

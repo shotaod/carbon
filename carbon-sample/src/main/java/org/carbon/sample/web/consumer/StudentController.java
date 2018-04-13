@@ -2,60 +2,60 @@ package org.carbon.sample.web.consumer;
 
 import java.util.List;
 
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.auth.consumer.ConsumerAuthIdentity;
 import org.carbon.sample.web.consumer.dto.LectureRoomDto;
 import org.carbon.sample.web.consumer.dto.LecturerIndex;
 import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
 import org.carbon.web.annotation.PathVariable;
-import org.carbon.web.annotation.Session;
-import org.carbon.web.core.response.HtmlResponse;
-import org.carbon.web.core.response.HttpOperation;
-import org.carbon.web.core.response.RedirectOperation;
+import org.carbon.web.annotation.scope.SessionScope;
+import org.carbon.web.translate.dto.Html;
 import org.carbon.web.def.HttpMethod;
+import org.carbon.web.translate.dto.Redirect;
+import org.carbon.web.translate.dto.Transfer;
 
 /**
  * @author Shota Oda 2016/11/23.
  */
 @Controller
 public class StudentController {
-    @Inject
+    @Assemble
     private StudentAppService appService;
 
-    @Action(url = "/consumer", method = HttpMethod.GET)
-    public HtmlResponse indexGet() {
-        return new HtmlResponse("/consumer/login");
+    @Action(path = "/consumer", method = HttpMethod.GET)
+    public Html indexGet() {
+        return new Html("/consumer/login");
     }
 
-    @Action(url = "/consumer/login", method = HttpMethod.GET)
-    public HtmlResponse loginGet() {
-        return new HtmlResponse("/consumer/login");
+    @Action(path = "/consumer/login", method = HttpMethod.GET)
+    public Html loginGet() {
+        return new Html("/consumer/login");
     }
 
-    @Action(url = "/consumer/auth", method = HttpMethod.POST)
-    public HttpOperation authSuccessPost() {
-        return RedirectOperation.to("/consumer/lecturers");
+    @Action(path = "/consumer/auth", method = HttpMethod.POST)
+    public Transfer authSuccessPost() {
+        return new Redirect("/consumer/lecturers");
     }
 
-    @Action(url = "/consumer/lecturers", method = HttpMethod.GET)
-    public HtmlResponse homeGet() {
-        HtmlResponse response = new HtmlResponse("/consumer/lecturer_list");
+    @Action(path = "/consumer/lecturers", method = HttpMethod.GET)
+    public Html homeGet() {
+        Html response = new Html("/consumer/lecturer_list");
         List<LecturerIndex> lecturers = appService.selectLecturers();
         response.putData("models", lecturers);
         return response;
     }
 
-    @Action(url = "/consumer/lecturer/{lecturerId}/room", method = HttpMethod.GET)
-    public HtmlResponse lecturerRoomGet(@PathVariable("lecturerId") String lecturerId) {
-        HtmlResponse response = new HtmlResponse("/consumer/lecturer_room");
+    @Action(path = "/consumer/lecturer/{lecturerId}/room", method = HttpMethod.GET)
+    public Html lecturerRoomGet(@PathVariable("lecturerId") String lecturerId) {
+        Html response = new Html("/consumer/lecturer_room");
         LectureRoomDto model = appService.selectLecturerRoom(Long.parseLong(lecturerId));
         response.putData("model", model);
         return response;
     }
 
-    @Action(url = "/consumer/apply", method = HttpMethod.POST)
-    public void applyPost(@Session ConsumerAuthIdentity identity) {
+    @Action(path = "/consumer/apply", method = HttpMethod.POST)
+    public void applyPost(@SessionScope ConsumerAuthIdentity identity) {
         Long id = identity.getStudent().getId();
         appService.apply(null, null, id);
     }

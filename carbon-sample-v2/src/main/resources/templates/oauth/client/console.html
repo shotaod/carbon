@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
       lang="en"
-      layout:decorate="~{/base/layout}">
+      layout:decorate="~{/templates/base/layout}">
 <head>
     <meta charset="UTF-8">
     <title>OAuth2</title>
 </head>
 <body>
-<!--/*@thymesVar id="clients" type="java.util.List<org.carbon.sample.v2.web.oauth.AuthClientDto>"*/-->
+<!--/*@thymesVar id="clients" type="java.util.List<org.carbon.sample.v2.app.oauth.AuthClientDto>"*/-->
 <!--/*@thymesVar id="errors" type="java.util.Map<String, String>"*/-->
-<!--/*@thymesVar id="form" type="org.carbon.sample.v2.web.oauth.client.OAuth2ClientRegisterForm"*/-->
+<!--/*@thymesVar id="form" type="org.carbon.sample.v2.app.oauth.client.OAuth2ClientRegisterForm"*/-->
 <section layout:fragment="content">
     <div class="row">
         <div class="col s12">

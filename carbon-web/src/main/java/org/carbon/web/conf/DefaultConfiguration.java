@@ -4,12 +4,13 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
-import org.carbon.modular.env.EnvironmentMapper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 
@@ -30,8 +31,8 @@ public class DefaultConfiguration {
         // load template from classpath
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setCharacterEncoding("utf-8");
-        resolver.setTemplateMode("HTML");
-        resolver.setPrefix("templates/");
+        resolver.setTemplateMode(TemplateMode.HTML);
+        // resolver.setPrefix("templates/");
         resolver.setSuffix(".html");
         resolver.setCacheable(false);
         templateEngine.setTemplateResolver(resolver);
@@ -50,5 +51,10 @@ public class DefaultConfiguration {
     public Validator validator() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         return factory.getValidator();
+    }
+
+    @Component
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

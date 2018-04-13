@@ -11,7 +11,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.carbon.component.annotation.Component;
 import org.carbon.util.SimpleKeyValue;
-import org.carbon.web.exception.RequestMappingException;
+import org.carbon.web.exception.request_mapping.MultipartFormRequestMappingException;
 
 /**
  * @author Shota Oda 2016/10/12.
@@ -33,7 +33,7 @@ public class MultipartFormKeyValueRequestMapper implements TypeSafeRequestMapper
         try {
             items = upload.parseRequest(request);
         } catch (FileUploadException e) {
-            throw new RequestMappingException("", e);
+            throw new MultipartFormRequestMappingException(e);
         }
 
         return items.stream().map(item -> {

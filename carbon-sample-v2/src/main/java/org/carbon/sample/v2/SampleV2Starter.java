@@ -1,6 +1,6 @@
 package org.carbon.sample.v2;
 
-import org.carbon.authentication.AuthenticationModuleConfigurer;
+import org.carbon.authentication.module.AuthenticationModuleConfigurer;
 import org.carbon.persistent.PersistentModuleConfigurer;
 import org.carbon.web.CarbonApplicationStarter;
 

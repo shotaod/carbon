@@ -41,4 +41,25 @@ public class ContentType {
     public String getBoundary() {
         return boundary;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ContentType)) return false;
+
+        ContentType that = (ContentType) o;
+
+        if (!mediaType.equals(that.mediaType)) return false;
+        //noinspection SimplifiableIfStatement
+        if (charset != null ? !charset.equals(that.charset) : that.charset != null) return false;
+        return boundary != null ? boundary.equals(that.boundary) : that.boundary == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mediaType.hashCode();
+        result = 31 * result + (charset != null ? charset.hashCode() : 0);
+        result = 31 * result + (boundary != null ? boundary.hashCode() : 0);
+        return result;
+    }
 }

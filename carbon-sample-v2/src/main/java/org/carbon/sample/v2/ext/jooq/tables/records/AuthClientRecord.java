@@ -28,12 +28,11 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> implements Record3<Long, String, String>, IAuthClient {
 
-    private static final long serialVersionUID = 855232162;
+    private static final long serialVersionUID = 1058062363;
 
     /**
      * Setter for <code>carbondb.auth_client.id</code>.
      */
-    @Override
     public void setId(Long value) {
         set(0, value);
     }
@@ -49,7 +48,6 @@ public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> impl
     /**
      * Setter for <code>carbondb.auth_client.client_host</code>.
      */
-    @Override
     public void setClientHost(String value) {
         set(1, value);
     }
@@ -65,7 +63,6 @@ public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> impl
     /**
      * Setter for <code>carbondb.auth_client.client_id</code>.
      */
-    @Override
     public void setClientId(String value) {
         set(2, value);
     }
@@ -200,23 +197,10 @@ public class AuthClientRecord extends UpdatableRecordImpl<AuthClientRecord> impl
     // FROM and INTO
     // -------------------------------------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void from(IAuthClient from) {
         setId(from.getId());
         setClientHost(from.getClientHost());
         setClientId(from.getClientId());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <E extends IAuthClient> E into(E into) {
-        into.from(this);
-        return into;
     }
 
     // -------------------------------------------------------------------------

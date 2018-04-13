@@ -4,9 +4,8 @@ import java.util.Optional;
 
 import org.carbon.authentication.AuthIdentifier;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.domain.service.LecturerService;
-import org.carbon.web.exception.UserIdentityNotFoundException;
 
 /**
  * @author Shota Oda 2016/11/23.
@@ -14,18 +13,12 @@ import org.carbon.web.exception.UserIdentityNotFoundException;
 @Component
 public class BusinessAuthIdentifier implements AuthIdentifier<BusinessAuthIdentity> {
 
-    @Inject
+    @Assemble
     private LecturerService service;
 
     @Override
-    public Class<BusinessAuthIdentity> getType() {
-        return BusinessAuthIdentity.class;
-    }
-
-    @Override
-    public BusinessAuthIdentity find(String address) throws UserIdentityNotFoundException {
-        return Optional.ofNullable(service.findByAddress(address))
-                .map(BusinessAuthIdentity::new)
-                .orElseThrow(() -> new UserIdentityNotFoundException(address));
+    public Optional<BusinessAuthIdentity> identify(String identity) {
+        return Optional.ofNullable(service.findByAddress(identity))
+                .map(BusinessAuthIdentity::new);
     }
 }

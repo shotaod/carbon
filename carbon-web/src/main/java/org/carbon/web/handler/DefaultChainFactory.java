@@ -1,50 +1,47 @@
 package org.carbon.web.handler;
 
-import org.carbon.component.annotation.Assemble;
-import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-import org.carbon.util.format.ChapterAttr;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.carbon.component.annotation.Assemble;
+import org.carbon.component.annotation.Component;
+import org.carbon.util.format.ChapterAttr;
+import org.carbon.util.Describable;
+import org.carbon.web.handler.scope.LoggingScopeChain;
+import org.carbon.web.handler.scope.RequestScopeChain;
+import org.carbon.web.handler.scope.SessionScopeChain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Shota Oda 2016/10/17.
  */
 @Component
-public class DefaultChainFactory {
+public class DefaultChainFactory implements Describable {
     private Logger logger = LoggerFactory.getLogger(DefaultChainFactory.class);
     private Set<Class<? extends HandlerChain>> DefaultChains = Stream.of(
-            CharacterEncodingChain.class,
-            ErrorWrapperChain.class,
+            ResponseTranslatorChain.class,
             LoggingScopeChain.class,
             SessionScopeChain.class,
             RequestScopeChain.class,
             CrossOriginChain.class,
-            CoreDispatchChain.class,
-            XHttpHeaderChain.class
+            CoreDispatchChain.class
     ).collect(Collectors.toSet());
 
-    @Inject
-    private CharacterEncodingChain encodingChain;
-    @Inject
-    private ErrorWrapperChain errorWrapperChain;
-    @Inject
+    @Assemble
+    private ResponseTranslatorChain responseTranslatorChain;
+    @Assemble
     private LoggingScopeChain loggingScopeChain;
-    @Inject
+    @Assemble
     private SessionScopeChain sessionScopeChain;
-    @Inject
+    @Assemble
     private RequestScopeChain requestScopeChain;
-    @Inject
+    @Assemble
     private CrossOriginChain crossOriginChain;
-    @Inject
+    @Assemble
     private CoreDispatchChain coreDispatchChain;
-    @Inject
-    private XHttpHeaderChain xHeaderChain;
 
     @Assemble
     private List<HandlerChain> handlers;
@@ -58,30 +55,29 @@ public class DefaultChainFactory {
         if (logger.isDebugEnabled()) {
             if (additionalHandlers.isEmpty()) {
                 logger.debug("No additional handler is found");
-            } else additionalHandlers.forEach(handler -> logger.debug("Detect additional handler {}", handler.getClass()));
+            } else
+                additionalHandlers.forEach(handler -> logger.debug("Detect additional handler {}", handler.getClass()));
         }
 
-        encodingChain
-                .withChain(loggingScopeChain)
+        loggingScopeChain
                 .withChain(sessionScopeChain)
                 .withChain(requestScopeChain)
-                .withChain(errorWrapperChain)
+                .withChain(responseTranslatorChain)
                 .withChain(crossOriginChain)
-                .setChains(additionalHandlers)
-                .withChain(coreDispatchChain)
-                .withChain(xHeaderChain);
+                .withChains(additionalHandlers)
+                .withChain(coreDispatchChain);
         logger.debug("[chain] finish initialize");
 
         if (logger.isInfoEnabled()) {
-            logger.info(resultInfo());
+            logger.info(describe());
         }
-        return encodingChain;
+        return loggingScopeChain;
     }
 
-    private String resultInfo() {
-
-        return ChapterAttr.getBuilder("Chain Processor Result")
-                .appendLine(encodingChain.getChainResult())
+    @Override
+    public String describe() {
+        return ChapterAttr.getBuilder("Chain Structure Result")
+                .appendLine(loggingScopeChain.describe())
                 .toString();
     }
 }

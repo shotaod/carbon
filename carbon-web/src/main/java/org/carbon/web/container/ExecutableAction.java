@@ -3,9 +3,10 @@ package org.carbon.web.container;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Collection;
 
 import org.carbon.web.exception.ActionInvokeException;
+import org.carbon.web.exception.WrappedException;
 
 /**
  * @author Shota Oda 2017/01/07.
@@ -13,35 +14,41 @@ import org.carbon.web.exception.ActionInvokeException;
 public class ExecutableAction<RETURN> {
     private Object instance;
     private Method action;
-    private Map<String, ArgumentMeta> arguments;
+    private ArgumentMetas arguments;
 
-    public ExecutableAction(Class<RETURN> type, Object instance, Method action, Map<String, ArgumentMeta> arguments) {
+    public ExecutableAction(Object instance, Method action, ArgumentMetas arguments) {
         this.instance = instance;
         this.action = action;
         this.arguments = arguments;
     }
 
-    public Map<String, ArgumentMeta> getArgumentInfo() {
-        return arguments;
+    public Collection<ArgumentMeta> getArgumentInfo() {
+        return arguments.values();
     }
 
     @SuppressWarnings("unchecked")
     public RETURN execute() {
-        Object[] args = collectArg(arguments);
+        Object[] args = collectArg();
         try {
             return (RETURN) action.invoke(instance, args);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
             throw new ActionInvokeException(e);
+        } catch (InvocationTargetException e) {
+            throw WrappedException.wrap(e.getTargetException());
         }
     }
 
     @SuppressWarnings("unchecked")
-    public RETURN executeWith(Map<String, ArgumentMeta> arguments) throws Exception {
+    public RETURN executeWith(ArgumentMeta... arguments) throws Exception {
         Object[] args = collectArg(arguments);
         return (RETURN) action.invoke(instance, args);
     }
 
-    private Object[] collectArg(Map<String, ArgumentMeta> source) {
-        return Arrays.stream(action.getParameters()).map(param -> source.get(param.getName()).getValue()).toArray();
+    private Object[] collectArg(ArgumentMeta... additions) {
+        ArgumentMetas source = new ArgumentMetas(arguments);
+        for (ArgumentMeta addition : additions) {
+            source.putMeta(addition);
+        }
+        return Arrays.stream(action.getParameters()).map(source::getValue).toArray();
     }
 }

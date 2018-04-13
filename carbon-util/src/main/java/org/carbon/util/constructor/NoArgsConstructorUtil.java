@@ -10,7 +10,7 @@ import java.lang.reflect.Modifier;
  * @author Shota Oda 2017/12/31.
  */
 public class NoArgsConstructorUtil {
-    public static boolean isInnerNoStaticClass(Class<?> type) {
+    public static boolean isInnerMemberClass(Class<?> type) {
         return type.isMemberClass() && !Modifier.isStatic(type.getModifiers());
     }
 
@@ -23,7 +23,7 @@ public class NoArgsConstructorUtil {
     }
 
     public static <T> T construct(Class<T> type, Object enclosing) throws ConstructionException {
-        assertInnerNoStaticArguments(type, enclosing);
+        assertInnerMemberClassArgument(type, enclosing);
         try {
             return ConstructorUtils.invokeExactConstructor(type, enclosing);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -31,8 +31,8 @@ public class NoArgsConstructorUtil {
         }
     }
 
-    private static void assertInnerNoStaticArguments(Class<?> type, Object enclosing) throws ConstructionException {
-        if (!isInnerNoStaticClass(type)) {
+    private static void assertInnerMemberClassArgument(Class<?> type, Object enclosing) throws ConstructionException {
+        if (!isInnerMemberClass(type)) {
             IllegalArgumentException cause = new IllegalArgumentException(type + " is not inner no-static class");
             throw new ConstructionException(type, cause);
         }

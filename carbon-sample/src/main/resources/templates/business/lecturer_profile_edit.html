@@ -29,7 +29,7 @@
                 <div class="input-field col s12 m8">
                     <i class="material-icons prefix">mode_edit</i>
                     <th:block th:with="showError=${errors and errors.containsKey('name')}">
-                        <input id="name" type="text" name="name" th:value="${model.username}">
+                        <input id="name" type="text" name="name" th:value="${model.identity}">
                         <label for="name">名前</label>
                         <span class="new badge red"
                               data-badge-caption=""

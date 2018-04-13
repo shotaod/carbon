@@ -15,6 +15,6 @@ public class PersistentModuleConfigurer implements ModuleConfigurer {
     public ModuleConfigurationResult configure() {
         Class<PersistentScanBase> scanBaseClass = PersistentScanBase.class;
         logger.debug("add scan target class [{}]", scanBaseClass);
-        return new ModuleConfigurationResult(scanBaseClass);
+        return ModuleConfigurationResult.forScan(scanBaseClass);
     }
 }

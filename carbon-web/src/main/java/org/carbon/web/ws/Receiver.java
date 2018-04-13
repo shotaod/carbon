@@ -5,6 +5,10 @@ package org.carbon.web.ws;
  */
 public interface Receiver {
     void receive(Message message);
+
     String id();
+
+    void assignId(String id);
+
     Channel getChannel();
 }

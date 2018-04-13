@@ -1,5 +1,23 @@
 package org.carbon.util.mapper;
 
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.carbon.util.SimpleKeyValue;
 import org.carbon.util.exception.PropertyMappingException;
@@ -10,19 +28,6 @@ import org.carbon.util.format.ChapterAttr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Shota Oda 2016/11/12.
@@ -72,8 +77,8 @@ public class YamlObjectMapper {
         }
     }
 
-    public YamlObjectMapper(String... fileNames) {
-        initialize(Stream.of(fileNames).map(this::getConfigString).collect(Collectors.toList()));
+    public YamlObjectMapper(URL... urls) {
+        initialize(Stream.of(urls).map(this::getConfigString).collect(Collectors.toList()));
     }
 
     public YamlObjectMapper(Path... paths) {
@@ -119,6 +124,9 @@ public class YamlObjectMapper {
         for (String k : Arrays.asList(key.split("\\."))) {
             try {
                 copy = (Map<String, Object>) copy.get(k);
+                if (copy == null) {
+                    throw new NullPointerException();
+                }
             } catch (NullPointerException e) {
                 throw new PropertyMappingException("Not found for key: [" + k + "] declared at " + object.getClass());
             } catch (ClassCastException e) {
@@ -192,7 +200,6 @@ public class YamlObjectMapper {
                             }
                             return new AbstractMap.SimpleEntry<>(key, str);
                         }
-                        return entry;
                     } else if (value instanceof Map) {
                         Map<String, Object> map = (Map<String, Object>) value;
                         Object mapValue = evaluateEnvironmentVariable(map);
@@ -200,15 +207,16 @@ public class YamlObjectMapper {
                     }
                     return entry;
                 })
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                // !caution! below is not null safe
+                // .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
     }
 
-    private String getConfigString(String resourceFile) {
+    private String getConfigString(URL resourceFile) {
         try {
-            Path path = Paths.get(ClassLoader.getSystemResource(resourceFile).toURI());
-            return getConfigString(path);
-        } catch (URISyntaxException e) {
-            throw new ResourceLoadingException("Fail to load resource ["+resourceFile+"]", e);
+            return IOUtils.toString(resourceFile, Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new ResourceLoadingException("Fail to load resource [" + resourceFile + "]", e);
         }
     }
 
@@ -217,7 +225,7 @@ public class YamlObjectMapper {
             byte[] bytes = Files.readAllBytes(path);
             return new String(bytes);
         } catch (Exception e) {
-            throw new ResourceLoadingException("Fail to load resource ["+path+"]", e);
+            throw new ResourceLoadingException("Fail to load resource [" + path + "]", e);
         }
     }
 
@@ -240,6 +248,11 @@ public class YamlObjectMapper {
                         return (Stream<PropertyItem>) ((List) value).stream().flatMap(item -> {
                             if (item instanceof Map) {
                                 return (Stream<PropertyItem>) flatten((Map) item, key).stream();
+                            } else if (item instanceof String
+                                    || item instanceof Integer
+                                    || item instanceof Boolean
+                                    || item instanceof Character) {
+                                return Stream.of(new PropertyItem(key, item));
                             }
                             PropertyItem error = new PropertyItem(new IllegalArgumentException(item.getClass() + " is not allowed under list\n list can contain Map<K, V> only."));
                             return Stream.of(error);

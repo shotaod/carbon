@@ -22,14 +22,12 @@ import org.carbon.sample.v2.ext.jooq.tables.interfaces.IUser;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User implements IUser {
 
-    private static final long serialVersionUID = 300652495;
+    private static final long serialVersionUID = -1729763149;
 
-    private Long   id;
-    private String email;
-    private String userName;
-    private String password;
-
-    public User() {}
+    private final Long   id;
+    private final String email;
+    private final String userName;
+    private final String password;
 
     public User(User value) {
         this.id = value.id;
@@ -56,18 +54,8 @@ public class User implements IUser {
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
     public String getEmail() {
         return this.email;
-    }
-
-    @Override
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     @Override
@@ -76,18 +64,8 @@ public class User implements IUser {
     }
 
     @Override
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    @Override
     public String getPassword() {
         return this.password;
-    }
-
-    @Override
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override
@@ -101,29 +79,5 @@ public class User implements IUser {
 
         sb.append(")");
         return sb.toString();
-    }
-
-    // -------------------------------------------------------------------------
-    // FROM and INTO
-    // -------------------------------------------------------------------------
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void from(IUser from) {
-        setId(from.getId());
-        setEmail(from.getEmail());
-        setUserName(from.getUserName());
-        setPassword(from.getPassword());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <E extends IUser> E into(E into) {
-        into.from(this);
-        return into;
     }
 }

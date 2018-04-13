@@ -47,7 +47,7 @@ public class LecturerRecord extends UpdatableRecordImpl<LecturerRecord> implemen
     }
 
     /**
-     * Setter for <code>carbondb.lecturer.username</code>.
+     * Setter for <code>carbondb.lecturer.identityClass</code>.
      */
     @Override
     public void setUsername(String value) {
@@ -55,7 +55,7 @@ public class LecturerRecord extends UpdatableRecordImpl<LecturerRecord> implemen
     }
 
     /**
-     * Getter for <code>carbondb.lecturer.username</code>.
+     * Getter for <code>carbondb.lecturer.identityClass</code>.
      */
     @Override
     public String getUsername() {

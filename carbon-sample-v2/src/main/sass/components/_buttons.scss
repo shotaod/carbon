@@ -131,7 +131,7 @@ button.btn-floating {
 .fixed-action-btn {
   &.active {
     ul {
-     visibility: visible;
+      visibility: visible;
     }
   }
 
@@ -249,12 +249,12 @@ button.btn-floating {
 
   &:focus,
   &:hover {
-    background-color: rgba(0,0,0,.1);
+    background-color: rgba(0, 0, 0, .1);
     box-shadow: none;
   }
 
   &:active {
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0, 0, 0, .2);
   }
 
   &.disabled {

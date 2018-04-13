@@ -1,12 +1,16 @@
 package org.carbon.sample.v2.conf.auth;
 
-import org.carbon.authentication.AuthConfigAdapter;
-import org.carbon.authentication.AuthDefinition;
+import lombok.Getter;
+import lombok.Setter;
+import org.carbon.authentication.conf.AuthConfigAdapter;
+import org.carbon.authentication.conf.AuthDefinitionBuilder;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Configuration;
-import org.carbon.component.annotation.Inject;
-import org.carbon.sample.v2.conf.auth.identity.HerokuAuthEventListener;
-import org.carbon.sample.v2.conf.auth.identity.HerokuAuthIdentifier;
-import org.carbon.sample.v2.conf.auth.identity.HerokuAuthIdentity;
+import org.carbon.sample.v2.conf.auth.api.RockettyAuthIdentifier;
+import org.carbon.sample.v2.conf.auth.api.RockettyAuthRequestMapping;
+import org.carbon.sample.v2.conf.auth.api.RockettyClientIdentity;
+import org.carbon.sample.v2.conf.auth.identity.SampleV2AuthIdentifier;
+import org.carbon.sample.v2.conf.auth.identity.SampleV2AuthIdentity;
 import org.carbon.web.def.HttpMethod;
 
 /**
@@ -14,27 +18,41 @@ import org.carbon.web.def.HttpMethod;
  */
 @Configuration
 public class SecurityConfiguration implements AuthConfigAdapter {
-    @Inject
-    private HerokuAuthIdentifier authIdentifier;
-    @Inject
-    private HerokuAuthRequestMapper requestMapper;
-    @Inject
-    private HerokuAuthEventListener authEvent;
+
+    @Assemble
+    private SampleV2AuthIdentifier authIdentifier;
+    @Assemble
+    private RockettyAuthIdentifier rockettyAuthIdentifier;
+    @Assemble
+    private RockettyAuthRequestMapping mapping;
+
+    @Getter
+    @Setter
+    public static class RockettyAuthRequestDTO {
+        private String clientId;
+        private String clientSecret;
+    }
 
     @Override
-    public void configure(AuthDefinition config) {
+    public void configure(AuthDefinitionBuilder config) {
         config
-            .<HerokuAuthIdentity>define()
+            .defineForPage(SampleV2AuthIdentity.class)
                 .base("/user", "/task")
-                .redirect("/user/login")
-                .endPoint(HttpMethod.POST, "/user/login")
+                .authTo(HttpMethod.POST, "/user/login")
                 .logout("/user/logout")
-                .permitGetAll("/user/login", "/user/signup",  "/task/about", "/static/**")
+                .redirect("/user/login")
+                .permitGetAll("/user/login", "/user/signup", "/task/about", "/static/**")
                 .permit(HttpMethod.POST, "/user/signup")
-                .requestMapper(requestMapper)
+                .authKey("email", "password")
                 .identifier(authIdentifier)
-                .eventListener(authEvent)
             .end()
-        ;
+            .defineForAPI(RockettyClientIdentity.class)
+                .base("/api/v1/rocketty")
+                .authTo(HttpMethod.POST, "/api/v1/rocketty/auth")
+                // for app register
+                .permit(HttpMethod.POST, "/api/v1/rocketty/auth/register", "/api/v1/rocketty/auth/confirm")
+                .requestMapping(mapping)
+                .identifier(rockettyAuthIdentifier)
+            .end();
     }
 }

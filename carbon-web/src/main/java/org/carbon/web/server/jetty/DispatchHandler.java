@@ -1,17 +1,15 @@
 package org.carbon.web.server.jetty;
 
-import org.carbon.component.annotation.AfterInject;
+import org.carbon.component.annotation.AfterAssemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.web.handler.DefaultChainFactory;
 import org.carbon.web.handler.HandlerChain;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ContextHandler;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * @author Shota Oda 2017/07/22.
@@ -19,11 +17,11 @@ import java.io.IOException;
 @Component
 public class DispatchHandler extends ContextHandler {
 
-    @Inject
+    @Assemble
     private DefaultChainFactory factory;
     private HandlerChain rootChain;
 
-    @AfterInject
+    @AfterAssemble
     public void afterInject() {
         rootChain = factory.factorize();
     }
