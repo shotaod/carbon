@@ -12,6 +12,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -108,7 +109,7 @@
                 <version>4.0.3</version>
                 <configuration>
                     <user>root</user>
-                    <secret>secret</secret>
+                    <password>secret</password>
                     <url>jdbc:mysql://localhost:23306/carbondb</url>
                 </configuration>
             </plugin>
