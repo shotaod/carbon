@@ -1,5 +1,4 @@
 
-
 .card-panel {
   transition: box-shadow .25s;
   padding: $card-padding;
@@ -16,7 +15,6 @@
   transition: box-shadow .25s;
   border-radius: 2px;
   @extend .z-depth-1;
-
 
   .card-title {
     font-size: 24px;
@@ -110,9 +108,6 @@
     }
   }
 
-
-
-
   .card-image {
     position: relative;
 
@@ -154,7 +149,7 @@
   .card-action {
     position: relative;
     background-color: inherit;
-    border-top: 1px solid rgba(160,160,160,.2);
+    border-top: 1px solid rgba(160, 160, 160, .2);
     padding: $card-padding;
 
     a:not(.btn):not(.btn-large):not(.btn-floating) {
@@ -163,7 +158,9 @@
       transition: color .3s ease;
       text-transform: uppercase;
 
-      &:hover { color: $card-link-color-light; }
+      &:hover {
+        color: $card-link-color-light;
+      }
     }
   }
 

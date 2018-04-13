@@ -45,7 +45,9 @@
     border: none;
     box-shadow: none;
 
-    li { padding: 0; }
+    li {
+      padding: 0;
+    }
   }
 
   .collapsible-header {
@@ -55,8 +57,12 @@
     height: inherit;
     padding: 0 $sidenav-padding;
 
-    &:hover { background-color: rgba(0,0,0,.05); }
-    i { line-height: inherit; }
+    &:hover {
+      background-color: rgba(0, 0, 0, .05);
+    }
+    i {
+      line-height: inherit;
+    }
   }
 
   .collapsible-body {
@@ -64,8 +70,7 @@
     background-color: $collapsible-header-color;
 
     li a {
-      padding: 0 (7.5px + $sidenav-padding)
-               0 (15px + $sidenav-padding);
+      padding: 0 (7.5px + $sidenav-padding) 0 (15px + $sidenav-padding);
     }
   }
 
