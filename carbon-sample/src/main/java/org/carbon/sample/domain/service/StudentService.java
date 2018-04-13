@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.ext.jooq.tables.daos.StudentDao;
 import org.carbon.sample.ext.jooq.tables.pojos.Student;
 import org.jooq.DSLContext;
@@ -15,9 +15,9 @@ import org.jooq.DSLContext;
 @Component
 public class StudentService {
 
-    @Inject
+    @Assemble
     private DSLContext jooq;
-    @Inject
+    @Assemble
     private StudentDao studentDao;
 
     public Student createStudent(Student student) {

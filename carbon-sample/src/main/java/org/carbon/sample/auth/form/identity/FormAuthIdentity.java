@@ -20,12 +20,11 @@ public class FormAuthIdentity implements AuthIdentity {
     }
 
     @Override
-    public String cryptSecret() {
-        return user.getPassword();
+    public boolean confirm(String plainSecret) {
+        return user.getPassword().equals(plainSecret);
     }
 
-    @Override
-    public boolean confirm(String plainPassword) {
-        return cryptSecret().equals(plainPassword);
+    public String getPassword() {
+        return user.getPassword();
     }
 }

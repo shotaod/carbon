@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import lombok.NonNull;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.persistent.annotation.Transactional;
 import org.carbon.sample.ext.jooq.Tables;
 import org.carbon.sample.ext.jooq.tables.daos.LecturerApplyHistoryDao;
@@ -27,13 +27,13 @@ import org.jooq.Result;
  */
 @Component
 public class StudentAppService {
-    @Inject
+    @Assemble
     private DSLContext jooq;
-    @Inject
+    @Assemble
     private LecturerDao lecturerDao;
-    @Inject
+    @Assemble
     private LecturerScheduleDao lecturerScheduleDao;
-    @Inject
+    @Assemble
     private LecturerApplyHistoryDao lecturerApplyHistoryDao;
 
     @Transactional

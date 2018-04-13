@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.carbon.authentication.AuthIdentifier;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.domain.service.LecturerService;
 
 /**
@@ -13,11 +13,11 @@ import org.carbon.sample.domain.service.LecturerService;
 @Component
 public class BusinessAuthIdentifier implements AuthIdentifier<BusinessAuthIdentity> {
 
-    @Inject
+    @Assemble
     private LecturerService service;
 
     @Override
-    public Optional<BusinessAuthIdentity> find(String identity) {
+    public Optional<BusinessAuthIdentity> identify(String identity) {
         return Optional.ofNullable(service.findByAddress(identity))
                 .map(BusinessAuthIdentity::new);
     }

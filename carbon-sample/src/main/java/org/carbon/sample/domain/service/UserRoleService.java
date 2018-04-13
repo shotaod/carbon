@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.persistent.annotation.Transactional;
 import org.carbon.sample.ext.jooq.tables.daos.RoleDao;
 import org.carbon.sample.ext.jooq.tables.daos.UserDao;
@@ -17,11 +17,11 @@ import org.jooq.DSLContext;
  */
 @Component
 public class UserRoleService {
-    @Inject
+    @Assemble
     private DSLContext jooq;
-    @Inject
+    @Assemble
     private UserDao userDao;
-    @Inject
+    @Assemble
     private RoleDao roleDao;
 
     @Transactional

@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.carbon.authentication.AuthIdentifier;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.domain.service.UserRoleService;
 
 /**
@@ -13,11 +13,11 @@ import org.carbon.sample.domain.service.UserRoleService;
 @Component
 public class SampleBasicAuthIdentifier implements AuthIdentifier<SampleBasicAuthIdentity> {
 
-    @Inject
+    @Assemble
     private UserRoleService userRoleService;
 
     @Override
-    public Optional<SampleBasicAuthIdentity> find(String identity) {
+    public Optional<SampleBasicAuthIdentity> identify(String identity) {
         return Optional.ofNullable(userRoleService.findByUsername(identity))
                 .map(SampleBasicAuthIdentity::new);
     }

@@ -1,6 +1,6 @@
 package org.carbon.sample.web.message;
 
-import org.carbon.web.annotation.Channeled;
+import org.carbon.web.annotation.ConfigureChannel;
 import org.carbon.web.annotation.OnClose;
 import org.carbon.web.annotation.OnOpen;
 import org.carbon.web.annotation.OnReceive;
@@ -12,7 +12,7 @@ import org.carbon.web.ws.Message;
 /**
  * @author Shota Oda 2017/01/01.
  */
-@Socket(url = "/message/socket/{userName}/{roomId}")
+@Socket(path = "/message/socket/{userName}/{roomId}", protocols = "soap")
 public class MessageSocket {
 
     @OnOpen
@@ -30,9 +30,9 @@ public class MessageSocket {
         return new MessageDto(message.getFrom().getKey(), message.getContent());
     }
 
-    @Channeled
-    public ChannelConfiguration config(@PathVariable("userName") String userName,
-                                       @PathVariable("roomId") String roomId) {
-        return ChannelConfiguration.simple(roomId, userName);
+    @ConfigureChannel
+    public void config(@PathVariable("userName") String userName,
+                       @PathVariable("roomId") String roomId) {
+        ChannelConfiguration.simple(roomId, userName);
     }
 }

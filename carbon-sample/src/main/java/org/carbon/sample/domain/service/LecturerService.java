@@ -3,7 +3,7 @@ package org.carbon.sample.domain.service;
 import java.util.List;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.persistent.annotation.Transactional;
 import org.carbon.sample.ext.jooq.tables.daos.LecturerDao;
 import org.carbon.sample.ext.jooq.tables.pojos.Lecturer;
@@ -15,9 +15,9 @@ import org.jooq.DSLContext;
  */
 @Component
 public class LecturerService {
-    @Inject
+    @Assemble
     private DSLContext jooq;
-    @Inject
+    @Assemble
     private LecturerDao lecturerDao;
 
     @Transactional

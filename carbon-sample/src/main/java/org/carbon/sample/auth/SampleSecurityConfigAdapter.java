@@ -3,8 +3,7 @@ package org.carbon.sample.auth;
 import org.carbon.authentication.conf.AuthConfigAdapter;
 import org.carbon.authentication.conf.AuthDefinitionBuilder;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-import org.carbon.sample.auth.basic.BasicAuthEvent;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.sample.auth.basic.identity.SampleBasicAuthIdentifier;
 import org.carbon.sample.auth.basic.identity.SampleBasicAuthIdentity;
 import org.carbon.sample.auth.business.BusinessAuthIdentifier;
@@ -21,30 +20,17 @@ import org.carbon.web.def.HttpMethod;
 @Component
 public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
 
-    // -----------------------------------------------------
-    //                                               for Basic Auth
-    //                                               -------
-    @Inject
+    // for Basic Auth
+    @Assemble
     private SampleBasicAuthIdentifier basicIdentifier;
-    @Inject
-    private BasicAuthEvent basicFinisher;
-
-    // -----------------------------------------------------
-    //                                               for Form Auth
-    //                                               -------
-    @Inject
+    // for Form Auth
+    @Assemble
     private FormAuthIdentifier formIdentifier;
-
-    // -----------------------------------------------------
-    //                                               for Consumer Auth
-    //                                               -------
-    @Inject
+    // for Consumer Auth
+    @Assemble
     private ConsumerAuthIdentifier consumerAuthIdentifier;
-
-    // -----------------------------------------------------
-    //                                               for Business Auth
-    //                                               -------
-    @Inject
+    // for Business Auth
+    @Assemble
     private BusinessAuthIdentifier businessAuthIdentifier;
 
     @Override
@@ -52,6 +38,7 @@ public class SampleSecurityConfigAdapter implements AuthConfigAdapter {
         config
                 .defineForPage(SampleBasicAuthIdentity.class)
                     .identifier(basicIdentifier)
+                    .basicAuth()
                     .base("/basic/")
                     .authTo(HttpMethod.GET, "/basic/**")
                     .logout("/basic/logout")
