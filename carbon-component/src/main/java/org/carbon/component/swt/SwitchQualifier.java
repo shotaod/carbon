@@ -26,7 +26,7 @@ public class SwitchQualifier implements ComponentQualifier {
 
     @Override
     public void awareDependency(ComponentMeta<?> meta, ComponentMetaSet dependency) throws ClassNotRegisteredException {
-        Switch annotation  = meta.getAnnotate(Switch.class);
+        Switch annotation  = meta.getAnnotation(Switch.class);
         Class<? extends Switcher> switcherClass = annotation.value();
         ComponentMeta<? extends Switcher> switcher = dependency.get(switcherClass);
         if (switcher == null) {
