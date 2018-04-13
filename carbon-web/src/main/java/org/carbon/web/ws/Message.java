@@ -17,10 +17,12 @@ public class Message {
     private Set<Channel> channels;
     private String content;
 
-    public Message(Identity from, Set<Channel> channels, String content) {
-        this.from = from;
-        this.channels = channels;
-        this.content = content;
+    public static Message sign(Identity from, Set<Channel> channels, String content) {
+        Message message = new Message();
+        message.from = from;
+        message.channels = channels;
+        message.content = content;
+        return message;
     }
 
     public Identity getFrom() {
