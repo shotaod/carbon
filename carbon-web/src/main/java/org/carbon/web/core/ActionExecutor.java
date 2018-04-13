@@ -1,10 +1,10 @@
 package org.carbon.web.core;
 
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
 import org.carbon.web.container.ActionResult;
-import org.carbon.web.container.RequestAssociatedAction;
-import org.carbon.web.exception.ActionInvokeException;
+import org.carbon.web.core.args.ActionArgumentAggregatorFactory;
+import org.carbon.web.mapping.ActionDefinition;
 
 /**
  * @author Shota Oda 2016/10/07.
@@ -12,31 +12,22 @@ import org.carbon.web.exception.ActionInvokeException;
 @Component
 public class ActionExecutor {
 
-    @Inject
+    @Assemble
     private ActionArgumentAggregatorFactory aggregatorFactory;
 
-    public ActionResult execute(RequestAssociatedAction action) {
+    public ActionResult execute(ActionDefinition action) throws Throwable {
         // execute Action
-        try {
-            Object result = executeAction(action);
-            if (result instanceof ActionResult) {
-                return (ActionResult) result;
-            }
-            return ActionResult.Result(result);
-        } catch (Exception e) {
-            throw actionInvokeException(action.getActionDefinition().mappingResult(), e);
+        Object result = executeAction(action);
+        if (result instanceof ActionResult) {
+            return (ActionResult) result;
         }
+        return ActionResult.Result(result);
     }
 
     // ===================================================================================
     //                                                                      Execute Method
     //                                                                      ==============
-    private Object executeAction(RequestAssociatedAction action) throws Exception{
-        return action.execute(aggregatorFactory);
-    }
-
-    private ActionInvokeException actionInvokeException (String mapping, Exception e) {
-        String message = String.format("failed to Invoke Action at [%s]", mapping);
-        return new ActionInvokeException(message, e);
+    private Object executeAction(ActionDefinition action) throws Throwable {
+        return action.execute(aggregatorFactory.newAggregator());
     }
 }

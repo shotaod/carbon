@@ -2,6 +2,7 @@ package org.carbon.web.core;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,14 +11,25 @@ import java.util.stream.Stream;
 import org.carbon.component.annotation.Component;
 import org.carbon.util.format.StringLineBuilder;
 import org.carbon.web.annotation.PathVariable;
-import org.carbon.web.container.ComputedUrl;
+import org.carbon.web.container.ComputedPath;
 import org.carbon.web.exception.ActionMappingException;
 
 /**
  * @author Shota Oda 2016/10/08.
  */
 @Component
-public class PathVariableResolver {
+public class PathDefinitionResolver {
+
+    private class Counter {
+        private int _n = 0;
+
+        public Counter() {
+        }
+
+        public int incrementAndGet() {
+            return _n++;
+        }
+    }
 
     private class CandidateArgument {
         private Parameter argument;
@@ -35,9 +47,11 @@ public class PathVariableResolver {
         public Parameter getArgument() {
             return argument;
         }
+
         public String getPathVarName() {
             return argument.getDeclaredAnnotation(PathVariable.class).value();
         }
+
         public boolean isResolved() {
             return resolved;
         }
@@ -46,24 +60,19 @@ public class PathVariableResolver {
     private static final String ComputedVariableMarkPrefix = "$$";
     private static final String PathVariablePrefix = "{";
     private static final String PathVariableSuffix = "}";
-    private int variableCounter;
 
-    public ComputedUrl resolve(String url, Method method) {
-
-        // extract bind target arguments by @PathVariable
+    public ComputedPath resolve(Path path, Method method) {
         Stream<Parameter> params = Arrays.stream(method.getParameters());
-
-        return resolve(url, params);
+        return resolve(path.toString(), params);
     }
 
-    public ComputedUrl resolve(String url, Stream<Parameter> params) {
-        variableCounter = 0;
+    public ComputedPath resolve(String path, Stream<Parameter> params) {
         List<CandidateArgument> candidates = params
-            .filter(param -> param.isAnnotationPresent(PathVariable.class))
-            .map(CandidateArgument::new).collect(Collectors.toList());
-        // compute url
-        List<ComputedUrl.Path> computedPaths = Arrays.stream(url.split("/"))
-                .map(path -> computeUrlPartVariable(path, candidates))
+                .filter(param -> param.isAnnotationPresent(PathVariable.class))
+                .map(CandidateArgument::new).collect(Collectors.toList());
+        // compute path
+        List<ComputedPath.Node> computedPaths = Arrays.stream(path.split("/"))
+                .map(p -> convertPathPart(p, candidates, new Counter()))
                 .collect(Collectors.toList());
 
         // confirm if no unresolved candidate exist
@@ -74,24 +83,24 @@ public class PathVariableResolver {
                 String methodName = candidate.getArgument().getDeclaringExecutable().getName();
                 String pathVarName = candidate.getPathVarName();
                 sb.appendLine("At %s#%s", className, methodName);
-                sb.appendLine("@PathVariable for name('%s') is not exist in url", pathVarName);
+                sb.appendLine("@PathVariable for name('%s') is not exist in path definition", pathVarName);
             }
         });
         String error = sb.toString();
         if (!error.isEmpty()) {
-            throw new ActionMappingException("Illegal Path Variable Definition is Detected!\n" + error);
+            throw new ActionMappingException("Illegal Node Variable Definition is Detected!\n" + error);
         }
-        return new ComputedUrl(computedPaths);
+        return new ComputedPath(computedPaths);
     }
 
-    private ComputedUrl.Path computeUrlPartVariable(String path, List<CandidateArgument> candidates) {
+    private ComputedPath.Node convertPathPart(String path, List<CandidateArgument> candidates, Counter variableCounter) {
         if (isStaticPart(path)) {
-            return ComputedUrl.Path.Static(path);
+            return ComputedPath.Node.Static(path);
         }
 
-        // variable name extracted in annotation url
+        // variable name extracted from annotate path
         String varName = path.replace(PathVariablePrefix, "").replace(PathVariableSuffix, "");
-        String replaceMarker = getVariableMark();
+        String replaceMarker = getVariableMark(variableCounter);
 
         // check resolved
         candidates.stream()
@@ -102,15 +111,15 @@ public class PathVariableResolver {
                     }
                 });
 
-        return ComputedUrl.Path.Variable(replaceMarker, varName);
+        return ComputedPath.Node.Variable(replaceMarker, varName);
     }
 
     private boolean isStaticPart(String pathPart) {
         return !(pathPart.startsWith(PathVariablePrefix) && pathPart.endsWith(PathVariableSuffix));
     }
 
-    private String getVariableMark() {
-        return ComputedVariableMarkPrefix + this.variableCounter++;
+    private String getVariableMark(Counter variableCounter) {
+        return ComputedVariableMarkPrefix + variableCounter.incrementAndGet();
     }
 }
 
