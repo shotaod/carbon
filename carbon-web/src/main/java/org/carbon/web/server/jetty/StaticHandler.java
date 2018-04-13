@@ -8,9 +8,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.carbon.component.annotation.AfterInject;
+import org.carbon.component.annotation.AfterAssemble;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
 import org.carbon.web.conf.WebProperty;
 import org.carbon.web.exception.ServerStartupException;
 import org.eclipse.jetty.http.HttpHeader;
@@ -35,7 +35,7 @@ public class StaticHandler extends ServletContextHandler {
     private byte[] favicon;
     private final long faviconModified = System.currentTimeMillis();
 
-    @Inject
+    @Assemble
     private WebProperty config;
     private boolean enabled = false;
     private String resourcePath;
@@ -47,7 +47,7 @@ public class StaticHandler extends ServletContextHandler {
         }
     }
 
-    @AfterInject
+    @AfterAssemble
     public void afterInject() {
         WebProperty.Resource resource = config.getResource();
         if (resource == null || resource.getDirectory() == null || resource.getOutPath() == null) {
@@ -118,6 +118,10 @@ public class StaticHandler extends ServletContextHandler {
     }
 
     private String resourceSetupFailMessage(String resourceDirectory) {
-        return String.format("Fail to load Resource directory: %s\n--------------------------------------------------------------------------------\nTry either\n・ Delete resource setting property\nor\n・ Create dir: resource/%s and stuff some resource file\n--------------------------------------------------------------------------------", resourceDirectory, resourceDirectory);
+        return String.format(
+                "Fail to load Resource directory: %s\n--------------------------------------------------------------------------------\nTry either\n・ Delete resource setting property\nor\n・ Create dir: resource/%s and stuff some resource file\n--------------------------------------------------------------------------------",
+                resourceDirectory,
+                resourceDirectory
+        );
     }
 }

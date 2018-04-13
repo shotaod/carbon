@@ -5,9 +5,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.carbon.component.annotation.AfterInject;
+import org.carbon.component.annotation.AfterAssemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.HandlerCollection;
@@ -34,12 +34,12 @@ public class RootHandler extends HandlerWrapper {
             }
         }
     }
-    @Inject
+    @Assemble
     private DispatchHandler dispatchHandler;
-    @Inject
+    @Assemble
     private StaticHandler staticHandler;
 
-    @AfterInject
+    @AfterAssemble
     public void afterInject() {
         setHandler(new SwitchHandler());
     }

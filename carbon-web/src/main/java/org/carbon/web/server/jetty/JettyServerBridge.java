@@ -1,7 +1,7 @@
 package org.carbon.web.server.jetty;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.web.conf.WebProperty;
 import org.carbon.web.server.EmbedServer;
 import org.eclipse.jetty.server.Connector;
@@ -13,9 +13,9 @@ import org.eclipse.jetty.server.ServerConnector;
  */
 @Component
 public class JettyServerBridge implements EmbedServer {
-    @Inject
+    @Assemble
     private WebProperty config;
-    @Inject
+    @Assemble
     private RootHandler rootHandler;
 
     private Server server;
