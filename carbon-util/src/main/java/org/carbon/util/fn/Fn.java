@@ -1,9 +1,6 @@
 package org.carbon.util.fn;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author Shota Oda 2017/12/31.
