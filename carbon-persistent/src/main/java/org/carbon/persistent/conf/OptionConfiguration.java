@@ -1,10 +1,13 @@
 package org.carbon.persistent.conf;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
-import org.carbon.component.annotation.AfterInject;
+import org.carbon.component.annotation.AfterAssemble;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Configuration;
-import org.carbon.component.annotation.Inject;
 import org.carbon.persistent.ConnectionTester;
 import org.carbon.persistent.migrate.SchemaAction;
 import org.carbon.persistent.migrate.SchemaManager;
@@ -13,32 +16,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author garden 2018/01/11.
+ * @author Shota.Oda 2018/01/11.
  */
 @Configuration
 public class OptionConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(OptionConfiguration.class);
 
-    @Inject
+    @Assemble
     private DataSource dataSource;
-    @Inject
+    @Assemble
     private PersistentOptionProperty optionProperty;
-    @Inject
+    @Assemble
     private SchemaManager schemaManager;
 
-    @AfterInject
+    @AfterAssemble
     public void afterInject() {
         // connection test
         if (optionProperty.getTest()) {
-            logger.info("[persistent] run optional operation !test-connection!. This takes a time. To turn off, Set property{persistent.option.test}=false");
+            logger.info("[persistent] run optional operation !test-connection!. This takes additional time, so you can turn off by setting property{persistent.option.test}=false");
             ConnectionTester.testConnection(dataSource);
         }
 
         // auto migration
         PersistentOptionProperty.Schema schema = optionProperty.getSchema();
-        schema.getActions().stream()
-                .map(SchemaAction::nameOf)
-                .sorted()
-                .forEach(schemaManager.ready(schema.getSrc())::call);
+        if (schema != null) {
+            List<SchemaAction> actions = schema.getActions().stream()
+                    .map(SchemaAction::nameOf)
+                    .sorted(Comparator.naturalOrder())
+                    .collect(Collectors.toList());
+            logger.info("[persistent] detect auto migration property({}). Run schema action", actions.stream().map(SchemaAction::name).collect(Collectors.joining(",")));
+            List<String> src = schema.getSrc();
+            schemaManager.manage(actions, src);
+        }
     }
 }
