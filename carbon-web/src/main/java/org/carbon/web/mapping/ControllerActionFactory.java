@@ -7,12 +7,12 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.web.annotation.Action;
 import org.carbon.web.annotation.Controller;
-import org.carbon.web.container.ComputedUrl;
-import org.carbon.web.core.ActionArgumentAggregatorFactory;
-import org.carbon.web.core.PathVariableResolver;
+import org.carbon.web.container.ComputedPath;
+import org.carbon.web.core.args.ActionArgumentAggregatorFactory;
+import org.carbon.web.core.PathDefinitionResolver;
 import org.carbon.web.def.HttpMethod;
 
 /**
@@ -26,14 +26,14 @@ public class ControllerActionFactory {
         private Object controller;
         private Method action;
 
-        public ControllerAction(HttpMethod httpMethod, ComputedUrl computed, Object controller, Method action) {
+        public ControllerAction(HttpMethod httpMethod, ComputedPath computed, Object controller, Method action) {
             super(httpMethod, computed);
             this.controller = controller;
             this.action = action;
         }
 
         @Override
-        public Object execute(ActionArgumentAggregatorFactory.ActionArgumentAggregator aggregator) throws Exception {
+        public Object execute(ActionArgumentAggregatorFactory.ActionArgumentAggregator aggregator) {
             return aggregator.resolve(action, controller).execute();
         }
 
@@ -45,8 +45,8 @@ public class ControllerActionFactory {
         }
     }
 
-    @Inject
-    private PathVariableResolver pathResolver;
+    @Assemble
+    private PathDefinitionResolver pathResolver;
 
     public Stream<ActionDefinition> factorize(Object controller) {
         Class<?> controllerClass = controller.getClass();
@@ -59,8 +59,8 @@ public class ControllerActionFactory {
             .map(action -> {
                 Action annotation = action.getDeclaredAnnotation(Action.class);
                 HttpMethod method = annotation.method();
-                Path path = Paths.get(controllerRootPath, annotation.url());
-                ComputedUrl computed = pathResolver.resolve(path.toString(), action);
+                Path path = Paths.get(controllerRootPath, annotation.path());
+                ComputedPath computed = pathResolver.resolve(path, action);
                 return new ControllerAction(method, computed, controller, action);
             });
     }
