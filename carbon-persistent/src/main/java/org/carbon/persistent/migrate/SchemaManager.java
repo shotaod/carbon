@@ -3,21 +3,35 @@ package org.carbon.persistent.migrate;
 import java.util.List;
 
 /**
- * @author garden 2018/01/11.
+ * @author Shota.Oda 2018/01/11.
  */
 public interface SchemaManager {
-    @FunctionalInterface
-    interface Callable {
-        void call(SchemaAction action);
-    }
 
-    Callable ready(List<String> src);
+    /**
+     * Iterate actions,
+     *
+     * @param actions not null
+     * @param directories     null allowed
+     */
+    void manage(List<SchemaAction> actions, List<String> directories);
 
-    void manage(SchemaAction action, List<String> src);
-
+    /**
+     * clean schema
+     */
     void clean();
 
-    void migrate(List<String> src);
+    /**
+     * migrate schema(directories)
+     *
+     * @param directories schema
+     */
+    void migrate(List<String> directories);
 
-    void validate(List<String> src) throws IllegalStateException;
+    /**
+     * validate schema
+     *
+     * @param directories schema
+     * @throws IllegalStateException if validation fail
+     */
+    void validate(List<String> directories) throws IllegalStateException;
 }

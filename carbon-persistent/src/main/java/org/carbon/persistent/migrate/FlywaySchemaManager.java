@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
 
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class FlywaySchemaManager extends Flyway implements SchemaManager {
     private Logger logger = LoggerFactory.getLogger(FlywaySchemaManager.class);
 
-    @Inject
+    @Assemble
     private DataSource dataSource;
 
     public FlywaySchemaManager() {
@@ -31,21 +31,18 @@ public class FlywaySchemaManager extends Flyway implements SchemaManager {
     }
 
     @Override
-    public Callable ready(List<String> src) {
-        return action -> this.manage(action, src);
-    }
-
-    @Override
-    public void manage(SchemaAction action, List<String> src) {
-        switch (action) {
-            case CLEAN:
-                clean();
-            case MIGRATE:
-                migrate(src);
-            case VALIDATE:
-                validate(src);
-            case NONE:
-            default:
+    public void manage(List<SchemaAction> actions, List<String> src) {
+        for (SchemaAction action : actions) {
+            switch (action) {
+                case CLEAN:
+                    clean();
+                case MIGRATE:
+                    migrate(src);
+                case VALIDATE:
+                    validate(src);
+                case NONE:
+                default:
+            }
         }
     }
 
@@ -54,21 +51,21 @@ public class FlywaySchemaManager extends Flyway implements SchemaManager {
         setup(Collections.emptyList());
         logger.info("[schema ] {action: clean}");
         super.clean();
-        logger.info("[schema ] {action: clean, result: success}");
+        logger.info("[schema-clean] {action: clean, result: success}");
     }
 
     @Override
-    public void migrate(List<String> src) {
-        setup(src);
-        logger.info("[schema ] {action: migrate, src: {}}", src);
+    public void migrate(List<String> directories) {
+        setup(directories);
+        logger.info("[schema ] {action: migrate, src: {}}", directories);
         int result = migrate();
-        logger.info("[schema-migrate] count{}", result);
+        logger.info("[schema-migrate] count {}", result);
     }
 
     @Override
-    public void validate(List<String> src) throws IllegalStateException {
-        logger.info("[schema ] {action: validate, src: {}}", src);
-        setup(src);
+    public void validate(List<String> directories) throws IllegalStateException {
+        logger.info("[schema ] {action: validate, src: {}}", directories);
+        setup(directories);
         try {
             validate();
         } catch (FlywayException e) {
