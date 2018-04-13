@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
 import org.carbon.component.annotation.Configuration;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Switch;
 import org.carbon.modular.env.EnvironmentMapper;
 import org.carbon.persistent.conf.PersistentImplSwitcher;
@@ -29,12 +29,12 @@ public class HibernateConfiguration {
     private static final String AutoDDLKey = "persistent.option.autoddl";
     private static final AtomicInteger count = new AtomicInteger(0);
 
-    @Inject
+    @Assemble
     private EnvironmentMapper environmentMapper;
-    @Inject
+    @Assemble
     private DataSource dataSource;
 
-    @Assemble({Entity.class})
+    @Assemble(gather = {Entity.class})
     private List<Object> entities;
 
     @Component
