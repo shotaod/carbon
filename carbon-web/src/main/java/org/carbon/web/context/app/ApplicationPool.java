@@ -1,26 +1,28 @@
 package org.carbon.web.context.app;
 
-import org.carbon.web.context.Context;
+import java.util.Optional;
+
+import org.carbon.web.context.Pool;
 import org.carbon.web.context.InstanceContainer;
 
 /**
  * @author Shota Oda 2017/02/25.
  */
-public class ApplicationContext implements Context {
+public class ApplicationPool implements Pool {
     // -----------------------------------------------------
     //                                               application scope
     //                                               -------
     private static InstanceContainer instanceContainer;
 
-    public static ApplicationContext instance = new ApplicationContext();
+    public static ApplicationPool instance = new ApplicationPool();
 
-    private ApplicationContext() {}
+    private ApplicationPool() {}
 
     public static void initialize(InstanceContainer instanceContainer) {
-        ApplicationContext.instanceContainer = instanceContainer;
+        ApplicationPool.instanceContainer = instanceContainer;
     }
 
-    public <T> T getByType(Class<T> type) {
-        return instanceContainer.getByType(type);
+    public <T> Optional<T> getByType(Class<T> type) {
+        return Optional.ofNullable(instanceContainer.getByType(type));
     }
 }
