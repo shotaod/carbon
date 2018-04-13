@@ -5,13 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
- *
- * @author Shota Oda 2016/10/01
+ * @author Shota Oda 2017/03/06.
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Inject {
-    boolean optional() default false;
+public @interface AfterAssemble {
 }
