@@ -14,7 +14,7 @@ import org.carbon.modular.ModuleConfigurerResolver;
 import org.carbon.util.fn.Fn;
 import org.carbon.util.format.ChapterAttr;
 import org.carbon.web.context.InstanceContainer;
-import org.carbon.web.context.app.ApplicationContext;
+import org.carbon.web.context.app.ApplicationPool;
 import org.carbon.web.def.Logo;
 import org.carbon.web.exception.ApplicationStartException;
 import org.carbon.web.module.ClientModuleConfigurer;
@@ -70,7 +70,7 @@ public class CarbonApplicationStarter {
         // prepare
         InstanceContainer appContainer = Fn
                 .Try(() -> prepare(scanBase))
-                .CatchThrow(e -> new ApplicationStartException("Application Start up Error", e));
+                .CatchThrow(e -> new ApplicationStartException("Application Fail to [Initialize]", e));
 
         afterPrepare.run();
 
@@ -79,7 +79,7 @@ public class CarbonApplicationStarter {
         try {
             embedServer.run();
         } catch (Exception e) {
-            throw new ApplicationStartException("Application Start running Error", e);
+            throw new ApplicationStartException("Application Fail to [Run]", e);
         }
 
         afterStart.run();
@@ -92,11 +92,10 @@ public class CarbonApplicationStarter {
         logger.info(new Logo().logo);
         logger.info(ChapterAttr.get("Carbon Initialize Started"));
 
-
         // resolve external module
         InstanceContainer appInstances = initializeContainer(scanBase);
 
-        ApplicationContext.initialize(appInstances);
+        ApplicationPool.initialize(appInstances);
 
         return appInstances;
     }
@@ -110,11 +109,6 @@ public class CarbonApplicationStarter {
         ComponentMetaSet baseMetas = moduleConfigurerResolver.resolve();
 
         HandyComponentManager componentManager = new HandyComponentManager();
-
-        // load component -> create component
-        Set<ComponentMeta> clientMetas = componentManager.scanComponent(scanBase).stream().map(ComponentMeta::noImpl).collect(Collectors.toSet());
-
-        baseMetas.addAll(clientMetas);
 
         ComponentMetaSet resolvedMetas = componentManager.resolve(baseMetas);
         return new InstanceContainer(resolvedMetas.stream().collect(Collectors.toMap(ComponentMeta::getType, ComponentMeta::getInstance)));
