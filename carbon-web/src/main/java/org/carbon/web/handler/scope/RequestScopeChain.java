@@ -1,11 +1,11 @@
-package org.carbon.web.handler;
+package org.carbon.web.handler.scope;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
-import org.carbon.web.context.request.RequestContext;
+import org.carbon.component.annotation.Assemble;
+import org.carbon.web.context.request.RequestPool;
 
 /**
  * @author Shota Oda 2016/10/17.
@@ -13,8 +13,8 @@ import org.carbon.web.context.request.RequestContext;
 @Component
 public class RequestScopeChain extends ScopeChain {
 
-    @Inject
-    private RequestContext requestContext;
+    @Assemble
+    private RequestPool requestContext;
 
     @Override
     protected void in(HttpServletRequest request, HttpServletResponse response) {
