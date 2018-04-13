@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
       xml:lang="ja" lang="ja"
-      layout:decorate="~{/base/layout}">
+      layout:decorate="~{/templates/base/layout}">
 <body>
 <div layout:fragment="bread">
-	<a href="/home" class="breadcrumb">Home</a>
-	<a class="breadcrumb">Sample</a>
-	<a href="#" class="breadcrumb">WebSocket</a>
+    <a href="/home" class="breadcrumb">Home</a>
+    <a class="breadcrumb">Sample</a>
+    <a href="#" class="breadcrumb">WebSocket</a>
 </div>
 <section layout:fragment="content">
-	<div class="container">
-		<div class="row" id="message_start_form">
-			<div class="input-field col s6">
-				<input placeholder="your name ..." id="message_username" type="text">
-				<label for="message_username">What is your name ?</label>
-			</div>
-			<div class="input-field col s6">
-				<input placeholder="room id ..." id="message_roomId" type="text">
-				<label for="message_roomId">Where is the room join ?</label>
-			</div>
-			<div class="col s3">
-				<button id="message_start_button" class="btn waves-effect waves-light">
-					Start
-					<i class="material-icons right">message</i>
-				</button>
-			</div>
-		</div>
-		<div id="message_main" class="row" style="display: none">
-			<form id="message_form">
-				<div class="input-field col s12">
-					<textarea id="message_text" class="materialize-textarea"></textarea>
-					<label for="message_text">Message Here</label>
-				</div>
-				<div class="col s3">
-					<button class="btn waves-effect waves-light" type="submit" name="action">Submit
-						<i class="material-icons right">send</i>
-					</button>
-				</div>
-			</form>
-		</div>
-		<div class="row" id="message_content"></div>
-		<script type="text/javascript" th:src="@{/static/js/message/room.js}"></script>
-	</div>
+    <div class="container">
+        <div class="row" id="message_start_form">
+            <div class="input-field col s6">
+                <input placeholder="your name ..." id="message_username" type="text">
+                <label for="message_username">What is your name ?</label>
+            </div>
+            <div class="input-field col s6">
+                <input placeholder="room id ..." id="message_roomId" type="text">
+                <label for="message_roomId">Where is the room join ?</label>
+            </div>
+            <div class="col s3">
+                <button id="message_start_button" class="btn waves-effect waves-light">
+                    Start
+                    <i class="material-icons right">message</i>
+                </button>
+            </div>
+        </div>
+        <div id="message_main" class="row" style="display: none">
+            <form id="message_form">
+                <div class="input-field col s12">
+                    <textarea id="message_text" class="materialize-textarea"></textarea>
+                    <label for="message_text">Message Here</label>
+                </div>
+                <div class="col s3">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="row" id="message_content"></div>
+        <script type="text/javascript" th:src="@{/static/js/message/room.js}"></script>
+    </div>
 </section>
 </body>
 </html>

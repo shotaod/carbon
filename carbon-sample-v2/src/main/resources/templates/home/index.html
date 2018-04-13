@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns="http://www.w3.org/1999/xhtml"
       lang="en"
-      layout:decorate="~{/base/layout}">
+      layout:decorate="~{/templates/base/layout}">
 <head>
-	<meta charset="UTF-8">
-	<title>Home</title>
+    <meta charset="UTF-8">
+    <title>Home</title>
 </head>
 <body>
 <section layout:fragment="content">
-	<div class="row">
-		<div class="col s12 m4">
-			<div class="card hoverable light-blue darken-2">
-				<a href="/sample/websocket">
-					<div class="card-content white-text">
-						<span class="card-title">Chat</span>
-						<p>
-							This is sample chat application page.
-							You enter display name and room id which represents the private room key.
-							Carbon WebSocket is easy to implement.
-							Enjoy chat application!
-						</p>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="col s12 m4">
-			<div class="card hoverable light-blue darken-2">
-				<a href="/task/about">
-					<div class="card-content white-text">
-						<span class="card-title">Task Management</span>
-						<p>
-							This is sample task management page for authenticated user.
-							First, you should sign up.
-							Then, you can login and use task management application'
-						</p>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="col s12 m4">
-			<div class="card hoverable light-blue darken-2">
-				<a href="/oauth/client/console">
-					<div class="card-content white-text">
-						<span class="card-title">OAuth</span>
-						<p>This is sample oauth page.
-						</p>
-					</div>
-				</a>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col s12 m4">
+            <div class="card hoverable light-blue darken-2">
+                <a href="/sample/websocket">
+                    <div class="card-content white-text">
+                        <span class="card-title">Chat</span>
+                        <p>
+                            This is sample chat application page.
+                            You enter display name and room id which represents the private room key.
+                            Carbon WebSocket is easy to implement.
+                            Enjoy chat application!
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col s12 m4">
+            <div class="card hoverable light-blue darken-2">
+                <a href="/task/about">
+                    <div class="card-content white-text">
+                        <span class="card-title">Task Management</span>
+                        <p>
+                            This is sample task management page for authenticated user.
+                            First, you should sign up.
+                            Then, you can login and use task management application'
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col s12 m4">
+            <div class="card hoverable light-blue darken-2">
+                <a href="/oauth/client/console">
+                    <div class="card-content white-text">
+                        <span class="card-title">OAuth</span>
+                        <p>This is sample oauth page.
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
 </section>
 </body>
 </html>
