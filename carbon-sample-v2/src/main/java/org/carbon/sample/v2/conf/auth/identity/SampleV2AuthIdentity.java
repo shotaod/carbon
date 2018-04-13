@@ -25,12 +25,7 @@ public class SampleV2AuthIdentity implements AuthIdentity {
     }
 
     @Override
-    public String cryptSecret() {
-        return user.getPassword();
-    }
-
-    @Override
-    public boolean confirm(String plainPassword) {
-        return BCrypt.checkpw(plainPassword, cryptSecret());
+    public boolean confirm(String plainSecret) {
+        return BCrypt.checkpw(plainSecret, user.getPassword());
     }
 }
