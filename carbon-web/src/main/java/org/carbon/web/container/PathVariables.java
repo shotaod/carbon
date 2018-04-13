@@ -6,11 +6,11 @@ import java.util.Map;
 /**
  * @author Shota Oda 2016/10/08.
  */
-public class PathVariableValues {
+public class PathVariables {
     //      Map<varName, value>
     private Map<String, String> map;
 
-    public PathVariableValues() {
+    public PathVariables() {
         map = new HashMap<>();
     }
 

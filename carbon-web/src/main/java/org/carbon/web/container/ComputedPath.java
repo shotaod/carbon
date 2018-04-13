@@ -6,21 +6,22 @@ import java.util.stream.Collectors;
 /**
  * @author Shota Oda 2016/10/08.
  */
-public class ComputedUrl {
-    public static class Path {
+public class ComputedPath {
+    public static class Node {
         private String pathName;
         private String varName;
 
-        private Path(String pathName, String varName) {
+        private Node(String pathName, String varName) {
             this.pathName = pathName;
             this.varName = varName;
         }
 
-        public static Path Static(String name) {
-            return new Path(name, null);
+        public static Node Static(String name) {
+            return new Node(name, null);
         }
-        public static Path Variable(String pathName, String varName) {
-            return new Path(pathName, varName);
+
+        public static Node Variable(String pathName, String varName) {
+            return new Node(pathName, varName);
         }
 
         public String getPathName() {
@@ -35,18 +36,19 @@ public class ComputedUrl {
             return varName != null;
         }
     }
-    private List<Path> computedPaths;
 
-    public ComputedUrl(List<Path> computedPaths) {
+    private List<Node> computedPaths;
+
+    public ComputedPath(List<Node> computedPaths) {
         this.computedPaths = computedPaths;
     }
 
-    public List<Path> getComputedPaths() {
+    public List<Node> getComputedPaths() {
         return computedPaths;
     }
 
     @Override
     public String toString() {
-        return computedPaths.stream().map(Path::getPathName).collect(Collectors.joining("/"));
+        return computedPaths.stream().map(Node::getPathName).collect(Collectors.joining("/"));
     }
 }

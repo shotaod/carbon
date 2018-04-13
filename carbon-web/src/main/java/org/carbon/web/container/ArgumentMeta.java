@@ -7,7 +7,7 @@ import java.lang.reflect.Parameter;
  */
 public class ArgumentMeta {
     private Parameter parameter;
-    // extracted value from request or context
+    // extracted value from somewhere
     private Object value;
 
     public ArgumentMeta(Parameter parameter, Object value) {
