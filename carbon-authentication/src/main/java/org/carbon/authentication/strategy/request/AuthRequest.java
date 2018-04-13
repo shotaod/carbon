@@ -1,7 +1,7 @@
 package org.carbon.authentication.strategy.request;
 
 /**
- * @author garden 2018/02/12.
+ * @author Shota.Oda 2018/02/12.
  */
 public class AuthRequest {
     private String identity;
