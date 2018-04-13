@@ -1,7 +1,7 @@
 package org.carbon.component.exception;
 
 /**
- * @author garden 2018/01/16.
+ * @author Shota.Oda 2018/01/16.
  */
 public class ImpossibleDetermineException extends Exception {
     public ImpossibleDetermineException(Class target) {
