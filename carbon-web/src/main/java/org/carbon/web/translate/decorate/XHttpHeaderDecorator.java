@@ -1,24 +1,22 @@
-package org.carbon.web.handler;
+package org.carbon.web.translate.decorate;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.carbon.component.annotation.Component;
-import org.carbon.component.annotation.Inject;
+import org.carbon.component.annotation.Assemble;
 import org.carbon.web.header.HttpHeaderRegistry;
 
 /**
- * @author Shota Oda 2017/02/17.
+ * @author Shota.Oda 2018/02/18.
  */
 @Component
-public class XHttpHeaderChain extends HandlerChain {
-    @Inject
+public class XHttpHeaderDecorator implements HttpDecorator {
+    @Assemble
     private HttpHeaderRegistry headerRegistry;
 
     @Override
-    protected void chain(HttpServletRequest request, HttpServletResponse response) {
+    public void decorate(HttpServletResponse response) {
         headerRegistry.getHttpHeaders()
                 .forEach(header -> response.setHeader(header.getKey(), header.getValue()));
-        super.chain(request, response);
     }
 }
