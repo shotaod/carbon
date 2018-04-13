@@ -2,16 +2,22 @@ package org.carbon.component.meta;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.carbon.component.exception.ClassNotRegisteredException;
+import org.carbon.component.exception.IllegalDeclarationException;
 import org.carbon.component.exception.ImpossibleDetermineException;
+import org.carbon.util.Describable;
 
 /**
  * @author Shota Oda 2018/01/01.
  */
-public final class ComponentMeta<T> {
+public final class ComponentMeta<T> implements Describable {
     private Class<T> asClass;
     private T instance;
     private ComponentMetaSet parent;
@@ -28,7 +34,7 @@ public final class ComponentMeta<T> {
     @SuppressWarnings("unchecked")
     public static ComponentMeta implAs(Class<?> asClass, Object instance) {
         if (!ClassUtils.isAssignable(instance.getClass(), asClass)) {
-            throw new IllegalArgumentException("instance(type["+instance.getClass()+"]) cannot not assign to asClass["+asClass+"]");
+            throw new IllegalArgumentException("instance(type[" + instance.getClass() + "]) cannot not assign to asClass[" + asClass + "]");
         }
         return new ComponentMeta(asClass, instance);
     }
@@ -50,8 +56,54 @@ public final class ComponentMeta<T> {
         return instance == null;
     }
 
-    public void setParent(ComponentMetaSet parent) {
-        this.parent = parent;
+
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
+        A instanceClassAnnotate = instance.getClass().getDeclaredAnnotation(type);
+        if (instanceClassAnnotate == null) return asClass.getDeclaredAnnotation(type);
+        return instanceClassAnnotate;
+    }
+
+
+    public boolean annotatedBy(Class<? extends Annotation> annotation) {
+        return instance.getClass().isAnnotationPresent(annotation) || asClass.isAnnotationPresent(annotation);
+    }
+
+    public Field[] getDeclaredField() {
+        return instance.getClass().getDeclaredFields();
+    }
+
+    public boolean isAssignableTo(Type other) {
+        Class<T> self = getType();
+        if (other instanceof Class) {
+            return ((Class<?>) other).isAssignableFrom(self);
+        }
+
+        if (other instanceof WildcardType) {
+            Type[] upperBounds = ((WildcardType) other).getUpperBounds();
+            if (upperBounds.length != 1) {
+                throw new IllegalDeclarationException(other.getTypeName() + " is illegal, Single Wildcard(*) declaration is only supported");
+            }
+            Type upperType = upperBounds[0];
+            if (upperType instanceof Class) {
+                return ((Class<?>) upperType).isAssignableFrom(self);
+            } else {
+                throw new IllegalDeclarationException(other.getTypeName() + " is illegal declaration");
+            }
+        }
+
+        if (other instanceof ParameterizedType) {
+            ParameterizedType pType = (ParameterizedType) other;
+            Type rawType = pType.getRawType();
+            if (rawType instanceof Class) {
+                return ((Class<?>) rawType).isAssignableFrom(self)
+                        && Stream.of(pType.getActualTypeArguments())
+                        .allMatch(generic -> generic.equals(Object.class) || generic instanceof WildcardType);
+            } else {
+                throw new IllegalDeclarationException("Nested type is not acceptable");
+            }
+        }
+
+        return false;
     }
 
     @SuppressWarnings("unchecked")
@@ -70,18 +122,8 @@ public final class ComponentMeta<T> {
         }
     }
 
-    public boolean annotatedBy(Class<? extends Annotation> annotation) {
-        return instance.getClass().isAnnotationPresent(annotation) || asClass.isAnnotationPresent(annotation);
-    }
-
-    public <A extends Annotation> A getAnnotate(Class<A> annotation) {
-        A instanceClassAnnotate = instance.getClass().getDeclaredAnnotation(annotation);
-        if (instanceClassAnnotate == null) return asClass.getDeclaredAnnotation(annotation);
-        return instanceClassAnnotate;
-    }
-
-    public Field[] getPrivateField() {
-        return instance.getClass().getDeclaredFields();
+    void setParent(ComponentMetaSet parent) {
+        this.parent = parent;
     }
 
     // ===================================================================================
@@ -112,6 +154,11 @@ public final class ComponentMeta<T> {
     @Override
     public int hashCode() {
         return asClass.hashCode();
+    }
+
+    @Override
+    public String describe() {
+        return toString();
     }
 
     @Override

@@ -89,7 +89,9 @@ public class ComponentMetaSet extends AbstractSet<ComponentMeta> implements Set<
     public boolean isQualified(ComponentMeta meta) throws ImpossibleDetermineException {
         for (ComponentQualifier extension : qualifiers) {
             if (extension.shouldHandle(meta)) {
-                return extension.isQualified(meta);
+                if (!extension.isQualified(meta)) {
+                    return false;
+                }
             }
         }
         return true;
