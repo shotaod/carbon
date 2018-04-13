@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Constructor for Class and enhance by proxy
+ * Constructor for Class by proxied enhance
  *
  * @author Shota Oda 2016/10/07.
  */
