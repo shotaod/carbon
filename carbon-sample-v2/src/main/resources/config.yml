@@ -17,7 +17,7 @@ persistent:
     user: _OVERWRITTEN_
     password: _OVERWRITTEN_
     port: _OVERWRITTEN_
-    params:
+    parameters:
       useSSL: false
   option:
     schema:
@@ -25,3 +25,7 @@ persistent:
       src:
         - /db/migration/mysql
     test: true
+rocketty:
+  secret: '{$ROCKETTY_SECRET}'
+  cipher:
+    passphrase: '{$ROCKETTY_CIPHER_KEY}'
