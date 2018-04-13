@@ -16,7 +16,7 @@ CREATE TABLE user
   id        BIGINT AUTO_INCREMENT,
   email     VARCHAR(255) NOT NULL,
   user_name VARCHAR(31)  NOT NULL,
-  secret  CHAR(65)     NOT NULL,
+  password  CHAR(65)     NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT user_email_uindex
   UNIQUE (email)
