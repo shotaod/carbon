@@ -5,6 +5,6 @@ package org.carbon.authentication;
  */
 public interface AuthIdentity {
     String identity();
-    String cryptSecret();
-    boolean confirm(String plainPassword);
+
+    boolean confirm(String plainSecret);
 }
