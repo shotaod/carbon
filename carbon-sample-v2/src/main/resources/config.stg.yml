@@ -1,5 +1,5 @@
 web:
-  port: "{$PORT}"
+  port: '{$PORT}'
   maxHeaderSize: 512000 #500KB
   maxContentSize: 2097152 #2MB
   customError:
@@ -7,10 +7,10 @@ web:
     serverError: /error/500
 persistent:
   dataSource:
-    host: "{$DB_HOST}"
-    db: "{$DB_NAME}"
-    user: "{$DB_USER}"
-    password: "{$DB_PASSWORD}"
+    host: '{$DB_HOST}'
+    db: '{$DB_NAME}'
+    user: '{$DB_USER}'
+    password: '{$DB_PASSWORD}'
     port: 3306
   option:
     schema:
