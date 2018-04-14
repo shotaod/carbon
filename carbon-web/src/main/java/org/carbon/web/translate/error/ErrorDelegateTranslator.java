@@ -57,7 +57,7 @@ public class ErrorDelegateTranslator implements HttpTranslator<Throwable> {
         } catch (Throwable t) {
             // mmm... translate anyway
             try {
-                logger.error("Fail to translate throwable. try translate as internal server error", t);
+                logger.error("Fail to translate throwable. translate as internal server error", t);
                 translateAsInternalServerError(request, response, throwable);
             } catch (Throwable ohmygod) {
                 logger.error("Unexpected error occurred. Fail to respond.", ohmygod);
