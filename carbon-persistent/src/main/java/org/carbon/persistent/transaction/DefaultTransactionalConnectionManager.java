@@ -47,9 +47,8 @@ public class DefaultTransactionalConnectionManager implements TransactionalConne
     public Connection allocateConnection() throws SQLException {
         logDebugAction("allocate");
         DefaultTransactionalConnectionManager self = currentContext();
-        TransactionState state = self.transactionState;
 
-        if (state == TransactionState.NONE)
+        if (self.transactionState == TransactionState.NONE)
             return dataSource.getConnection();
 
         // if BEGIN
@@ -84,7 +83,10 @@ public class DefaultTransactionalConnectionManager implements TransactionalConne
     @Override
     public void end() throws SQLException {
         logDebugAction("end");
-        currentContext().transactionConnection.close();
+        DefaultTransactionalConnectionManager self = currentContext();
+        if (self.transactionConnection != null) {
+            self.transactionConnection.close();
+        }
         removeContext();
     }
 
@@ -94,6 +96,9 @@ public class DefaultTransactionalConnectionManager implements TransactionalConne
         DefaultTransactionalConnectionManager self = currentContext();
         self.transactionDepth--;
         if (self.transactionDepth == 0) {
+            if (currentContext().transactionConnection == null) {
+                throw new IllegalStateException("transaction is began but connection is null");
+            }
             self.transactionConnection.commit();
         }
     }
@@ -101,7 +106,9 @@ public class DefaultTransactionalConnectionManager implements TransactionalConne
     @Override
     public void rollback() throws SQLException {
         logDebugAction("rollback");
-        currentContext().transactionConnection.rollback();
+        if (currentContext().transactionConnection != null) {
+            currentContext().transactionConnection.rollback();
+        }
     }
 
     private void logDebugAction(String action) {
