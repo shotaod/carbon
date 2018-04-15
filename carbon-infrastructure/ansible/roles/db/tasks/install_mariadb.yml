@@ -23,11 +23,14 @@
     update_cache: yes
 - name: Set configuration files
   copy:
-    src: templates/
+    src: templates/{{ item }}
     dest: /etc/mysql/
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
+  with_items:
+    - my.cnf
+    - my.conf.d
 - name: Start MariaDB service
   service:
     name: mysql
@@ -38,6 +41,14 @@
     name: root
     password: "{{ mariadb_root_password }}"
     state: present
+    check_implicit_admin: true
+- name: Register root client info
+  template:
+    src: templates/root/my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
 - name: Create application user for database connection
   mysql_user:
     host: "localhost"
@@ -45,6 +56,8 @@
     password: "{{ mariadb_app_password }}"
     priv: "*.*:CREATE,SELECT,INSERT,UPDATE,DELETE,INDEX"
     state: present
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
 - name: Setup initial schema
   mysql_db:
       name: "{{ mariadb_app_database }}"

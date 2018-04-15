@@ -1,0 +1,13 @@
+# ====================================================================================================
+# The MariaDB configuration file
+# The MariaDB/MySQL tools read configuration files in the following order:
+# 1. "/etc/mysql/mariadb.cnf" (this file) to set global defaults,
+# 2. "/etc/mysql/conf.d/*.cnf" to set global options.
+# 3. "/etc/mysql/mariadb.conf.d/*.cnf" to set MariaDB-only options.
+# 4. "~/.my.cnf" to set user-specific options.
+# for root client usage
+# ====================================================================================================
+
+[client]
+user=root
+password={{ mariadb_root_password }}
