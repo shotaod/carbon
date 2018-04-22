@@ -46,7 +46,7 @@ public class ErrorDelegateTranslator implements HttpTranslator<Throwable> {
 
         StringLineBuilder configureResultBuilder = ChapterAttr
                 .getBuilder("Configured Translator Action")
-                .appendLine("action order");
+                .appendLine("translation action priority order");
         for (int i = 0; i < throwableHandleActions.size(); i++) {
             String cName = throwableHandleActions.get(i).getClass().getName();
             String prefix = "├─";
