@@ -29,7 +29,7 @@ public class PropertyConfiguration {
     @AfterAssemble
     public void afterInject() {
         if (logger.isInfoEnabled()) {
-            String classes = props.stream().map(prop -> "-" + prop.getClass().getName()).collect(Collectors.joining("\n"));
+            String classes = props.stream().map(prop -> "- " + prop.getClass().getName()).collect(Collectors.joining("\n"));
             logger.info(ChapterAttr.getBuilder("Resolved Property Classes").appendLine(classes).toString());
         }
         props.forEach(prop -> {
