@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.carbon.component.annotation.AfterAssemble;
 import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Component;
+import org.carbon.util.format.ChapterAttr;
+import org.carbon.util.format.StringLineBuilder;
 import org.carbon.web.translate.HttpTranslator;
 import org.carbon.web.translate.TextTranslator;
 import org.carbon.web.translate.dto.ErrorTranslatableResult;
@@ -24,7 +26,6 @@ import org.slf4j.LoggerFactory;
  */
 @Component
 public class ErrorDelegateTranslator implements HttpTranslator<Throwable> {
-
     private static final Logger logger = LoggerFactory.getLogger(ErrorDelegateTranslator.class);
 
     @Assemble
@@ -41,6 +42,22 @@ public class ErrorDelegateTranslator implements HttpTranslator<Throwable> {
     @AfterAssemble
     public void afterInject() {
         throwableHandleActions.sort(Comparator.naturalOrder());
+        if (!logger.isInfoEnabled()) return;
+
+        StringLineBuilder configureResultBuilder = ChapterAttr
+                .getBuilder("Configured Translator Action")
+                .appendLine("translation action priority order");
+        for (int i = 0; i < throwableHandleActions.size(); i++) {
+            String cName = throwableHandleActions.get(i).getClass().getName();
+            String prefix = "├─";
+            if (i == throwableHandleActions.size() - 1) {
+                prefix = "└─";
+            }
+            configureResultBuilder
+                    .append(prefix).append(" [").append(i + 1).append("] ").append(cName)
+                    .appendLine();
+        }
+        logger.info(configureResultBuilder.toString());
     }
 
     @Override
@@ -57,7 +74,7 @@ public class ErrorDelegateTranslator implements HttpTranslator<Throwable> {
         } catch (Throwable t) {
             // mmm... translate anyway
             try {
-                logger.error("Fail to translate throwable. try translate as internal server error", t);
+                logger.error("Fail to translate throwable. translate as internal server error", t);
                 translateAsInternalServerError(request, response, throwable);
             } catch (Throwable ohmygod) {
                 logger.error("Unexpected error occurred. Fail to respond.", ohmygod);

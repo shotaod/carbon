@@ -1,7 +1,5 @@
 package org.carbon.sample.v2.conf.auth;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.carbon.authentication.conf.AuthConfigAdapter;
 import org.carbon.authentication.conf.AuthDefinitionBuilder;
 import org.carbon.component.annotation.Assemble;
@@ -25,13 +23,6 @@ public class SecurityConfiguration implements AuthConfigAdapter {
     private RockettyAuthIdentifier rockettyAuthIdentifier;
     @Assemble
     private RockettyAuthRequestMapping mapping;
-
-    @Getter
-    @Setter
-    public static class RockettyAuthRequestDTO {
-        private String clientId;
-        private String clientSecret;
-    }
 
     @Override
     public void configure(AuthDefinitionBuilder config) {

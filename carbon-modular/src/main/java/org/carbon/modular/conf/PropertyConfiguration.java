@@ -8,6 +8,7 @@ import org.carbon.component.annotation.Assemble;
 import org.carbon.component.annotation.Configuration;
 import org.carbon.modular.annotation.Property;
 import org.carbon.modular.env.EnvironmentMapper;
+import org.carbon.util.format.ChapterAttr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +29,8 @@ public class PropertyConfiguration {
     @AfterAssemble
     public void afterInject() {
         if (logger.isInfoEnabled()) {
-            String classes = props.stream().map(prop -> "-" + prop.getClass().getName()).collect(Collectors.joining("\n"));
-            logger.info("Resolve property classes below\n{}", classes);
+            String classes = props.stream().map(prop -> "- " + prop.getClass().getName()).collect(Collectors.joining("\n"));
+            logger.info(ChapterAttr.getBuilder("Resolved Property Classes").appendLine(classes).toString());
         }
         props.forEach(prop -> {
             Property propertyAnnotation = prop.getClass().getDeclaredAnnotation(Property.class);

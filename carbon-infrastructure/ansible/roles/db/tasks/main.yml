@@ -1,2 +1,2 @@
 ---
-- import_tasks: ./tasks/install_mariadb_10_1.yml
+- import_tasks: ./tasks/install_mariadb.yml

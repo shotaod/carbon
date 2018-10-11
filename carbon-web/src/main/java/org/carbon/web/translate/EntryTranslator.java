@@ -47,7 +47,7 @@ public class EntryTranslator {
             if (throwable instanceof WrappedException) {
                 throwable = ((WrappedException) throwable).get();
             }
-            logger.debug("[Translate] handle exception", throwable);
+            logger.info("[Translate] handle exception", throwable);
             errorDelegateTranslator.translate(request, response, throwable);
         }
     }
