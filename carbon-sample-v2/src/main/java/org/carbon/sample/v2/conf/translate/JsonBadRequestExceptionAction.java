@@ -21,6 +21,6 @@ public class JsonBadRequestExceptionAction implements ThrowableHandleAction<Json
 
     @Override
     public ErrorTranslatableResult<? extends Translatable> execute(HttpServletRequest request, JsonBadRequestException jsonException) {
-        return new ErrorTranslatableResult<>(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, new Message(jsonException.getMessage()));
+        return new ErrorTranslatableResult<>(HttpServletResponse.SC_BAD_REQUEST, new Message(jsonException.getMessage()));
     }
 }
