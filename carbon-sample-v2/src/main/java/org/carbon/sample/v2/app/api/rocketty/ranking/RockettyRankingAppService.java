@@ -2,11 +2,9 @@ package org.carbon.sample.v2.app.api.rocketty.ranking;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,9 +72,9 @@ public class RockettyRankingAppService {
         Record2<Long, Long> userId_rankingId = jooq.select(ROCKETTY_USER.ID, ROCKETTY_RANKING.ID)
                 .from(ROCKETTY_AUTH_CLIENT)
                 .leftJoin(ROCKETTY_USER)
-                    .on(ROCKETTY_AUTH_CLIENT.ID.eq(ROCKETTY_USER.ROCKETTY_AUTH_CLIENT_ID))
+                .on(ROCKETTY_AUTH_CLIENT.ID.eq(ROCKETTY_USER.ROCKETTY_AUTH_CLIENT_ID))
                 .leftJoin(ROCKETTY_RANKING)
-                    .on(ROCKETTY_USER.ID.eq(ROCKETTY_RANKING.ROCKETTY_USER_ID))
+                .on(ROCKETTY_USER.ID.eq(ROCKETTY_RANKING.ROCKETTY_USER_ID))
                 .where(ROCKETTY_AUTH_CLIENT.ID.eq(clientId))
                 .fetchOne();
         Long userId = userId_rankingId.value1();
@@ -105,7 +103,7 @@ public class RockettyRankingAppService {
     @Setter
     public static class Score {
         private Integer value;
-        private String isoDateTime;
+        private Long datetimeMills;
     }
 
     private Integer doDecrypt(String score) throws GeneralSecurityException {
@@ -113,8 +111,8 @@ public class RockettyRankingAppService {
             String plainScore = cipher.decrypt(score);
             Score scoreDate = objectMapper.readValue(plainScore, Score.class);
             // check datetime signature
-            LocalDateTime target = LocalDateTime.parse(scoreDate.getIsoDateTime(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            LocalDateTime to = LocalDateTime.now(Clock.systemUTC());
+            LocalDateTime target = Instant.ofEpochMilli(scoreDate.getDatetimeMills()).atZone(ZoneOffset.UTC).toLocalDateTime();
+            LocalDateTime to = LocalDateTime.now(ZoneOffset.UTC);
             LocalDateTime from = to.minusSeconds(10);
             if (target.isBefore(from) || target.isAfter(to)) {
                 throw new IllegalStateException("illegal datetime sign");

@@ -31,7 +31,7 @@ public class RockettyUserAppService {
                     .on(ROCKETTY_USER.ID.eq(ROCKETTY_RANKING.ROCKETTY_USER_ID))
                 .where(ROCKETTY_AUTH_CLIENT.ID.eq(clientId))
                 .fetchOptional()
-                .map(displayName_score -> new UserInfoDTO(displayName_score.value1(), displayName_score.value2()))
+                .map(score_displayName -> new UserInfoDTO(score_displayName.value1(), score_displayName.value2()))
                 .orElseGet(() -> new UserInfoDTO(null, null));
     }
 
