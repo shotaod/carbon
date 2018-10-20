@@ -15,7 +15,7 @@ Carbon is a java web framework inspired by Spring.
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/598c59cfd97a40619fdf20d1056037e7)](https://www.codacy.com/app/shota.oda-github/carbon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ShotaOd/carbon&amp;utm_campaign=Badge_Grade)
 
-
+[![codebeat badge](https://codebeat.co/badges/3b11abb4-b922-4bfd-afc6-a1ae9297b121)](https://codebeat.co/projects/github-com-shotaod-carbon-master)
 
 # Function
 - Dependency Injection
