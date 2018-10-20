@@ -9,6 +9,14 @@ Carbon is a java web framework inspired by Spring.
 
 [![BCH compliance](https://bettercodehub.com/edge/badge/ShotaOd/carbon?branch=master)](https://bettercodehub.com/)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/0ebabea94995d04ccce6/maintainability)](https://codeclimate.com/github/ShotaOd/carbon/maintainability)
+
+[![CodeFactor](https://www.codefactor.io/repository/github/shotaod/carbon/badge)](https://www.codefactor.io/repository/github/shotaod/carbon)
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/598c59cfd97a40619fdf20d1056037e7)](https://www.codacy.com/app/shota.oda-github/carbon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ShotaOd/carbon&amp;utm_campaign=Badge_Grade)
+
+
+
 # Function
 - Dependency Injection
 - Mvc Application
