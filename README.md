@@ -5,8 +5,8 @@
  \___/_/ \_|_|_|___/\___/|_|\_|
 ```
 # Carbon
-
 Carbon is a java web framework inspired by Spring.
+[![BCH compliance](https://bettercodehub.com/edge/badge/ShotaOd/carbon?branch=master)](https://bettercodehub.com/)
 
 # Function
 - Dependency Injection
